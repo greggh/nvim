@@ -3,6 +3,7 @@ local M = {}
 M.headers = {
   eagle = "eagle.cat",
   neovim = "neovim.cat",
+  hack = "hack.cat",
 }
 
 local function get_header(header)
