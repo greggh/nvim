@@ -11,13 +11,24 @@ return {
     local autotag = require("nvim-ts-autotag")
     local context = require("treesitter-context")
 
+    ---@diagnostic disable-next-line: missing-fields
     treesitter.setup({
       auto_install = true,
-      ensure_installed = { "regex" },
+      ensure_installed = {
+        "regex",
+        "python",
+        "toml",
+        "json",
+        "rst",
+        "ninja",
+        "markdown",
+        "markdown_inline",
+      },
       highlight = { enable = true },
       indent = { enable = true },
     })
 
+    ---@diagnostic disable-next-line: missing-fields
     autotag.setup({
       opts = {
         enable_close = true, -- Auto close tags

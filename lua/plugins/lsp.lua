@@ -46,6 +46,20 @@ return {
           })
         end,
       },
+      eslint_d = {
+        root_dir = vim.fs.root(0, { "package.json", ".eslintrc.json", ".eslintrc.js", ".git" }),
+        filetypes = { "javascript", "typescript", "typescriptreact", "javascriptreact" },
+        flags = os.getenv("DEBOUNCE_ESLINT") and {
+          allow_incremental_sync = true,
+          debounce_text_changes = 1000,
+        } or nil,
+        on_attach = function(_, bufnr)
+          vim.api.nvim_create_autocmd("BufWritePre", {
+            buffer = bufnr,
+            command = "EslintFixAll",
+          })
+        end,
+      },
       gopls = {},
       html = {},
       jsonls = {},
@@ -58,7 +72,13 @@ return {
           },
         },
       },
-      nil_ls = {},
+      --nil_ls = {},
+      pyright = {},
+      ruff = {
+        on_attach = function(client)
+          client.server_capabilities.hoverProvider = false
+        end,
+      },
       rust_analyzer = {},
       sqls = {},
       taplo = {

@@ -4,6 +4,7 @@ local M = {}
 
 M.DEBUGGERS = {
   "codelldb",
+  "debugpy",
   "delve",
   "js-debug-adapter",
 }
@@ -29,6 +30,7 @@ function M.debugger_icons()
 end
 
 function M.debugger_executable_path(debugger_name)
+  pcall(require, "mason")
   return vim.env.MASON .. "/bin/" .. debugger_name
 end
 

@@ -62,6 +62,7 @@ return {
   "Wansmer/symbol-usage.nvim",
   event = { "LspAttach" },
   config = function()
+    ---@diagnostic disable-next-line: missing-fields
     require("symbol-usage").setup({
       text_format = text_format,
       definition = { enabled = false },
