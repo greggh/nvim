@@ -1,3 +1,13 @@
+local trouble_filter = function(position)
+  return function(_, win)
+    return vim.w[win].trouble
+      and vim.w[win].trouble.position == position
+      and vim.w[win].trouble.type == "split"
+      and vim.w[win].trouble.relative == "editor"
+      and not vim.w[win].trouble_preview
+  end
+end
+
 return {
   "folke/edgy.nvim",
   event = { "VeryLazy" },
@@ -12,6 +22,22 @@ return {
       { ft = "grug-far", title = "Search & Replace", size = { width = 0.5 } },
       { ft = "neotest-summary", title = "neotest", size = { width = 0.3 } },
       { ft = "Outline", title = "Outline", size = { width = 0.2 } },
+      {
+        ft = "trouble",
+        pinned = true,
+        collapsed = false,
+        size = { height = 0.6, width = 0.2 },
+        open = "Trouble symbols toggle win.position=right",
+        filter = trouble_filter("right"),
+      },
+      {
+        ft = "trouble",
+        pinned = true,
+        collapsed = true,
+        size = { height = 0.4, width = 0.2 },
+        open = "Trouble lsp toggle win.position=right",
+        filter = trouble_filter("right"),
+      },
     },
     bottom = {
       {
@@ -34,10 +60,20 @@ return {
             and not vim.w[win].trouble_preview
         end,
       },
-      { ft = "trouble", title = "Trouble", size = { height = 0.4 } },
+      -- { ft = "trouble", title = "Trouble", size = { height = 0.4 } },
     },
-    left = {},
-
+    left = {
+      {
+        ft = "NvimTree",
+        pinned = true,
+        collapsed = false,
+        open = "NvimTreeOpen",
+        size = {
+          height = 0.5,
+          width = 30,
+        },
+      },
+    },
     animate = { enabled = false },
     options = {
       top = { size = 10 },

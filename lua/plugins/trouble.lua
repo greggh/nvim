@@ -5,7 +5,7 @@ return {
     "folke/todo-comments.nvim",
   },
   opts = {
-    auto_close = true,
+    auto_close = false,
     auto_preview = false,
     multiline = false,
     focus = true,
@@ -57,6 +57,20 @@ return {
       "<CMD>Trouble todo toggle<CR>",
       silent = true,
       desc = "Trouble: TODO",
+    },
+    {
+      mode = "n",
+      "<leader>xs",
+      "<CMD>Trouble symbols toggle win.position=right<CR>",
+      silent = true,
+      desc = "Trouble: Symbols",
+    },
+    {
+      mode = "n",
+      "<leader>xp",
+      "<CMD>Trouble lsp toggle win.position=right<CR>",
+      silent = true,
+      desc = "Trouble: LSP",
     },
   },
 }

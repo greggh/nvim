@@ -3,7 +3,7 @@ return {
   keys = {
     {
       mode = { "n", "t" },
-      "<C-\\>",
+      "<C-T>",
       function()
         Snacks.terminal.toggle()
       end,
