@@ -14,7 +14,7 @@ return {
       hijack_netrw = true,
       hijack_unnamed_buffer_when_opening = true,
       open_on_tab = false,
-      respect_buf_cwd = false,
+      respect_buf_cwd = true,
       sort_by = "name",
       sync_root_with_cwd = true,
       on_attach = function(bufnr)

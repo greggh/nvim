@@ -51,7 +51,7 @@ return {
       { ft = "qf", title = "QuickFix" },
       {
         ft = "snacks_terminal",
-        size = { height = 0.5 },
+        size = { height = 0.2 },
         title = "Terminal %{b:snacks_terminal.id}",
         filter = function(_, win)
           return vim.w[win].snacks_win
@@ -60,12 +60,19 @@ return {
             and not vim.w[win].trouble_preview
         end,
       },
+      {
+        ft = "trouble",
+        title = "Trouble Diagnostics",
+        size = { height = 0.2 },
+        open = "Trouble diagnostics toggle win.position=bottom",
+        filter = trouble_filter("bottom"),
+      },
       -- { ft = "trouble", title = "Trouble", size = { height = 0.4 } },
     },
     left = {
       {
         ft = "NvimTree",
-        pinned = true,
+        pinned = false,
         collapsed = false,
         open = "NvimTreeOpen",
         size = {

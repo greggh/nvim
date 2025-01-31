@@ -168,6 +168,9 @@ return {
       function(server_name)
         local server = servers[server_name] or {}
         server.capabilities = vim.tbl_deep_extend("force", {}, capabilities, server.capabilities or {})
+        server.on_attach = function(client, bufnr) -- Attach the following to every buffer.
+          require("workspace-diagnostics").populate_workspace_diagnostics(client, bufnr) -- Populate Workspace-Diagnostics plugin information.
+        end
         require("lspconfig")[server_name].setup(server)
       end,
     })

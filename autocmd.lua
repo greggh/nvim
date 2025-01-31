@@ -39,7 +39,6 @@ end
 
 local root_augroup = vim.api.nvim_create_augroup("MyAutoRoot", {})
 vim.api.nvim_create_autocmd("BufEnter", { group = root_augroup, callback = set_root })
-
 ------------------------------------
 -- PYTHON
 ------------------------------------

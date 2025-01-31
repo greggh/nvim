@@ -46,6 +46,7 @@ function M.select_scratch()
   local items = Snacks.scratch.list()
   process_items(items)
 
+  ---@diagnostic disable-next-line: missing-fields
   Snacks.picker.pick({
     source = "scratch",
     items = items,
@@ -83,6 +84,7 @@ function M.select_scratch()
     },
     confirm = function(_, item)
       if item then
+        ---@diagnostic disable-next-line: missing-fields
         Snacks.scratch.open({ icon = item.icon, file = item.file, name = item.name, ft = item.ft })
       end
     end,
@@ -90,6 +92,7 @@ function M.select_scratch()
 end
 
 function M.new_scratch(filetypes)
+  ---@diagnostic disable-next-line: missing-fields
   Snacks.picker.pick({
     source = "scratch",
     items = filetypes,
@@ -105,8 +108,10 @@ function M.new_scratch(filetypes)
         vim.schedule(function()
           local items = picker:items()
           if #items == 0 then
+            ---@diagnostic disable-next-line: missing-fields
             Snacks.scratch({ ft = picker:filter().pattern, name = generate_uuid() })
           else
+            ---@diagnostic disable-next-line: missing-fields
             Snacks.scratch({ ft = item.text, name = generate_uuid() })
           end
         end)

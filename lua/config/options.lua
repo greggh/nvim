@@ -8,6 +8,7 @@ vim.g.dashboard_header = require("utils.ui").headers.anonymous
 vim.g.ai = require("utils.flags").get_flags("ai") or false
 vim.g.debugger = require("utils.flags").get_flags("debugger") or false
 vim.g.tests = require("utils.flags").get_flags("tests") or false
+vim.g.ide_view_open = false
 ------------------------------------
 vim.opt.listchars = { tab = "» ", trail = "·", nbsp = "␣" }
 vim.opt.shortmess:append({ c = true })

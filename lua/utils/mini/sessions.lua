@@ -37,6 +37,7 @@ function M.select_session()
     return a.modify_time > b.modify_time
   end)
 
+  ---@diagnostic disable-next-line: missing-fields
   Snacks.picker.pick({
     source = "sessions",
     items = items,

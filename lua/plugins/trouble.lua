@@ -9,6 +9,8 @@ return {
     auto_preview = false,
     multiline = false,
     focus = true,
+    warn_no_results = false,
+    open_no_results = true,
 
     vim.api.nvim_create_autocmd("BufRead", {
       callback = function(ev)

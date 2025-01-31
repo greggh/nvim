@@ -15,8 +15,10 @@ function M.switch_grep_files(picker, _)
   if M.status.is_grep then
     local pattern = picker.input.filter.search or picker.input.filter.pattern
     if M.status.is_git then
+      ---@diagnostic disable-next-line: missing-fields
       snacks.picker.git_files({ cwd = cwd, pattern = pattern })
     else
+      ---@diagnostic disable-next-line: missing-fields
       snacks.picker.files({ cwd = cwd, pattern = pattern })
     end
     M.status = {
@@ -26,6 +28,7 @@ function M.switch_grep_files(picker, _)
     return
   else
     local pattern = picker.input.filter.pattern or picker.input.filter.search
+    ---@diagnostic disable-next-line: missing-fields
     snacks.picker.grep({ cwd = cwd, search = pattern })
     M.status = {
       is_grep = true,
