@@ -16,21 +16,20 @@ function M.get_dashboard_header(header)
 end
 
 function M.ToggleIDEView()
-  local nvim_tree = require("nvim-tree.api")
   local trouble = require("trouble")
   local edgy = require("edgy")
 
   if vim.g.ide_view_open then
-    nvim_tree.tree.close()
     trouble.close("diagnostics")
+    Snacks.explorer.open()
     edgy.close("right")
     vim.g.ide_view_open = false
   else
     for _, client in ipairs(vim.lsp.get_clients()) do
       require("workspace-diagnostics").populate_workspace_diagnostics(client, 0)
     end
-    nvim_tree.tree.open()
     trouble.open("diagnostics")
+    Snacks.explorer.open()
     edgy.open("right")
     vim.g.ide_view_open = true
   end

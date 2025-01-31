@@ -29,18 +29,6 @@ require("utils.dependencies").missing_dependencies_notification()
 require("utils.snippets")
 
 ------------------------------------
--- Set proper working directory
-------------------------------------
-
-local set_root = function()
-  local git = require("utils.git")
-  vim.fn.chdir(git.get_workspace_root())
-end
-
-local root_augroup = vim.api.nvim_create_augroup("MyAutoRoot", {})
-vim.api.nvim_create_autocmd("BufEnter", { group = root_augroup, callback = set_root })
-
-------------------------------------
 -- PYTHON
 ------------------------------------
 -- The filetype-autocmd runs a function when opening a file with the filetype
