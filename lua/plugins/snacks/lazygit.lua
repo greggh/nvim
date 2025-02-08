@@ -5,8 +5,10 @@ return {
       "<leader>gg",
       function()
         if require("utils.git").is_git_repo() then
+          ---@diagnostic disable-next-line: missing-fields
           Snacks.lazygit({ cwd = require("utils.git").get_git_root() })
         elseif vim.bo.filetype == "snacks_dashboard" then
+          ---@diagnostic disable-next-line: missing-fields, assign-type-mismatch
           Snacks.lazygit({ cwd = vim.fn.stdpath("config") })
         else
           print("You're not in a git repository")
@@ -18,8 +20,10 @@ return {
       "<leader>gl",
       function()
         if require("utils.git").is_git_repo() then
+          ---@diagnostic disable-next-line: missing-fields
           Snacks.lazygit.log({ cwd = require("utils.git").get_git_root() })
         elseif vim.bo.filetype == "snacks_dashboard" then
+          ---@diagnostic disable-next-line: missing-fields, assign-type-mismatch
           Snacks.lazygit.log({ cwd = vim.fn.stdpath("config") })
         else
           print("You're not in a git repository")

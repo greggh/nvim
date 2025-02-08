@@ -61,6 +61,7 @@ return {
     {
       "<leader>cc",
       function()
+        ---@diagnostic disable-next-line: assign-type-mismatch
         Snacks.picker.files({ cwd = vim.fn.stdpath("config") })
       end,
       desc = "Picker: nvim config",
