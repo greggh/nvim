@@ -30,6 +30,10 @@ keymap("i", "<c-a-k>", "<Esc><CMD>m .-2<CR>==gi", { noremap = true, silent = tru
 keymap("v", "<c-a-j>", "<ESC><CMD>'<,'>m '>+1<CR>gv=gv", { noremap = true, silent = true, desc = "Move line down" })
 keymap("v", "<c-a-k>", "<ESC><CMD>'<,'>m '<-2<CR>gv=gv", { noremap = true, silent = true, desc = "Move line up" })
 
+--- CCC Color Picker
+keymap("n", "<leader>cp", "<CMD>CccPick<CR>", { noremap = true, silent = true, desc = "Color Picker" })
+keymap("i", "<C-c>", "<CMD>CccPick<CR>", { noremap = true, silent = true, desc = "Color Picker" })
+
 -- Toggle IDE view
 keymap(
   "n",
