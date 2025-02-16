@@ -261,9 +261,6 @@ return {
 
         bind.nvim_load_mapping(lsp_map)
 
-        opts.desc = "See available code actions"
-        vim.keymap.set({ "n", "v" }, "<leader>ca", vim.lsp.buf.code_action, opts)
-
         opts.desc = "Smart rename"
         vim.keymap.set("n", "<F2>", vim.lsp.buf.rename, opts)
       end,

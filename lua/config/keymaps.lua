@@ -416,6 +416,14 @@ local plug_map = {
     :with_noremap()
     :with_silent()
     :with_desc("Trouble: LSP"),
+
+  -- Pligin: actions-preview
+  ["nv|<leader>ca"] = map_callback(function()
+      require("actions-preview").code_actions()
+    end)
+    :with_noremap()
+    :with_silent()
+    :with_desc("Code Actions"),
 }
 
 bind.nvim_load_mapping(plug_map)
@@ -439,3 +447,39 @@ local misc_map = {
 }
 
 bind.nvim_load_mapping(misc_map)
+
+local wk = require("which-key")
+
+-- basic
+wk.add({ mode = "n" }, {
+  { "ccb", desc = "Togggle block comment" },
+  { "ccc", desc = "Toggle line comment" },
+  { "cbc", desc = "Toggle comment" },
+})
+
+wk.add({ mode = "x" }, {
+  { "cc", desc = "Toggle line comment" },
+  { "cb", desc = "Togggle block comment" },
+})
+
+-- extra
+wk.add({ mode = "n" }, {
+  { "ccA", desc = "Comment end of line" },
+  { "cco", desc = "Comment next line" },
+  { "ccO", desc = "Comment prev line" },
+})
+
+-- extended
+wk.add({ mode = "n" }, {
+  { "c>", desc = "Comment region" },
+  { "c<lt>", desc = "Uncomment region" },
+  { "c<lt>c", desc = "Remove line comment" },
+  { "c<lt>b", desc = "Remove block comment" },
+  { "c>c", desc = "Add line comment" },
+  { "c>b", desc = "Add block comment" },
+})
+
+wk.add({ mode = "x" }, {
+  { "c>", desc = "Comment region" },
+  { "c<lt>", desc = "Uncomment region" },
+})
