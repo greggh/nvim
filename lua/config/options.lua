@@ -10,6 +10,7 @@ vim.g.debugger = require("utils.flags").get_flags("debugger") or false
 vim.g.suggestions = require("utils.flags").get_flags("suggestions") or false
 vim.g.tests = require("utils.flags").get_flags("tests") or false
 vim.g.ide_view_open = false
+vim.g.current_session = nil
 ------------------------------------
 vim.opt.listchars = { tab = "» ", trail = "·", nbsp = "␣" }
 vim.opt.shortmess:append({ c = true })
@@ -26,7 +27,7 @@ vim.o.hlsearch = false
 vim.o.ignorecase = true
 vim.o.inccommand = "split"
 vim.o.incsearch = true
-vim.o.laststatus = 3
+vim.o.laststatus = 13
 vim.o.list = true
 vim.o.mouse = "a"
 vim.o.number = true

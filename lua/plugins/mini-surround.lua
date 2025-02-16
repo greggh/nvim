@@ -5,9 +5,9 @@ return {
   config = function()
     require("mini.surround").setup({
       mappings = {
-        add = "<leader>sa", -- Add surrounding in Normal and Visual modes
-        delete = "<leader>sd", -- Delete surrounding
-        replace = "<leader>sr", -- Replace surrounding
+        add = "", -- Add surrounding in Normal and Visual modes
+        delete = "", -- Delete surrounding
+        replace = "", -- Replace surrounding
 
         find = "", -- Find surrounding (to the right)
         find_left = "", -- Find surrounding (to the left)

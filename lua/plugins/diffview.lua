@@ -46,15 +46,6 @@ return {
   "sindrets/diffview.nvim",
   event = { "BufReadPre", "BufNewFile" },
   cmd = { "DiffviewOpen", "DiffviewFileHistory" },
-  --stylua: ignore
-  keys = {
-    { mode = "n", "<leader>gh", "<CMD>DiffviewFileHistory<CR>", silent = true, desc = "Diff branch history" },
-    { mode = "n", "<leader>gd", "<CMD>DiffviewFileHistory --follow %<CR>", silent = true, desc = "Diff file" },
-    { mode = "v", "<leader>gd", "<ESC><CMD>'<,'>DiffviewFileHistory --follow<CR>", silent = true, desc = "Diff Selection" },
-    { mode = "n", "<leader>gv", diffview_toggle, silent = true, desc = "Diff view" },
-    { mode = "n", "<leader>gp", "<CMD>ClipboardDiff<CR>", silent = true, desc = "Diff clipboard" },
-    { mode = "v", "<leader>gp", "<ESC><CMD>ClipboardDiffSelection<CR>", silent = true, desc = "Diff clipboard Selection" },
-  },
   opts = function()
     local actions = require("diffview.actions")
 

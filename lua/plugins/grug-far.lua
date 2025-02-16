@@ -1,11 +1,6 @@
 return {
   "MagicDuck/grug-far.nvim",
   event = { "BufReadPre", "BufNewFile" },
-  --stylua: ignore
-  keys = {
-    { mode = "n", "<leader>r", function() require("grug-far").open({ prefills = { paths = vim.fn.expand("%") } }) end, desc = "Search and replace" },
-    { mode = "v", "<leader>r", function() require("grug-far").with_visual_selection({ prefills = { paths = vim.fn.expand("%") } }) end, desc = "Search and replace selection" },
-  },
   opts = {
     engine = "ripgrep", -- 'astgrep'
     headerMaxWidth = 80,

@@ -9,13 +9,13 @@
 return {
   "Vigemus/iron.nvim",
   keys = {
-    { "<leader>i", vim.cmd.IronRepl, desc = "󱠤 Toggle REPL" },
-    { "<leader>I", vim.cmd.IronRestart, desc = "󱠤 Restart REPL" },
+    { "<leader>cr", vim.cmd.IronRepl, desc = "󱠤 Toggle REPL" },
+    { "<leader>ct", vim.cmd.IronRestart, desc = "󱠤 Restart REPL" },
 
     -- these keymaps need no right-hand-side, since that is defined by the
     -- plugin config further below
-    { "+", mode = { "n", "x" }, desc = "󱠤 Send-to-REPL Operator" },
-    { "++", desc = "󱠤 Send Line to REPL" },
+    { "<leader>cs", mode = { "n", "x" }, desc = "󱠤 Send-to-REPL Operator" },
+    { "<leader>cl", desc = "󱠤 Send Line to REPL" },
   },
 
   -- since irons's setup call is `require("iron.core").setup`, instead of
@@ -25,9 +25,9 @@ return {
 
   opts = {
     keymaps = {
-      send_line = "++",
-      visual_send = "+",
-      send_motion = "+",
+      send_line = "<leader>cl",
+      visual_send = "<leader>cs",
+      send_motion = "<leader>cs",
     },
     config = {
       -- This defines how the repl is opened. Here, we set the REPL window

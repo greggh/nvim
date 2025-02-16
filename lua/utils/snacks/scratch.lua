@@ -53,6 +53,7 @@ function M.select_scratch()
     format = "text",
     layout = {
       layout = { title = " Select Scratch Buffer: " },
+      ---@diagnostic disable-next-line: assign-type-mismatch
       preview = true,
       preset = function()
         return vim.o.columns >= 120 and "default" or "vertical"
@@ -102,6 +103,7 @@ function M.new_scratch(filetypes)
     format = "text",
     layout = {
       preset = "vscode",
+      ---@diagnostic disable-next-line: assign-type-mismatch
       preview = false,
       layout = { title = " Select a filetype: " },
     },

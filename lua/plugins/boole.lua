@@ -3,10 +3,7 @@ return {
   config = function()
     ---@diagnostic disable-next-line: missing-fields
     require("boole").setup({
-      mappings = {
-        increment = "<C-a>",
-        decrement = "<C-z>",
-      },
+      mappings = {},
       -- User defined loops
       additions = {
         { "Foo", "Bar" },

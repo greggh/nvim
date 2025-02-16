@@ -191,55 +191,81 @@ return {
       group = vim.api.nvim_create_augroup("UserLspConfig", {}),
       callback = function(event)
         local opts = { buffer = event.buf, silent = true }
+        local bind = require("utils.keymap-bind")
+        local map_cr = bind.map_cr
+        local map_cu = bind.map_cu
+        local map_cmd = bind.map_cmd
+        local map_callback = bind.map_callback
+        local lsp_map = {
+          ["n|<leader>lr"] = map_callback(function()
+              require("mason").toggle()
+            end)
+            :with_noremap()
+            :with_silent()
+            :with_desc("Show LSP references"),
+          ["n|<leader>lk"] = map_callback(function()
+              require("mason").toggle()
+            end)
+            :with_noremap()
+            :with_silent()
+            :with_desc("Go to declaration"),
+          ["n|<leader>ld"] = map_callback(function()
+              require("mason").toggle()
+            end)
+            :with_noremap()
+            :with_silent()
+            :with_desc("Show LSP definitions"),
+          ["n|<leader>li"] = map_callback(function()
+              require("mason").toggle()
+            end)
+            :with_noremap()
+            :with_silent()
+            :with_desc("Show LSP implementations"),
+          ["n|<leader>lt"] = map_callback(function()
+              require("mason").toggle()
+            end)
+            :with_noremap()
+            :with_silent()
+            :with_desc("Show LSP type definitions"),
+          ["n|<leader>lb"] = map_callback(function()
+              require("mason").toggle()
+            end)
+            :with_noremap()
+            :with_silent()
+            :with_desc("Show buffer diagnostics"),
+          ["n|<leader>ll"] = map_callback(function()
+              require("mason").toggle()
+            end)
+            :with_noremap()
+            :with_silent()
+            :with_desc("Show line diagnostics"),
+          ["n|<leader>l["] = map_callback(function()
+              require("mason").toggle()
+            end)
+            :with_noremap()
+            :with_silent()
+            :with_desc("Go to previous diagnostic"),
+          ["n|<leader>l]"] = map_callback(function()
+              require("mason").toggle()
+            end)
+            :with_noremap()
+            :with_silent()
+            :with_desc("Go to next diagnostic"),
+          ["n|<leader>lz"] = map_callback(function()
+              require("mason").toggle()
+            end)
+            :with_noremap()
+            :with_silent()
+            :with_desc("Restart LSP"),
+        }
 
-        opts.desc = "Show LSP references"
-        vim.keymap.set("n", "gr", function()
-          Snacks.picker.lsp_references()
-        end, opts)
-
-        opts.desc = "Go to declaration"
-        vim.keymap.set("n", "gk", vim.lsp.buf.declaration, opts)
-
-        opts.desc = "Show LSP definitions"
-        vim.keymap.set("n", "gd", function()
-          Snacks.picker.lsp_definitions()
-        end, opts)
-
-        opts.desc = "Show LSP implementations"
-        vim.keymap.set("n", "gi", function()
-          Snacks.picker.lsp_implementations()
-        end, opts)
-
-        opts.desc = "Show LSP type definitions"
-        vim.keymap.set("n", "gt", function()
-          Snacks.picker.lsp_type_definitions()
-        end, opts)
+        bind.nvim_load_mapping(lsp_map)
 
         opts.desc = "See available code actions"
         vim.keymap.set({ "n", "v" }, "<leader>ca", vim.lsp.buf.code_action, opts)
 
         opts.desc = "Smart rename"
         vim.keymap.set("n", "<F2>", vim.lsp.buf.rename, opts)
-
-        opts.desc = "Show buffer diagnostics"
-        vim.keymap.set("n", "gb", function()
-          Snacks.picker.diagnostics_buffer()
-        end, opts)
-
-        opts.desc = "Show line diagnostics"
-        vim.keymap.set("n", "gl", vim.diagnostic.open_float, opts)
-
-        opts.desc = "Go to previous diagnostic"
-        vim.keymap.set("n", "[d", vim.diagnostic.goto_prev, opts)
-
-        opts.desc = "Go to next diagnostic"
-        vim.keymap.set("n", "]d", vim.diagnostic.goto_next, opts)
-
-        opts.desc = "Show documentation for what is under cursor"
-        vim.keymap.set("n", "K", vim.lsp.buf.hover, opts)
-
-        opts.desc = "Restart LSP"
-        vim.keymap.set("n", "<leader>lr", "<CMD>LspRestart<CR>", opts)
       end,
     })
 

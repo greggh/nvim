@@ -1,6 +1,3 @@
-------------------------------------
--- NVIM
-------------------------------------
 require("config.flags")
 require("config.options")
 require("config.lazy")
