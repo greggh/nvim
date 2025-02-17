@@ -12,9 +12,6 @@ return {
           },
         },
       },
-      keys = {
-        { mode = "n", "<leader>,", "<CMD>Mason<CR>", desc = "Open mason" },
-      },
     },
     { "williamboman/mason-lspconfig.nvim" },
     { "WhoIsSethDaniel/mason-tool-installer.nvim" },
@@ -192,9 +189,6 @@ return {
       callback = function(event)
         local opts = { buffer = event.buf, silent = true }
         local bind = require("utils.keymap-bind")
-        local map_cr = bind.map_cr
-        local map_cu = bind.map_cu
-        local map_cmd = bind.map_cmd
         local map_callback = bind.map_callback
         local lsp_map = {
           ["n|<leader>lr"] = map_callback(function()
@@ -295,7 +289,7 @@ return {
     -- inlay hints
     ---------------------
     -- vim.lsp.inlay_hint.enable() -- enabled by default
-    vim.keymap.set("n", "<leader>&", function()
+    vim.keymap.set("n", "<leader>oi", function()
       local current_state = vim.lsp.inlay_hint.is_enabled()
       local icon = current_state and " " or " "
       local message = current_state and "Inlay hints disabled" or "Inlay hints enabled"

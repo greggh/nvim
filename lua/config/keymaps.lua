@@ -3,7 +3,6 @@ local map_cr = bind.map_cr
 local map_cu = bind.map_cu
 local map_cmd = bind.map_cmd
 local map_callback = bind.map_callback
-local et = bind.escape_termcode
 
 local builtin_map = {
   -- Builtin: save & quit
@@ -57,10 +56,10 @@ local builtin_map = {
   ["t|<C-w>k"] = map_cmd("<Cmd>wincmd k<CR>"):with_silent():with_noremap():with_desc("window: Focus up"),
 
   -- Builtin: tab
-  ["n|tn"] = map_cr("tabnew"):with_noremap():with_silent():with_desc("tab: Create a new tab"),
-  ["n|tk"] = map_cr("tabnext"):with_noremap():with_silent():with_desc("tab: Move to next tab"),
-  ["n|tj"] = map_cr("tabprevious"):with_noremap():with_silent():with_desc("tab: Move to previous tab"),
-  ["n|to"] = map_cr("tabonly"):with_noremap():with_silent():with_desc("tab: Only keep current tab"),
+  ["n|<leader>wtn"] = map_cr("tabnew"):with_noremap():with_silent():with_desc("tab: Create a new tab"),
+  ["n|<leader>wth"] = map_cr("tabnext"):with_noremap():with_silent():with_desc("tab: Move to next tab"),
+  ["n|<leader>wtl"] = map_cr("tabprevious"):with_noremap():with_silent():with_desc("tab: Move to previous tab"),
+  ["n|<leader>wtc"] = map_cr("tabonly"):with_noremap():with_silent():with_desc("tab: Only keep current tab"),
 }
 
 bind.nvim_load_mapping(builtin_map)
@@ -79,23 +78,29 @@ local plug_map = {
     :with_desc("Picker: Explorer"),
 
   -- Plugin: yazi
-  ["n|<leader>/"] = map_cmd("<CMD>Yazi<CR>"):with_noremap():with_silent():with_desc("Yazi: Current file"),
-  ["n|<leader>-"] = map_cmd("<CMD>Yazi cwd<CR>"):with_noremap():with_silent():with_desc("Yazi: nvim working directory"),
-  ["n|<leader>\\"] = map_cmd("<CMD>Yazi toggle<CR>")
+  ["n|<leader>f/"] = map_cmd("<CMD>Yazi<CR>"):with_noremap():with_silent():with_desc("Yazi: Current file"),
+  ["n|<leader>f-"] = map_cmd("<CMD>Yazi cwd<CR>")
+    :with_noremap()
+    :with_silent()
+    :with_desc("Yazi: nvim working directory"),
+  ["n|<leader>f\\"] = map_cmd("<CMD>Yazi toggle<CR>")
     :with_noremap()
     :with_silent()
     :with_desc("Yazi: Resume last session"),
 
   -- Plugin: lazy
-  ["n|<leader>."] = map_cmd("<CMD>Lazy sync<CR>"):with_noremap():with_silent():with_desc("Lazy: Sync"),
+  ["n|<leader>pl"] = map_cmd("<CMD>Lazy sync<CR>"):with_noremap():with_silent():with_desc("✓ Lazy: Sync"),
+
+  -- Plugin: Mason
+  ["n|<leader>pm"] = map_cmd("<CMD>Mason<CR>"):with_noremap():with_silent():with_desc("Mason: Toggle"),
 
   -- Plugin: flags
   ["n|<leader>F"] = map_cmd("<CMD>Flags<CR>"):with_noremap():with_silent():with_desc("Flags"),
 
   -- Plugin: buffer
   ["n|<leader><tab>"] = map_cmd("<CMD>b#<CR>"):with_noremap():with_silent():with_desc("Buffer: Switch back & forth"),
-  ["n|[b"] = map_cmd("<CMD>bp<CR>"):with_noremap():with_silent():with_desc("Buffer: Previous"),
-  ["n|]b"] = map_cmd("<CMD>bn<CR>"):with_noremap():with_silent():with_desc("Buffer: Next"),
+  ["n|<leader>b["] = map_cmd("<CMD>bp<CR>"):with_noremap():with_silent():with_desc("Buffer: Previous"),
+  ["n|<leader>b]"] = map_cmd("<CMD>bn<CR>"):with_noremap():with_silent():with_desc("Buffer: Next"),
 
   -- Plugin: move lines
   ["n|<c-a-j>"] = map_cmd("<CMD>m .+1<CR>=="):with_noremap():with_silent():with_desc("Move: Line down"),
@@ -149,10 +154,10 @@ local plug_map = {
   ["n|<C-j>"] = map_cu("SmartCursorMoveDown"):with_silent():with_noremap():with_desc("window: Focus down"),
   ["n|<C-k>"] = map_cu("SmartCursorMoveUp"):with_silent():with_noremap():with_desc("window: Focus up"),
   ["n|<C-l>"] = map_cu("SmartCursorMoveRight"):with_silent():with_noremap():with_desc("window: Focus right"),
-  ["n|<leader>wh"] = map_cu("SmartSwapLeft"):with_silent():with_noremap():with_desc("window: Move window leftward"),
-  ["n|<leader>wj"] = map_cu("SmartSwapDown"):with_silent():with_noremap():with_desc("window: Move window downward"),
-  ["n|<leader>wk"] = map_cu("SmartSwapUp"):with_silent():with_noremap():with_desc("window: Move window upward"),
-  ["n|<leader>wl"] = map_cu("SmartSwapRight"):with_silent():with_noremap():with_desc("window: Move window rightward"),
+  ["n|<leader>wh"] = map_cu("SmartSwapLeft"):with_silent():with_noremap():with_desc("window: Move window left"),
+  ["n|<leader>wj"] = map_cu("SmartSwapDown"):with_silent():with_noremap():with_desc("window: Move window down"),
+  ["n|<leader>wk"] = map_cu("SmartSwapUp"):with_silent():with_noremap():with_desc("window: Move window up"),
+  ["n|<leader>wl"] = map_cu("SmartSwapRight"):with_silent():with_noremap():with_desc("window: Move window right"),
 
   -- Plugin: boole.nvim
   ["n|<C-n>"] = map_cmd("<CMD>Boole increment<CR>"):with_noremap():with_silent():with_desc("Boole: Increment"),
@@ -235,7 +240,7 @@ local plug_map = {
     :with_desc("Diff clipboard Selection"),
 
   -- Plugin: auto-save.nvim
-  ["n|<leader>*"] = map_cmd("<CMD>ASToggle<CR>"):with_noremap():with_silent():with_desc("Toggle auto save"),
+  ["n|<leader>oa"] = map_cmd("<CMD>ASToggle<CR>"):with_noremap():with_silent():with_desc("Toggle auto save"),
 
   -- Plugin: grug-far.nvim
   ["n|<leader>r"] = map_callback(function()
@@ -311,7 +316,7 @@ local plug_map = {
   ["n|<leader>lo"] = map_cmd("<CMD>Outline<CR>"):with_noremap():with_silent():with_desc("Toggle Outline"),
 
   -- Plugin: Suda
-  ["n|<leader>qs"] = map_cmd("<CMD>Suda w<CR>"):with_noremap():with_silent():with_desc("Suda: Write"),
+  ["n|<leader>qS"] = map_cmd("<CMD>Suda w<CR>"):with_noremap():with_silent():with_desc("Suda: Write"),
   ["n|<leader>qv"] = map_cmd("<CMD>Suda wq<CR>"):with_noremap():with_silent():with_desc("Suda: Write and quit"),
   ["n|<leader>qa"] = map_cmd("<CMD>Suda wqa<CR>"):with_noremap():with_silent():with_desc("Suda: Write and quit all"),
 
@@ -424,6 +429,14 @@ local plug_map = {
     :with_noremap()
     :with_silent()
     :with_desc("Code Actions"),
+
+  -- Plugin: snacks rename
+  ["n|<leader>fR"] = map_callback(function()
+      Snacks.rename.rename_file()
+    end)
+    :with_noremap()
+    :with_silent()
+    :with_desc("Rename file"),
 }
 
 bind.nvim_load_mapping(plug_map)
@@ -482,4 +495,83 @@ wk.add({ mode = "n" }, {
 wk.add({ mode = "x" }, {
   { "c>", desc = "Comment region" },
   { "c<lt>", desc = "Uncomment region" },
+})
+
+-- Add icons to everything in Whick-key
+
+wk.add({
+  mode = "n",
+  { "<leader>m", desc = "Arrow: Open", icon = "󰁕" },
+  { "<leader>e", desc = "Picker: Explorer", icon = "" },
+  { "<leader>f/", desc = "Yazi: Current file", icon = "" },
+  { "<leader>f-", desc = "Yazi: nvim working directory", icon = "󰘦" },
+  { "<leader>f\\", desc = "Yazi: Resume last session", icon = "↺" },
+  { "<leader>pl", desc = "✓ Lazy: Sync", icon = "󰒲" },
+  { "<leader>pm", desc = "Mason: Toggle", icon = "" },
+  { "<leader>F", desc = "Flags", icon = "⚐" },
+  { "<leader><tab>", desc = "Buffer: Switch back & forth", icon = "" },
+  { "<leader>b[", desc = "Buffer: Previous", icon = "<-" },
+  { "<leader>b]", desc = "Buffer: Next", icon = "->" },
+  { "<leader>cp", desc = "Color Picker", icon = "󰏘" },
+  { "<leader>gb", desc = "Gitsigns: Toggle current line blame", icon = "" },
+  { "<leader>gs", desc = "Gitsigns: Stage hunk", icon = "" },
+  { "<leader>gu", desc = "Gitsigns: Undo stage hunk", icon = "" },
+  { "<leader>gt", desc = "Gitsigns: Toggle signs", icon = "" },
+  { "<leader>gpi", desc = "Gitsigns: Preview hunk inline", icon = "" },
+  { "<leader>gr", desc = "Gitsigns: Reset hunk", icon = "" },
+  { "<leader>gR", desc = "Gitigns: Reset buffer", icon = "" },
+  { "<leader>gp", desc = "Gitsigns: Preview hunk", icon = "" },
+  { "<leader>g]", desc = "Gitsigns: Next hunk", icon = "" },
+  { "<leader>g[", desc = "Gitsigns: Prev hunk", icon = "" },
+  { "<leader>gg", desc = "Lazygit", icon = "󰒲" },
+  { "<leader>gl", desc = "Lazygit log", icon = "" },
+  { "<leader>gx", desc = "Diff clipboard", icon = "📋" },
+  { "<leader>gv", desc = "Diff view", icon = "" },
+  { "<leader>oa", desc = "Toggle auto save", icon = "󰑖" },
+  { "<leader>r", desc = "Search and replace", icon = "" },
+  { "<leader>s<backspace>", desc = "Load last session", icon = "󰙠" },
+  { "<leader>sl", desc = "Load session", icon = "" },
+  { "<leader>ss", desc = "Save session", icon = "" },
+  { "<leader>sw", desc = "Current session", icon = "" },
+  { "<leader>tS", desc = "Stop (Neotest)", icon = "󰝤" },
+  { "<leader>tT", desc = "TODO (Neotest)", icon = "" },
+  { "<leader>ta", desc = "Code Actions", icon = "" },
+  { "<leader>tl", desc = "Run Last (Neotest)", icon = "" },
+  { "<leader>to", desc = "Show Output (Neotest)", icon = "" },
+  { "<leader>tO", desc = "Toggle Output Panel (Neotest)", icon = "" },
+  { "<leader>tr", desc = "Run Nearest (Neotest)", icon = "" },
+  { "<leader>ts", desc = "Toggle Summary (Neotest)", icon = "" },
+  { "<leader>tt", desc = "Run File (Neotest)", icon = "" },
+  { "<leader>tw", desc = "Toggle Watch (Neotest)", icon = "" },
+  { "<leader>xq", desc = "Trouble: quickfix list", icon = "" },
+  { "<leader>xd", desc = "Populate workspace diagnostics", icon = "" },
+  { "<leader>xl", desc = "Trouble: location list", icon = "󰀹" },
+  { "<leader>xp", desc = "Trouble: LSP", icon = "󱜙" },
+  { "<leader>xs", desc = "Trouble: Symbols", icon = "" },
+  { "<leader>xw", desc = "Trouble: workspace diagnostics", icon = "" },
+  { "<leader>xx", desc = "Trouble: document diagnostics", icon = "" },
+  { "<leader>xt", desc = "Trouble: TODO", icon = "" },
+  { "<leader>xc", desc = "Todo Comments: show TODO", icon = "" },
+  { "<leader>ua", desc = "Surround: Add", icon = "" },
+  { "<leader>ud", desc = "Surround: Delete", icon = "" },
+  { "<leader>ur", desc = "Surround: Replace", icon = "󰏫" },
+  { "<leader>qz", desc = "Force quit", icon = "󰝥" },
+  { "<leader>qf", desc = "Force quit all (no save)", icon = "" },
+  { "<leader>qx", desc = "Save all and quit", icon = "" },
+  { "<leader>qq", desc = "Save file and quit", icon = "" },
+  { "<leader>qs", desc = "Save file", icon = "" },
+  { "<leader>qS", desc = "Suda: Write", icon = "󰌋" },
+  { "<leader>qv", desc = "Suda: Write and quit", icon = "󰌋" },
+  { "<leader>qa", desc = "Suda: Write and quit all", icon = "󱕴" },
+  { "<leader>wh", desc = "Move window left", icon = "←" },
+  { "<leader>wj", desc = "Move window down", icon = "↓" },
+  { "<leader>wk", desc = "Move window up", icon = "↑" },
+  { "<leader>wl", desc = "Move window right", icon = "→" },
+  { "<leader>lo", desc = "Toggle Outline", icon = "󰌗" },
+  { "<leader>ca", desc = "Code Actions", icon = "" },
+  { "<leader>fR", desc = "Rename file", icon = "󰬶" },
+  { "<leader>wtn", desc = "Create a new tab", icon = "+" },
+  { "<leader>wth", desc = "Move to next tab", icon = "" },
+  { "<leader>wtl", desc = "Move to previous tab", icon = "" },
+  { "<leader>wtc", desc = "Only keep current tab", icon = "" },
 })
