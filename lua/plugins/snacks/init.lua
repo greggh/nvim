@@ -3,6 +3,26 @@ return {
   priority = 1000,
   lazy = false,
   import = "plugins.snacks",
+  opts = {
+    styles = {
+      zen = {
+        enter = true,
+        fixbuf = false,
+        minimal = false,
+        width = 120,
+        height = 0,
+        backdrop = { transparent = true, blend = 20 },
+        keys = { q = false },
+        zindex = 40,
+        wo = {
+          winhighlight = "NormalFloat:Normal",
+        },
+        w = {
+          snacks_main = true,
+        },
+      },
+    },
+  },
   init = function()
     vim.api.nvim_create_autocmd("User", {
       pattern = "VeryLazy",
