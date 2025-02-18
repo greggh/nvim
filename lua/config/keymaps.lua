@@ -599,6 +599,7 @@ local readme_map = {
         "- [lazygit](https://github.com/jesseduffield/lazygit)",
         "- [ripgrep](https://github.com/BurntSushi/ripgrep)",
         "- [fd](https://github.com/sharkdp/fd)",
+        "- [fzf](https://github.comjunegunn/fzf)",
         "",
         "## Install Instructions",
         "",
@@ -649,7 +650,7 @@ local readme_map = {
     end)
     :with_noremap()
     :with_silent()
-    :with_desc("Code Actions"),
+    :with_desc("Generate README.md"),
 }
 
 bind.nvim_load_mapping(readme_map)

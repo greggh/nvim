@@ -14,10 +14,11 @@
 - [lazygit](https://github.com/jesseduffield/lazygit)
 - [ripgrep](https://github.com/BurntSushi/ripgrep)
 - [fd](https://github.com/sharkdp/fd)
+- [fzf](https://github.comjunegunn/fzf)
 
 ## Install Instructions
 
-> Install requires Neovim 0.10+. Always review the code before installing a configuration.
+ > Install requires Neovim 0.10+. Always review the code before installing a configuration.
 
 Clone the repository and install the plugins:
 
