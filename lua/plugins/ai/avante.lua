@@ -31,5 +31,6 @@ return {
   config = function()
     require("avante_lib").load()
     require("avante").setup()
+    require("plugins.ai.avante-prompts")
   end,
 }
