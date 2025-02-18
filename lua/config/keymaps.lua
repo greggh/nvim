@@ -259,12 +259,6 @@ local plug_map = {
     :with_silent()
     :with_desc("Search and replace selection"),
 
-  -- Plugin: maximizer
-  ["n|<C-w>m"] = map_cmd("<CMD>MaximizerToggle<CR>")
-    :with_noremap()
-    :with_silent()
-    :with_desc("Maximize/minimize a split"),
-
   -- Plugin: mini-sessions
   ["n|<leader>sl"] = map_callback(function()
       require("utils.mini.sessions").select_session()

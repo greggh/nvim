@@ -116,8 +116,6 @@ NVIM_APPNAME=greggh/nvim/ nvim
 - [todo-comments.nvim](https://github.com/folke/todo-comments.nvim)
 - [treewalker.nvim](https://github.com/aaronik/treewalker.nvim)
 - [trouble.nvim](https://github.com/folke/trouble.nvim)
-- [vim-caddyfile](https://github.com/isobit/vim-caddyfile)
-- [vim-maximizer](https://github.com/szw/vim-maximizer)
 - [which-key.nvim](https://github.com/folke/which-key.nvim)
 - [workspace-diagnostics.nvim](https://github.com/artemave/workspace-diagnostics.nvim)
 - [yazi.nvim](https://github.com/mikavilpas/yazi.nvim)

@@ -7,9 +7,9 @@ local sources_default = {
   "snippets",
 }
 
-if vim.g.ai then
-  -- table.insert(sources_default, "avante")
-end
+-- if vim.g.ai then
+-- table.insert(sources_default, "avante")
+-- end
 
 local border = {
   { "╭", "FloatBorder" },
