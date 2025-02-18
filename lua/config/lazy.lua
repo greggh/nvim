@@ -28,7 +28,7 @@ require("lazy").setup("plugins", {
   rocks = { enabled = false }, -- disable luarocks
   ui = {
     custom_keys = {
-      ["<C-r>"] = {
+      ["<localleader>h"] = {
         function(_)
           local plugins = require("lazy.core.config").plugins
           local file_content = {

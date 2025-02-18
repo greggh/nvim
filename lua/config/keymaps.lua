@@ -65,6 +65,9 @@ local builtin_map = {
 bind.nvim_load_mapping(builtin_map)
 
 local plug_map = {
+  -- Plugin: avante
+  -- Avante's keybindings are built into the plugin itself or in avante-prompts.lua
+
   -- Plugin: arrow
   ["n|<leader>m"] = map_cmd("<CMD>Arrow open<CR>"):with_noremap():with_silent():with_desc("Arrow: Open"),
 
@@ -183,7 +186,7 @@ local plug_map = {
     :with_noremap()
     :with_silent()
     :with_desc("Gitsigns: Toggle signs"),
-  ["n|<leader>gpi"] = map_cmd("<CMD>Gitsigns preview_hunk_inline<CR>")
+  ["n|<leader>gi"] = map_cmd("<CMD>Gitsigns preview_hunk_inline<CR>")
     :with_noremap()
     :with_silent()
     :with_desc("Gitsigns: Preview hunk inline"),
@@ -517,7 +520,7 @@ wk.add({
   { "<leader>gs", desc = "Gitsigns: Stage hunk", icon = "" },
   { "<leader>gu", desc = "Gitsigns: Undo stage hunk", icon = "" },
   { "<leader>gt", desc = "Gitsigns: Toggle signs", icon = "" },
-  { "<leader>gpi", desc = "Gitsigns: Preview hunk inline", icon = "" },
+  { "<leader>gi", desc = "Gitsigns: Preview hunk inline", icon = "" },
   { "<leader>gr", desc = "Gitsigns: Reset hunk", icon = "" },
   { "<leader>gR", desc = "Gitigns: Reset buffer", icon = "" },
   { "<leader>gp", desc = "Gitsigns: Preview hunk", icon = "" },
@@ -575,3 +578,78 @@ wk.add({
   { "<leader>wtl", desc = "Move to previous tab", icon = "" },
   { "<leader>wtc", desc = "Only keep current tab", icon = "" },
 })
+
+local readme_map = {
+  ["n|<leader>pr"] = map_callback(function()
+      local plugins = require("lazy.core.config").plugins
+      local file_content = {
+        "<h1>",
+        '  <img src="https://raw.githubusercontent.com/neovim/neovim.github.io/master/logos/neovim-logo-300x87.png" alt="Neovim">',
+        "</h1>",
+        "",
+        '<a href="https://dotfyle.com/greggh/nvim"><img src="https://dotfyle.com/greggh/nvim/badges/plugins?style=flat" /></a>',
+        '<a href="https://dotfyle.com/greggh/nvim"><img src="https://dotfyle.com/greggh/nvim/badges/leaderkey?style=flat" /></a>',
+        '<a href="https://dotfyle.com/greggh/nvim"><img src="https://dotfyle.com/greggh/nvim/badges/plugin-manager?style=flat" /></a>',
+        "",
+        "![image](assets/readme/neovim.png)",
+        "",
+        "## ⚡️ Requirements",
+        "",
+        "- [Nerd Font](https://www.nerdfonts.com/)",
+        "- [lazygit](https://github.com/jesseduffield/lazygit)",
+        "- [ripgrep](https://github.com/BurntSushi/ripgrep)",
+        "- [fd](https://github.com/sharkdp/fd)",
+        "",
+        "## Install Instructions",
+        "",
+        " > Install requires Neovim 0.10+. Always review the code before installing a configuration.",
+        "",
+        "Clone the repository and install the plugins:",
+        "",
+        "```sh",
+        "git clone git@github.com:greggh/nvim ~/.config/greggh/nvim",
+        "```",
+        "",
+        "Open Neovim with this config:",
+        "",
+        "```sh",
+        "NVIM_APPNAME=greggh/nvim/ nvim",
+        "```",
+        "",
+        "## 💤 Plugin manager",
+        "",
+        "- [lazy.nvim](https://github.com/folke/lazy.nvim)",
+        "",
+        "## 🔌 Plugins",
+        "",
+      }
+      local plugins_md = {}
+      for plugin, spec in pairs(plugins) do
+        if spec.url then
+          table.insert(plugins_md, ("- [%s](%s)"):format(plugin, spec.url:gsub("%.git$", "")))
+        end
+      end
+      table.sort(plugins_md, function(a, b)
+        return a:lower() < b:lower()
+      end)
+
+      for _, p in ipairs(plugins_md) do
+        table.insert(file_content, p)
+      end
+
+      table.insert(file_content, "")
+
+      local file, err = io.open(vim.fn.stdpath("config") .. "/README.md", "w")
+      if not file then
+        error(err)
+      end
+      file:write(table.concat(file_content, "\n"))
+      file:close()
+      vim.notify("README.md succesfully generated", vim.log.levels.INFO, {})
+    end)
+    :with_noremap()
+    :with_silent()
+    :with_desc("Code Actions"),
+}
+
+bind.nvim_load_mapping(readme_map)

@@ -32,6 +32,10 @@ return {
       { "nvim-neotest/neotest-plenary" },
       { "nvim-neotest/neotest-jest" },
       { "marilari88/neotest-vitest" },
+      { "nvim-neotest/neotest-python" },
+      { "fredrikaverpil/neotest-golang" },
+      { "V13Axel/neotest-pest" },
+      { "rouge8/neotest-rust" },
     },
     -- stylua: ignore
     config = function()
@@ -50,6 +54,10 @@ return {
           require("neotest-plenary"),
           require("neotest-jest"),
           require("neotest-vitest"),
+          require("neotest-python"),
+          require("neotest-golang"),
+          require("neotest-pest"),
+          require("neotest-rust"),
         },
         status = { virtual_text = true },
         output = { open_on_run = false },
