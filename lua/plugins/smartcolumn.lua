@@ -18,7 +18,7 @@ local filetypes = {
 }
 
 if vim.g.ai then
-  table.insert(filetypes, "codecompanion")
+  table.insert(filetypes, "Avante")
 end
 
 return {

@@ -10,6 +10,6 @@ elseif vim.g.suggestions then
   table.insert(plugins, require("plugins.ai.neocodeium"))
 end
 
-table.insert(plugins, require("plugins.ai.codecompanion"))
+table.insert(plugins, require("plugins.ai.avante"))
 
 return plugins

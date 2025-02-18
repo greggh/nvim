@@ -8,7 +8,7 @@ local sources_default = {
 }
 
 if vim.g.ai then
-  table.insert(sources_default, "codecompanion")
+  -- table.insert(sources_default, "avante")
 end
 
 local border = {
@@ -26,7 +26,9 @@ return {
   "saghen/blink.cmp",
   event = { "InsertEnter" },
   dependencies = {
+    "saghen/blink.compat",
     "mikavilpas/blink-ripgrep.nvim",
+    "dmitmel/cmp-cmdline-history",
     {
       "L3MON4D3/LuaSnip",
       version = "v2.*",
@@ -157,6 +159,24 @@ return {
           name = "snippets",
           module = "blink.cmp.sources.snippets",
         },
+        cmdline_history_cmd = {
+          name = "cmdline_history",
+          module = "blink.compat.source",
+          max_items = 5,
+          score_offset = -2,
+          opts = {
+            history_type = "cmd",
+          },
+        },
+        cmdline_history_search = {
+          name = "cmdline_history",
+          module = "blink.compat.source",
+          max_items = 5,
+          score_offset = -2,
+          opts = {
+            history_type = "search",
+          },
+        },
         ripgrep = {
           module = "blink-ripgrep",
           name = "Ripgrep",
@@ -246,10 +266,10 @@ return {
       sources = function()
         local type = vim.fn.getcmdtype()
         if type == "/" or type == "?" then
-          return { "buffer" }
+          return { "buffer", "cmdline_history_search" }
         end
-        if type == ":" then
-          return { "cmdline" }
+        if type == ":" or type == "@" then
+          return { "cmdline", "cmdline_history_cmd" }
         end
         return {}
       end,
