@@ -108,7 +108,6 @@ NVIM_APPNAME=greggh/nvim/ nvim
 - [quicker.nvim](https://github.com/stevearc/quicker.nvim)
 - [rainbow-delimiters.nvim](https://github.com/HiPhish/rainbow-delimiters.nvim)
 - [smart-splits.nvim](https://github.com/mrjones2014/smart-splits.nvim)
-- [smartcolumn.nvim](https://github.com/m4xshen/smartcolumn.nvim)
 - [snacks.nvim](https://github.com/folke/snacks.nvim)
 - [suda](https://github.com/lambdalisue/suda.vim)
 - [symbol-usage.nvim](https://github.com/Wansmer/symbol-usage.nvim)
