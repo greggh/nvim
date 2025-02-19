@@ -42,7 +42,7 @@ local avante_fix_bugs = "Fix the bugs inside the following codes if any"
 local avante_add_tests = "Implement tests for the following code"
 
 require("which-key").add({
-  { "<leader>a", group = "Avante" }, -- NOTE: add for avante.nvim
+  { "<leader>a", group = "AI Tools" }, -- NOTE: add for avante.nvim
   {
     mode = { "n", "v" },
     {
@@ -126,7 +126,7 @@ require("which-key").add({
 })
 
 require("which-key").add({
-  { "<leader>a", group = "Avante" }, -- NOTE: add for avante.nvim
+  { "<leader>a", group = "AI Tools" }, -- NOTE: add for avante.nvim
   {
     mode = { "v" },
     {
