@@ -41,13 +41,13 @@ local builtin_map = {
   ["v|>"] = map_cmd(">gv"):with_desc("edit: Increase indent"),
 
   -- Builtin: suckless
+  -- ["i|/"] = map_cmd("<Nop>"):with_noremap():with_silent():with_desc(""),
   ["n|Y"] = map_cmd("y$"):with_desc("edit: Yank text to EOL"),
   ["n|D"] = map_cmd("d$"):with_desc("edit: Delete text to EOL"),
   ["n|n"] = map_cmd("nzzzv"):with_noremap():with_desc("edit: Next search result"),
   ["n|N"] = map_cmd("Nzzzv"):with_noremap():with_desc("edit: Prev search result"),
   ["n|J"] = map_cmd("mzJ`z"):with_noremap():with_desc("edit: Join next line"),
   ["n|<S-Tab>"] = map_cr("normal za"):with_noremap():with_silent():with_desc("edit: Toggle code fold"),
-  ["n|<leader>o"] = map_cr("setlocal spell! spelllang=en_us"):with_desc("edit: Toggle spell check"),
 
   -- Builtin: terminal
   ["t|<C-w>h"] = map_cmd("<Cmd>wincmd h<CR>"):with_silent():with_noremap():with_desc("window: Focus left"),

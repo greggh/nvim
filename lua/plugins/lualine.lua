@@ -14,18 +14,7 @@ return {
         section_separators = { left = "", right = "" },
         globalstatus = true,
         disabled_filetypes = {
-          statusline = {
-            "grug-far",
-            "lazy",
-            "lazydo",
-            "lazygit",
-            "mason",
-            "minifiles",
-            "snacks_dashboard",
-            "snacks_terminal",
-            "snacks_picker_input",
-            "yazi",
-          },
+          statusline = vim.g.ignore_filetypes,
         },
       },
       sections = {

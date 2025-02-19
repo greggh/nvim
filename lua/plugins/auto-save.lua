@@ -1,16 +1,3 @@
-local EXCLUDED_FILETYPES = {
-  "grug-far",
-  "lazy",
-  "lazydo",
-  "lazygit",
-  "mason",
-  "minifiles",
-  "snacks_dashboard",
-  "snacks_terminal",
-  "snacks_picker_input",
-  "yazi",
-}
-
 local autosave_group = vim.api.nvim_create_augroup("autosave", {})
 
 local setup_autosave_autocmds = function()
@@ -52,7 +39,7 @@ return {
       end
 
       -- don't save for EXCLUDED_FILETYPES
-      if vim.list_contains(EXCLUDED_FILETYPES, bufVar("&filetype")) then
+      if vim.list_contains(vim.g.ignore_filetypes, bufVar("&filetype")) then
         return false
       end
 

@@ -189,68 +189,119 @@ return {
       callback = function(event)
         local opts = { buffer = event.buf, silent = true }
         local bind = require("utils.keymap-bind")
+        local map_cr = bind.map_cr
         local map_callback = bind.map_callback
         local lsp_map = {
+          ["n|gr"] = map_callback(function()
+              Snacks.picker.lsp_references()
+            end)
+            :with_noremap()
+            :with_silent()
+            :with_desc("Show LSP references"),
+          ["n|gD"] = map_callback(function()
+              vim.lsp.buf.declaration()
+            end)
+            :with_noremap()
+            :with_silent()
+            :with_desc("Go to declaration"),
+          ["n|gd"] = map_callback(function()
+              Snacks.picker.lsp_definitions()
+            end)
+            :with_noremap()
+            :with_silent()
+            :with_desc("Show LSP definitions"),
+          ["n|gi"] = map_callback(function()
+              Snacks.picker.lsp_implementations()
+            end)
+            :with_noremap()
+            :with_silent()
+            :with_desc("Show LSP implementations"),
+          ["n|gt"] = map_callback(function()
+              Snacks.picker.lsp_type_definitions()
+            end)
+            :with_noremap()
+            :with_silent()
+            :with_desc("Show LSP type definitions"),
+          ["n|gb"] = map_callback(function()
+              Snacks.picker.diagnostics_buffer()
+            end)
+            :with_noremap()
+            :with_silent()
+            :with_desc("Show buffer diagnostics"),
+          ["n|gl"] = map_callback(function()
+              vim.diagnostic.open_float()
+            end)
+            :with_noremap()
+            :with_silent()
+            :with_desc("Show line diagnostics"),
+          ["n|gp"] = map_callback(function()
+              vim.diagnostic.goto_prev()
+            end)
+            :with_noremap()
+            :with_silent()
+            :with_desc("Go to previous diagnostic"),
+          ["n|gn"] = map_callback(function()
+              vim.diagnostic.goto_next()
+            end)
+            :with_noremap()
+            :with_silent()
+            :with_desc("Go to next diagnostic"),
+
           ["n|<leader>lr"] = map_callback(function()
-              require("mason").toggle()
+              Snacks.picker.lsp_references()
             end)
             :with_noremap()
             :with_silent()
             :with_desc("Show LSP references"),
           ["n|<leader>lk"] = map_callback(function()
-              require("mason").toggle()
+              vim.lsp.buf.declaration()
             end)
             :with_noremap()
             :with_silent()
             :with_desc("Go to declaration"),
           ["n|<leader>ld"] = map_callback(function()
-              require("mason").toggle()
+              Snacks.picker.lsp_definitions()
             end)
             :with_noremap()
             :with_silent()
             :with_desc("Show LSP definitions"),
           ["n|<leader>li"] = map_callback(function()
-              require("mason").toggle()
+              Snacks.picker.lsp_implementations()
             end)
             :with_noremap()
             :with_silent()
             :with_desc("Show LSP implementations"),
           ["n|<leader>lt"] = map_callback(function()
-              require("mason").toggle()
+              Snacks.picker.lsp_type_definitions()
             end)
             :with_noremap()
             :with_silent()
             :with_desc("Show LSP type definitions"),
           ["n|<leader>lb"] = map_callback(function()
-              require("mason").toggle()
+              Snacks.picker.diagnostics_buffer()
             end)
             :with_noremap()
             :with_silent()
             :with_desc("Show buffer diagnostics"),
           ["n|<leader>ll"] = map_callback(function()
-              require("mason").toggle()
+              vim.diagnostic.open_float()
             end)
             :with_noremap()
             :with_silent()
             :with_desc("Show line diagnostics"),
           ["n|<leader>l["] = map_callback(function()
-              require("mason").toggle()
+              vim.diagnostic.goto_prev()
             end)
             :with_noremap()
             :with_silent()
             :with_desc("Go to previous diagnostic"),
           ["n|<leader>l]"] = map_callback(function()
-              require("mason").toggle()
+              vim.diagnostic.goto_next()
             end)
             :with_noremap()
             :with_silent()
             :with_desc("Go to next diagnostic"),
-          ["n|<leader>lz"] = map_callback(function()
-              require("mason").toggle()
-            end)
-            :with_noremap()
-            :with_silent()
-            :with_desc("Restart LSP"),
+          ["n|<leader>lz"] = map_cr("LspRestart"):with_noremap():with_silent():with_desc("Restart LSP"),
         }
 
         bind.nvim_load_mapping(lsp_map)

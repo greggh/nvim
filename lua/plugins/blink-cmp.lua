@@ -43,8 +43,9 @@ return {
   },
   version = "*",
   opts = {
+    -- don't show completions or signature help for these filetypes. Keymaps are also disabled.
     enabled = function()
-      return not vim.tbl_contains({ "snacks_picker_input" }, vim.bo.filetype)
+      return not vim.tbl_contains(vim.g.ignore_filetypes, vim.bo.filetype)
     end,
     keymap = {
       preset = "default", -- "default" | "enter" | "super-tab"

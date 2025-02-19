@@ -11,6 +11,32 @@ vim.g.suggestions = require("utils.flags").get_flags("suggestions") or false
 vim.g.tests = require("utils.flags").get_flags("tests") or false
 vim.g.ide_view_open = false
 vim.g.current_session = nil
+vim.g.ignore_filetypes = {
+  "qf",
+  "Avante",
+  "netrw",
+  "NvimTree",
+  "lazy",
+  "mason",
+  "grug-far",
+  "lazydo",
+  "lazygit",
+  "minifiles",
+  "snacks_dashboard",
+  "snacks_terminal",
+  "snacks_picker_input",
+  "yazi",
+  "trouble",
+  "Trouble",
+  "diffview",
+  "checkhealth",
+  "dapui",
+  "lspinfo",
+  "noice",
+  "minifiles",
+  "notify",
+  "prompt",
+}
 ------------------------------------
 vim.opt.listchars = { tab = "» ", trail = "·", nbsp = "␣" }
 vim.opt.shortmess:append({ c = true })
