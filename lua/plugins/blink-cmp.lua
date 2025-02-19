@@ -262,19 +262,6 @@ return {
         },
       },
     },
-
-    cmdline = {
-      sources = function()
-        local type = vim.fn.getcmdtype()
-        if type == "/" or type == "?" then
-          return { "buffer", "cmdline_history_search" }
-        end
-        if type == ":" or type == "@" then
-          return { "cmdline", "cmdline_history_cmd" }
-        end
-        return {}
-      end,
-    },
   },
 
   opts_extend = { "sources.default" },

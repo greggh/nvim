@@ -67,7 +67,7 @@ return {
       desc = "Picker: nvim config",
     },
     {
-      "<leader>f<backspace>",
+      "<leader>fu",
       function()
         Snacks.picker.resume()
       end,
