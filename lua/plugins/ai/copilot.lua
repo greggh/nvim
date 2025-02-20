@@ -9,7 +9,7 @@ return {
 
     copilot.setup({
       suggestion = {
-        enabled = vim.g.suggestions,
+        enabled = false, --vim.g.suggestions,
         auto_trigger = true,
         hide_during_completion = true,
         debounce = 75,
