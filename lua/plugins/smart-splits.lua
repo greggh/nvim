@@ -3,4 +3,7 @@ return {
   --  build = "./kitty/install-kittens.bash",
   event = "VeryLazy",
   -- stylua: ignore
+  config = function()
+    require("smart-splits").setup()
+  end,
 }

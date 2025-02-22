@@ -8,4 +8,7 @@ return {
       lsp = true,
     },
   },
+  config = function(_, opts)
+    require("ccc").setup(opts)
+  end,
 }

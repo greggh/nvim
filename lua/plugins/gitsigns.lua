@@ -16,4 +16,7 @@ return {
     signs = icons,
     signs_staged = icons,
   },
+  config = function(_, opts)
+    require("gitsigns").setup(opts)
+  end,
 }

@@ -26,4 +26,7 @@ return {
       previewLocation = { n = "<localleader>i" },
     },
   },
+  config = function(_, opts)
+    require("grug-far").setup(opts)
+  end,
 }

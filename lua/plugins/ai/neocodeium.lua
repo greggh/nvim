@@ -16,8 +16,7 @@ return {
       desc = "Neocodeium: accept suggestion",
     },
   },
-  opts = {
-    show_label = false,
-    silent = true,
-  },
+  config = function()
+    require("neocodeium").setup({ show_label = false, silent = true })
+  end,
 }
