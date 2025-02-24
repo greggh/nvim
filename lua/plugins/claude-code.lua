@@ -1,11 +1,12 @@
+-- Instead of using a local plugin, we'll just initialize our Claude Code functionality
+-- directly from this plugin file
+
 return {
-  name = "claude-code",
-  dir = vim.fn.stdpath("config") .. "/lua/plugins/claude-code",
+  "claude-integration",
   lazy = false,
-  config = function()
-    -- Setup function for claude-code plugin
+  init = function()
     -- Initialize the file change detection system
     require("utils.claude").setup()
-  end,
+  end
 }
 
