@@ -434,6 +434,15 @@ local plug_map = {
     :with_noremap()
     :with_silent()
     :with_desc("Rename file"),
+
+  -- Plugin: screenkey
+  ["n|<leader>ckt"] = map_cmd("<CMD>Screenkey<CR>"):with_noremap():with_silent():with_desc("Screenkey: Toggle"),
+  ["n|<leader>ckr"] = map_callback(function()
+      require("screenkey").redraw()
+    end)
+    :with_noremap()
+    :with_silent()
+    :with_desc("Screenkey: Redraw"),
 }
 
 bind.nvim_load_mapping(plug_map)

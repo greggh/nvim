@@ -44,7 +44,7 @@ return {
       { "<leader>q", group = "Quit & Save", icon = "" },
       { "<leader>s", group = "Sessions", icon = "" },
       { "<leader>t", group = "Tests", icon = "" },
-      { "<leader>u", group = "Misc", icon = "󰰑" },
+      { "<leader>u", group = "Surround", icon = "󰰑" },
       { "<leader>w", group = "Windows & Smart Splits", icon = "荒" },
       { "<leader>x", group = "Diagnostics", icon = "" },
       { "<leader>y", group = "Yank", icon = "" },
