@@ -1,5 +1,5 @@
 return {
-  "claude-code",
+  name = "claude-code",
   dir = vim.fn.stdpath("config") .. "/lua/plugins/claude-code",
   lazy = false,
   config = function()
