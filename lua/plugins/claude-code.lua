@@ -1,12 +1,14 @@
--- Instead of using a local plugin, we'll just initialize our Claude Code functionality
--- directly from this plugin file
+-- Set up the file reload detection directly from the plugin spec
+-- without requiring an external repository
 
-return {
-  "claude-integration",
-  lazy = false,
-  init = function()
-    -- Initialize the file change detection system
+-- Create a VimEnter autocommand to initialize the file change detection system
+vim.api.nvim_create_autocmd("VimEnter", {
+  callback = function()
     require("utils.claude").setup()
-  end
-}
+  end,
+  once = true,
+})
+
+-- Return an empty spec to avoid Lazy trying to load a repository
+return {}
 
