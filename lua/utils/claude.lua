@@ -5,8 +5,11 @@ local M = {}
 function M.setup()
   local augroup = vim.api.nvim_create_augroup("ClaudeCodeFileRefresh", { clear = true })
   
-  -- Create an autocommand that checks for file changes when cursor stops moving or leaving insert mode
-  vim.api.nvim_create_autocmd({ "CursorHold", "CursorHoldI", "FocusGained", "BufEnter", "InsertLeave" }, {
+  -- Create an autocommand that checks for file changes more frequently
+  vim.api.nvim_create_autocmd({ 
+    "CursorHold", "CursorHoldI", "FocusGained", "BufEnter", 
+    "InsertLeave", "TextChanged", "TermLeave", "TermEnter", "BufWinEnter"
+  }, {
     group = augroup,
     pattern = "*",
     callback = function()
@@ -16,6 +19,19 @@ function M.setup()
     end,
     desc = "Check for file changes on disk",
   })
+
+  -- Create a timer to check for file changes periodically (every 1 second)
+  local timer = vim.loop.new_timer()
+  if timer then
+    timer:start(0, 1000, vim.schedule_wrap(function()
+      -- Only check time if there's an active Claude Code terminal
+      local claude_bufnr = vim.fn.bufnr("claude-code")
+      if claude_bufnr ~= -1 and vim.api.nvim_buf_is_valid(claude_bufnr) and 
+         #vim.fn.win_findbuf(claude_bufnr) > 0 then
+        vim.cmd("silent! checktime")
+      end
+    end))
+  end
   
   -- Create an autocommand that prompts the user when a file has been changed externally
   vim.api.nvim_create_autocmd("FileChangedShellPost", {
@@ -25,6 +41,37 @@ function M.setup()
       vim.notify("File changed on disk. Buffer reloaded.", vim.log.levels.INFO)
     end,
     desc = "Notify when a file is changed externally",
+  })
+  
+  -- Set a shorter updatetime while Claude Code is open
+  local saved_updatetime = vim.o.updatetime
+  
+  -- When Claude Code opens, set a shorter updatetime
+  vim.api.nvim_create_autocmd("TermOpen", {
+    group = augroup,
+    pattern = "*",
+    callback = function()
+      local buf = vim.api.nvim_get_current_buf()
+      local buf_name = vim.api.nvim_buf_get_name(buf)
+      if buf_name:match("claude%-code$") then
+        saved_updatetime = vim.o.updatetime
+        vim.o.updatetime = 100  -- 100ms for faster checks
+      end
+    end,
+    desc = "Set shorter updatetime when Claude Code is open",
+  })
+  
+  -- When Claude Code closes, restore normal updatetime
+  vim.api.nvim_create_autocmd("TermClose", {
+    group = augroup,
+    pattern = "*",
+    callback = function()
+      local buf_name = vim.api.nvim_buf_get_name(0)
+      if buf_name:match("claude%-code$") then
+        vim.o.updatetime = saved_updatetime
+      end
+    end,
+    desc = "Restore normal updatetime when Claude Code is closed",
   })
 end
 
