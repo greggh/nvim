@@ -31,7 +31,7 @@ return {
     },
     expand = 1,
     spec = {
-      { "<leader>a", group = "AI Tools" },
+      { "<leader>a", group = "AI Tools", icon = "🧠" },
       { "<leader>b", group = "Buffers", icon = "" },
       { "<leader>c", group = "Code & Commands", icon = "" },
       { "<leader>d", group = "Debug" },

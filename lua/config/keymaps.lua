@@ -68,6 +68,30 @@ local plug_map = {
   -- Plugin: avante
   -- Avante's keybindings are built into the plugin itself or in avante-prompts.lua
 
+  -- Plugin: claude-code
+  ["n|<leader>ac"] = map_callback(function()
+    require("utils.claude").toggle_claude_code()
+  end)
+  :with_noremap()
+  :with_silent()
+  :with_desc("Claude Code: Toggle"),
+  
+  -- Claude Code with Ctrl keymap for use in terminal mode
+  ["n|<C-o>"] = map_callback(function()
+    require("utils.claude").toggle_claude_code()
+  end)
+  :with_noremap()
+  :with_silent()
+  :with_desc("Claude Code: Toggle"),
+  
+  -- Terminal mode mapping for Claude Code toggle
+  ["t|<C-o>"] = map_callback(function()
+    require("utils.claude").toggle_claude_code()
+  end)
+  :with_noremap()
+  :with_silent()
+  :with_desc("Claude Code: Toggle"),
+
   -- Plugin: arrow
   ["n|<leader>m"] = map_cmd("<CMD>Arrow open<CR>"):with_noremap():with_silent():with_desc("Arrow: Open"),
 
@@ -507,6 +531,8 @@ wk.add({ mode = "x" }, {
 
 wk.add({
   mode = "n",
+  { "<leader>ac", desc = "Claude Code: Toggle", icon = "🤖" },
+  { "<C-o>", desc = "Claude Code: Toggle", icon = "🤖" },
   { "<leader>m", desc = "Arrow: Open", icon = "󰁕" },
   { "<leader>e", desc = "Picker: Explorer", icon = "" },
   { "<leader>f/", desc = "Yazi: Current file", icon = "" },

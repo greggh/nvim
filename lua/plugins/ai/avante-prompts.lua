@@ -95,7 +95,7 @@ require("which-key").add({
       desc = "Explain Code(ask)",
     },
     {
-      "<leader>ac",
+      "<leader>ap",
       function()
         require("avante.api").ask({ question = avante_complete_code })
       end,
