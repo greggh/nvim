@@ -1,6 +1,33 @@
 -- Claude Code terminal toggle utility
 local M = {}
 
+-- Setup autocommands for file change detection
+function M.setup()
+  local augroup = vim.api.nvim_create_augroup("ClaudeCodeFileRefresh", { clear = true })
+  
+  -- Create an autocommand that checks for file changes when cursor stops moving or leaving insert mode
+  vim.api.nvim_create_autocmd({ "CursorHold", "CursorHoldI", "FocusGained", "BufEnter", "InsertLeave" }, {
+    group = augroup,
+    pattern = "*",
+    callback = function()
+      if vim.fn.filereadable(vim.fn.expand("%")) == 1 then
+        vim.cmd("checktime")
+      end
+    end,
+    desc = "Check for file changes on disk",
+  })
+  
+  -- Create an autocommand that prompts the user when a file has been changed externally
+  vim.api.nvim_create_autocmd("FileChangedShellPost", {
+    group = augroup,
+    pattern = "*",
+    callback = function()
+      vim.notify("File changed on disk. Buffer reloaded.", vim.log.levels.INFO)
+    end,
+    desc = "Notify when a file is changed externally",
+  })
+end
+
 -- Toggle the Claude Code terminal window
 function M.toggle_claude_code()
   -- Check if Claude Code is already running

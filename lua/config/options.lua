@@ -74,6 +74,7 @@ vim.o.tabstop = 2
 vim.o.termguicolors = true
 vim.o.timeoutlen = 300
 vim.o.updatetime = 250
+vim.o.autoread = true
 vim.o.wrap = false
 ------------------------------------
 vim.schedule(function()

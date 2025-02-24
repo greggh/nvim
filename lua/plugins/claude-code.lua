@@ -1,9 +1,10 @@
 return {
-  -- "local/claude-code",
-  -- lazy = true,
-  -- config = function()
-  --   -- Setup function for claude-code plugin
-  --   -- This is a placeholder plugin for the Claude Code terminal integration
-  -- end,
+  "local/claude-code",
+  lazy = false,
+  config = function()
+    -- Setup function for claude-code plugin
+    -- Initialize the file change detection system
+    require("utils.claude").setup()
+  end,
 }
 
