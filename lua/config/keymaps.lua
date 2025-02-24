@@ -512,8 +512,7 @@ wk.add({ mode = "x" }, {
 
 wk.add({
   mode = "n",
-  { "<leader>ac", desc = "Claude Code: Toggle", icon = "🤖" },
-  { "<C-o>", desc = "Claude Code: Toggle", icon = "🤖" },
+  -- Claude Code keymaps are now handled by the plugin
   { "<leader>m", desc = "Arrow: Open", icon = "󰁕" },
   { "<leader>e", desc = "Picker: Explorer", icon = "" },
   { "<leader>f/", desc = "Yazi: Current file", icon = "" },
