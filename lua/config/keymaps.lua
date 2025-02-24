@@ -68,29 +68,10 @@ local plug_map = {
   -- Plugin: avante
   -- Avante's keybindings are built into the plugin itself or in avante-prompts.lua
 
-  -- Plugin: claude-code
-  ["n|<leader>ac"] = map_callback(function()
-    require("utils.claude").toggle_claude_code()
-  end)
-  :with_noremap()
-  :with_silent()
-  :with_desc("Claude Code: Toggle"),
-  
-  -- Claude Code with Ctrl keymap for use in terminal mode
-  ["n|<C-o>"] = map_callback(function()
-    require("utils.claude").toggle_claude_code()
-  end)
-  :with_noremap()
-  :with_silent()
-  :with_desc("Claude Code: Toggle"),
-  
-  -- Terminal mode mapping for Claude Code toggle
-  ["t|<C-o>"] = map_callback(function()
-    require("utils.claude").toggle_claude_code()
-  end)
-  :with_noremap()
-  :with_silent()
-  :with_desc("Claude Code: Toggle"),
+  -- Plugin: claude-code (now handled by the plugin itself)
+  -- The keymaps are now set up by the claude-code.nvim plugin
+  -- These local keymaps are removed to avoid conflicts
+  -- See lua/plugins/claude-code.lua for configuration
 
   -- Plugin: arrow
   ["n|<leader>m"] = map_cmd("<CMD>Arrow open<CR>"):with_noremap():with_silent():with_desc("Arrow: Open"),
