@@ -7,9 +7,9 @@ local sources_default = {
   "snippets",
 }
 
--- if vim.g.ai then
--- table.insert(sources_default, "avante")
--- end
+if vim.g.ai then
+  table.insert(sources_default, "avante")
+end
 
 local border = {
   { "╭", "FloatBorder" },
@@ -183,6 +183,7 @@ return {
           name = "Ripgrep",
           -- the options below are optional, some default values are shown
           ---@module "blink-ripgrep"
+          ---@diagnostic disable-next-line: undefined-doc-name
           ---@type blink-ripgrep.Options
           opts = {
             -- For many options, see `rg --help` for an exact description of
@@ -200,7 +201,7 @@ return {
             -- Examples:
             -- "1024" (bytes by default), "200K", "1M", "1G", which will
             -- exclude files larger than that size.
-            max_filesize = "1M",
+            max_filesize = "2M",
             -- Specifies how to find the root of the project where the ripgrep
             -- search will start from. Accepts the same options as the marker
             -- given to `:h vim.fs.root()` which offers many possibilities for
