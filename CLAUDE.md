@@ -12,6 +12,7 @@
 - Find in workspace: <leader>xw
 - Code actions: <leader>ca
 - Run tests: <leader>tr (nearest), <leader>tt (file)
+- Claude Code: <leader>ac (toggle in normal mode), <C-o> (toggle in terminal mode)
 
 ## Code Style Guidelines
 - Use 2 spaces for indentation (tabstop=2, shiftwidth=2)
@@ -27,3 +28,8 @@
 - Use lazy.nvim format: return { "author/plugin", config = function() ... end }
 - Add new keybindings through bind.nvim_load_mapping()
 - Register keybinding groups in which-key.lua
+
+## Claude Code Settings
+- Toggles: <leader>ac (normal mode), <C-o> (terminal mode)
+- Window settings: 50% height at bottom of screen
+- Git integration: Automatically uses git project root as CWD when available
