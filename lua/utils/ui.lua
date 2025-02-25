@@ -64,7 +64,7 @@ M.maximize_current_split = function()
   end
 end
 
--- UI status feedback
+-- UI status feedback using Noice's pretty notifications
 M.notify_operation_status = function(operation, status, details)
   local icons = {
     success = " ",
@@ -74,7 +74,8 @@ M.notify_operation_status = function(operation, status, details)
   }
   
   local icon = icons[status] or icons.info
-  local message = operation .. (details and (": " .. details) or "")
+  local title = operation
+  local message = details or ""
   
   local level = ({
     success = vim.log.levels.INFO,
@@ -83,7 +84,20 @@ M.notify_operation_status = function(operation, status, details)
     warning = vim.log.levels.WARN
   })[status] or vim.log.levels.INFO
   
-  vim.notify(icon .. " " .. message, level)
+  -- Check if Noice is available
+  local has_noice, noice = pcall(require, "noice.notify")
+  if has_noice then
+    noice.notify(message, level, {
+      title = icon .. " " .. title,
+      replace = true,
+      render = "compact",
+      timeout = 3000,
+      animate = true,
+    })
+  else
+    -- Fallback to regular notification
+    vim.notify(icon .. " " .. title .. (message ~= "" and (": " .. message) or ""), level)
+  end
 end
 
 return M
