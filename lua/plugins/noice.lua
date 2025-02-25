@@ -26,20 +26,21 @@ return {
       notify = {
         -- Enable Noice for vim.notify
         enabled = true,
-        view = "notify",
+        view = "popup",  -- Changed from notify to popup for boxed style
         -- Set animation style
         opts = {
-          replace = true,
-          timeout = 3000,
-          render = "default",
+          replace = false,
+          timeout = 5000,
+          render = "compact",
           stages = "fade",
           with_icon = true,
+          top_down = false  -- Display from bottom up
         },
       },
       messages = {
         -- Enable Noice UI for messages
         enabled = true,
-        view = "notify",
+        view = "popup",  -- Changed to popup view
         view_search = false,
       },
       lsp = {
@@ -69,6 +70,34 @@ return {
           size = { min_height = 4, max_height = 20, width = "auto" },
           position = { row = 1, col = "100%" },
           border = { style = "rounded" },
+        },
+        popup = {
+          backend = "popup",
+          relative = "editor",
+          focusable = false,
+          enter = false,
+          zindex = 60,
+          position = { row = 3, col = "100%-1" },  -- Top right
+          size = { 
+            width = "40%", 
+            height = "auto",
+            min_width = 30,
+            max_width = 80,
+            max_height = 20,
+          },
+          win_options = {
+            winblend = 0,        -- Solid background
+            winhighlight = {
+              Normal = "NoicePopup",
+              FloatBorder = "NoicePopupBorder",
+              IncSearch = "",
+              Search = "",
+            },
+          },
+          border = {
+            style = "rounded",   
+            padding = { 0, 1 },
+          },
         },
       },
       routes = {
