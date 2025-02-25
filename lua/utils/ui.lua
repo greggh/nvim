@@ -90,17 +90,11 @@ M.notify_operation_status = function(operation, status, details)
   local has_noice, noice = pcall(require, "noice")
 
   if has_noice then
-    -- Use the correct Noice API function for notifications with better styling
-    -- Force specific options to get exactly the style we want
+    -- Simplified call that just lets nvim-notify handle the details
     noice.notify(message, level, {
       title = title,
-      icon = icon,       -- Pass icon separately for proper display
-      replace = false,
+      icon = icon,        -- Pass icon separately for proper display
       timeout = 5000,
-      render = "minimal", -- Use minimal render for cleaner look
-      animate = true,     -- Add animation
-      level = level,      -- Force level for proper coloring
-      kind = "notify",    -- Force "notify" kind for consistent styling
     })
   else
     -- Fallback to standard notification
