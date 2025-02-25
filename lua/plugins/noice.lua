@@ -11,9 +11,12 @@ return {
   },
   config = function()
     require("noice").setup({
-      bottom_search = true,
-      preset = {
+      -- Use a specific preset that includes nice notifications
+      presets = {
+        bottom_search = true,
         command_palette = true,
+        long_message_to_split = true,
+        inc_rename = false,
         lsp_doc_border = true,
       },
       cmdline = {
@@ -26,21 +29,14 @@ return {
       notify = {
         -- Enable Noice for vim.notify
         enabled = true,
-        view = "popup",  -- Changed from notify to popup for boxed style
-        -- Set animation style
-        opts = {
-          replace = false,
-          timeout = 5000,
-          render = "compact",
-          stages = "fade",
-          with_icon = true,
-          top_down = false  -- Display from bottom up
-        },
+        -- Explicitly force the notify view
+        view = "notify",
       },
       messages = {
         -- Enable Noice UI for messages
         enabled = true,
-        view = "popup",  -- Changed to popup view
+        -- Explicitly set notify view for messages too
+        view = "notify",
         view_search = false,
       },
       lsp = {
@@ -55,48 +51,58 @@ return {
         },
         signature = { enabled = false }, -- provided by blink.cmp
       },
+      -- Override the default view - force popup with nice styling
       views = {
-        hover = {
-          border = { style = "rounded" },
-          position = { row = 2, col = 2 },
-          size = { max_width = 80, max_height = 20 }, -- Limit size
+        mini = { 
+          -- Completely disable the mini view
+          win_options = { winblend = 100 },
         },
-        notify = {
-          backend = "notify",
-          relative = "editor",
-          timeout = 3000,
-          replace = false,
-          level = 0,
-          size = { min_height = 4, max_height = 20, width = "auto" },
-          position = { row = 1, col = "100%" },
-          border = { style = "rounded" },
-        },
-        popup = {
-          backend = "popup",
-          relative = "editor",
-          focusable = false,
-          enter = false,
-          zindex = 60,
-          position = { row = 3, col = "100%-1" },  -- Top right
-          size = { 
-            width = "40%", 
-            height = "auto",
-            min_width = 30,
-            max_width = 80,
-            max_height = 20,
+        cmdline_popup = {
+          position = {
+            row = 5,
+            col = "50%",
           },
-          win_options = {
-            winblend = 0,        -- Solid background
-            winhighlight = {
-              Normal = "NoicePopup",
-              FloatBorder = "NoicePopupBorder",
-              IncSearch = "",
-              Search = "",
-            },
+          size = {
+            width = 60,
+            height = "auto",
+          },
+        },
+        popupmenu = {
+          relative = "editor",
+          position = {
+            row = 8,
+            col = "50%",
+          },
+          size = {
+            width = 60,
+            height = 10,
           },
           border = {
-            style = "rounded",   
+            style = "rounded",
             padding = { 0, 1 },
+          },
+          win_options = {
+            winhighlight = { Normal = "Normal", FloatBorder = "DiagnosticInfo" },
+          },
+        },
+        notify = {
+          -- This is the important part - make notifications appear properly
+          replace = false,
+          merge = false,
+          render = "wrapped-compact",
+          timeout = 5000,
+          top_down = false,
+          backend = "popup",
+          relative = "editor",
+          position = { row = 3, col = "99%" },
+          size = { width = 40, height = "auto", max_height = 20 },
+          border = { style = "rounded", padding = { 0, 1 } },
+          win_options = {
+            winblend = 0, -- No transparency
+            winhighlight = {
+              Normal = "NormalFloat",
+              FloatBorder = "FloatBorder",
+            },
           },
         },
       },
@@ -119,9 +125,7 @@ return {
           opts = { skip = true },
         },
       },
-      presets = {
-        long_message_to_split = true, -- Improve handling of long messages
-      },
+      -- Removed separate presets section as it's now in the main config
     })
   end,
 }
