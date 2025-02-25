@@ -84,20 +84,22 @@ M.notify_operation_status = function(operation, status, details)
     warning = vim.log.levels.WARN
   })[status] or vim.log.levels.INFO
 
-  -- Get direct access to Noice if available
+  -- Construct the full message with icon, title and details
+  local full_message = icon .. " " .. title .. (message ~= "" and (": " .. message) or "")
+  
+  -- Check if Noice is available using pcall
   local has_noice, noice = pcall(require, "noice")
   
-  if has_noice and noice.api and noice.api.status then
-    -- Use Noice's status API directly for pretty notifications
-    noice.api.status(icon .. " " .. title .. (message ~= "" and (": " .. message) or ""), {
+  if has_noice then
+    -- Use the correct Noice API function for notifications
+    noice.notify(full_message, level, {
       title = title,
-      level = level,
       replace = true,
       timeout = 3000,
     })
   else
     -- Fallback to standard notification
-    vim.notify(icon .. " " .. title .. (message ~= "" and (": " .. message) or ""), level)
+    vim.notify(full_message, level)
   end
 end
 
