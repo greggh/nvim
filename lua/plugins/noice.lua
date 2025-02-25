@@ -2,6 +2,10 @@
 return {
   "folke/noice.nvim",
   event = { "VeryLazy" },
+  dependencies = {
+    -- Required dependency for notifications
+    "rcarriga/nvim-notify",
+  },
   keys = {
     {
       "<leader>nm",
