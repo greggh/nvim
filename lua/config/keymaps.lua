@@ -11,7 +11,6 @@ local builtin_map = {
   ["n|<leader>qf"] = map_cr("qall!"):with_desc("edit: Force quit all (no save)"),
   ["n|<leader>qx"] = map_cr("wqall"):with_desc("edit: Save all and quit"),
   ["n|<C-s>"] = map_cu("write"):with_noremap():with_silent():with_desc("edit: Save file"),
-  ["n|<C-q>"] = map_cr("wq"):with_desc("edit: Save file and quit"),
   ["n|<A-S-q>"] = map_cr("qall!"):with_desc("edit: Force quit"),
   ["n|<A-q>"] = map_cr("wqall"):with_desc("edit: Save file and quit"),
   ["n|<leader>qz"] = map_cr("quitall!"):with_desc("edit: Force quit"),
@@ -72,6 +71,7 @@ local plug_map = {
   -- The keymaps are now set up by the claude-code.nvim plugin
   -- These local keymaps are removed to avoid conflicts
   -- See lua/plugins/claude-code.lua for configuration
+  ["nt|<C-O>"] = map_cmd("<CMD>ClaudeCode<CR>"):with_noremap():with_silent():with_desc("Claude Code: Toggle"),
 
   -- Plugin: arrow
   ["n|<leader>m"] = map_cmd("<CMD>Arrow open<CR>"):with_noremap():with_silent():with_desc("Arrow: Open"),
@@ -468,6 +468,35 @@ local misc_map = {
     :with_noremap()
     :with_silent()
     :with_desc("Populate workspace diagnostics"),
+    
+  -- Folding controls
+  ["n|<leader>z0"] = map_callback(function() require("utils.ui").toggle_fold_level(0) end)
+    :with_noremap():with_silent():with_desc("Toggle level 0 folds"),
+  ["n|<leader>z1"] = map_callback(function() require("utils.ui").toggle_fold_level(1) end)
+    :with_noremap():with_silent():with_desc("Toggle level 1 folds"),
+  ["n|<leader>z2"] = map_callback(function() require("utils.ui").toggle_fold_level(2) end)
+    :with_noremap():with_silent():with_desc("Toggle level 2 folds"),
+    
+  -- Enhanced window management
+  ["n|<leader>wm"] = map_callback(function() require("utils.ui").maximize_current_split() end)
+    :with_noremap():with_silent():with_desc("Window: Toggle maximize"),
+    
+  -- Enhanced buffer management
+  ["n|<C-PageDown>"] = map_cmd("<CMD>bn<CR>"):with_noremap():with_silent():with_desc("Buffer: Next"),
+  ["n|<C-PageUp>"] = map_cmd("<CMD>bp<CR>"):with_noremap():with_silent():with_desc("Buffer: Previous"),
+  ["n|<leader>bw"] = map_callback(function()
+    -- Only delete buffer when not last
+    if #vim.fn.getbufinfo({buflisted = 1}) > 1 then
+      vim.cmd("bd")
+    else
+      require("utils.ui").notify_operation_status("Buffer close", "warning", "Cannot close last buffer")
+    end
+  end):with_noremap():with_silent():with_desc("Buffer: Close (safe)"),
+  ["n|<leader>bo"] = map_callback(function()
+    -- Close all buffers except current
+    vim.cmd("%bd|e#|bd#")
+    require("utils.ui").notify_operation_status("Buffers", "success", "Closed all except current")
+  end):with_noremap():with_silent():with_desc("Buffer: Close all except current"),
 }
 
 bind.nvim_load_mapping(misc_map)
@@ -586,6 +615,22 @@ wk.add({
   { "<leader>wth", desc = "Move to next tab", icon = "" },
   { "<leader>wtl", desc = "Move to previous tab", icon = "" },
   { "<leader>wtc", desc = "Only keep current tab", icon = "" },
+})
+
+-- Register folding keymaps with which-key
+wk.add({
+  mode = "n",
+  { "<leader>z0", desc = "Toggle level 0 folds", icon = "󰈔" },
+  { "<leader>z1", desc = "Toggle level 1 folds", icon = "󰈕" },
+  { "<leader>z2", desc = "Toggle level 2 folds", icon = "󰈖" },
+})
+
+-- Register window/buffer management keymaps with which-key
+wk.add({
+  mode = "n",
+  { "<leader>wm", desc = "Toggle maximize window", icon = "󰆟" },
+  { "<leader>bw", desc = "Close buffer (safe)", icon = "󰅖" },
+  { "<leader>bo", desc = "Close all buffers except current", icon = "󰆐" },
 })
 
 local readme_map = {

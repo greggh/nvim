@@ -76,6 +76,24 @@ vim.o.timeoutlen = 300
 vim.o.updatetime = 250
 vim.o.autoread = true
 vim.o.wrap = false
+-- Folding configuration using Treesitter
+vim.o.foldmethod = "expr"
+vim.o.foldexpr = "nvim_treesitter#foldexpr()"
+vim.o.foldlevelstart = 99  -- Start with all folds open
+
+-- Modern Neovim 0.10+ features
+vim.o.splitkeep = "screen"      -- Maintain window view on splits
+vim.o.smoothscroll = true       -- Smooth scrolling for half-page jumps
+vim.o.exrc = true               -- Per-project configuration
+vim.o.mousemoveevent = true     -- Enable mouse move events
+vim.o.cmdheight = 0             -- Hide cmdline when not in use for more space
+
+-- Better gutter configuration
+vim.o.signcolumn = "auto:2"
+vim.o.statuscolumn = "%=%{v:virtnum < 1 ? (v:relnum ? v:relnum : v:lnum) : ''}%=%s"
+
+-- Enable modern diff algorithm
+vim.opt.diffopt:append({ "algorithm:histogram", "indent-heuristic" })
 ------------------------------------
 vim.schedule(function()
   vim.o.clipboard = vim.env.SSH_TTY and "" or "unnamedplus"

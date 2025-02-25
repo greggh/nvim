@@ -55,6 +55,10 @@ return {
             completion = {
               callSnippet = "Replace",
             },
+            workspace = {
+              library = vim.api.nvim_get_runtime_file("", true),
+              checkThirdParty = false,
+            },
           },
         },
       },
@@ -145,6 +149,20 @@ return {
     ---------------------
     local capabilities = vim.lsp.protocol.make_client_capabilities()
     capabilities = vim.tbl_deep_extend("force", capabilities, require("blink.cmp").get_lsp_capabilities())
+    
+    -- Add folding range capability
+    capabilities.textDocument.foldingRange = {
+      dynamicRegistration = false,
+      lineFoldingOnly = true
+    }
+
+    ---------------------
+    -- memory limiting for LSP servers
+    ---------------------
+    local function get_memory_limit_mb()
+      -- Adapt based on available system memory
+      return 1024 -- 1GB limit for LSP servers
+    end
 
     ---------------------
     -- mason
@@ -163,6 +181,20 @@ return {
       function(server_name)
         local server = servers[server_name] or {}
         server.capabilities = vim.tbl_deep_extend("force", {}, capabilities, server.capabilities or {})
+        
+        -- Add memory limits for heavy LSP servers
+        if server_name == "vtsls" or server_name == "lua_ls" or server_name == "pyright" then
+          server.settings = server.settings or {}
+          server.settings.memory = {
+            limitMb = get_memory_limit_mb()
+          }
+        end
+        
+        -- Add offsetEncoding capability for clangd
+        if server_name == "clangd" then
+          server.capabilities.offsetEncoding = { "utf-16" }
+        end
+        
         server.on_attach = function(client, bufnr) -- Attach the following to every buffer.
           require("workspace-diagnostics").populate_workspace_diagnostics(client, bufnr) -- Populate Workspace-Diagnostics plugin information.
         end
@@ -314,7 +346,13 @@ return {
     -- error lens
     ---------------------
     vim.diagnostic.config({
-      float = { border = "rounded" },
+      float = { 
+        border = "rounded",
+        max_width = 100,
+        max_height = 20,
+        focusable = false,
+        close_events = { "CursorMoved", "BufHidden", "InsertLeave" },
+      },
       severity_sort = true,
       underline = true,
       update_in_insert = false,
@@ -322,8 +360,29 @@ return {
         spacing = 4,
         source = "if_many",
         prefix = "●",
+        format = function(diagnostic)
+          -- Trim long diagnostics
+          if #diagnostic.message > 80 then
+            return diagnostic.message:sub(1, 77) .. "..."
+          end
+          return diagnostic.message
+        end,
       },
     })
+
+    ---------------------
+    -- signature help handler
+    ---------------------
+    vim.lsp.handlers["textDocument/signatureHelp"] = vim.lsp.with(
+      vim.lsp.handlers.signature_help, {
+        border = "rounded",
+        close_events = {"CursorMoved", "BufHidden", "InsertLeave"},
+        focusable = false,
+        relative = "cursor",
+        max_height = 20,
+        max_width = 120,
+      }
+    )
 
     ---------------------
     -- inlay hints

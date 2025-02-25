@@ -35,4 +35,55 @@ function M.ToggleIDEView()
   end
 end
 
+-- Toggle fold level for better code navigation
+M.toggle_fold_level = function(level)
+  if vim.o.foldlevel == level then
+    vim.o.foldlevel = 99  -- Open all folds
+  else
+    vim.o.foldlevel = level
+  end
+end
+
+-- Maximize current split window
+M.maximize_current_split = function()
+  local current_winnr = vim.fn.winnr()
+  local windows = vim.api.nvim_list_wins()
+  
+  if #windows <= 1 then return end
+  
+  -- Store original layout
+  if not vim.g.original_win_layout then
+    vim.g.original_win_layout = vim.fn.winrestcmd()
+    vim.g.maximized_window = true
+    vim.cmd("only")
+  else
+    -- Restore original layout
+    vim.cmd(vim.g.original_win_layout)
+    vim.g.original_win_layout = nil
+    vim.g.maximized_window = false
+  end
+end
+
+-- UI status feedback
+M.notify_operation_status = function(operation, status, details)
+  local icons = {
+    success = " ",
+    error = " ",
+    info = " ",
+    warning = " "
+  }
+  
+  local icon = icons[status] or icons.info
+  local message = operation .. (details and (": " .. details) or "")
+  
+  local level = ({
+    success = vim.log.levels.INFO,
+    error = vim.log.levels.ERROR,
+    info = vim.log.levels.INFO,
+    warning = vim.log.levels.WARN
+  })[status] or vim.log.levels.INFO
+  
+  vim.notify(icon .. " " .. message, level)
+end
+
 return M

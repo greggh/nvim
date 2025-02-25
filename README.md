@@ -18,7 +18,13 @@
 
 ## Install Instructions
 
- > Install requires Neovim 0.10+. Always review the code before installing a configuration.
+ > **REQUIRES NEOVIM 0.10+**. This configuration uses several Neovim 0.10+ exclusive features including:
+ > - `vim.system()` for async operations
+ > - `splitkeep` option for better window management
+ > - Updated LSP handlers and APIs
+ > - Modern UI capabilities
+ >
+ > Always review the code before installing a configuration.
 
 Clone the repository and install the plugins:
 

@@ -1,5 +1,10 @@
 # CLAUDE.md - Neovim Configuration Guidelines
 
+## Requirements
+- Neovim 0.10+ (required for vim.system(), splitkeep, modern LSP features)
+- Nerd Font for icons
+- External dependencies: ripgrep, fd, fzf, lazygit
+
 ## Commands and Keybindings
 - Leader key is <Space>
 - Save: <C-s> or <leader>qs
@@ -13,6 +18,11 @@
 - Code actions: <leader>ca
 - Run tests: <leader>tr (nearest), <leader>tt (file)
 - Claude Code: <leader>ac (toggle in normal mode), <C-o> (toggle in terminal mode)
+- Folding: <leader>z0 (toggle level 0), <leader>z1 (toggle level 1), <leader>z2 (toggle level 2)
+- Window management: <leader>wm (toggle maximize window)
+- Buffer management: <leader>bw (close buffer safely), <leader>bo (close all buffers except current)
+- Treesitter text objects: af/if (function), ac/ic (class), aa/ia (parameter)
+- Treesitter navigation: [f/]f (prev/next function), [c/]c (prev/next class), [a/]a (prev/next parameter)
 
 ## Code Style Guidelines
 - Use 2 spaces for indentation (tabstop=2, shiftwidth=2)
