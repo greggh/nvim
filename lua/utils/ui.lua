@@ -86,15 +86,20 @@ M.notify_operation_status = function(operation, status, details)
     warning = vim.log.levels.WARN,
   })[status] or vim.log.levels.INFO
 
-  -- Check if Noice is available using pcall
-  local has_noice, noice = pcall(require, "noice")
+  -- Try to use nvim-notify directly instead of through Noice
+  local has_notify, notify = pcall(require, "notify")
 
-  if has_noice then
-    -- Simplified call that just lets nvim-notify handle the details
-    noice.notify(message, level, {
+  if has_notify then
+    -- Use nvim-notify directly for better control
+    notify(message, level, {
       title = title,
-      icon = icon,        -- Pass icon separately for proper display
-      timeout = 5000,
+      icon = icon,
+      timeout = 3000,
+      render = "default",    -- Get boxed design
+      stages = "fade",       -- Smooth animation
+      top_down = false,      -- Display from bottom to top (appears on top)
+      max_width = 80,
+      animate = true,
     })
   else
     -- Fallback to standard notification
