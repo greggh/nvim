@@ -89,7 +89,7 @@ return {
           -- This is the important part - make notifications appear properly
           replace = false,
           merge = false,
-          render = "default",  -- Use default render to show title in the box
+          render = "minimal",  -- Use minimal render for cleaner look
           timeout = 5000,
           top_down = false,
           backend = "popup",
@@ -99,35 +99,36 @@ return {
           border = { 
             style = "rounded", 
             padding = { 0, 1 },
-            text = {
-              top = " Notification ",
-            },
+            -- Remove the "Notification" text
           },
           format = {  -- Format to include title, icon, level 
-            "{level} {title} {message}"
+            "{icon} {title} {message}"
           },
           win_options = {
             winblend = 0, -- No transparency
             winhighlight = {
-              Normal = "NormalFloat",
+              -- Match border color to the level by default
+              -- This will color the entire border based on message level
               FloatBorder = "FloatBorder",
-              Title = "FloatTitle",
-              -- Different highlights based on level
-              ["NotifyERRORBorder"] = "DiagnosticError",
-              ["NotifyWARNBorder"] = "DiagnosticWarn",
-              ["NotifyINFOBorder"] = "DiagnosticInfo",
-              ["NotifyDEBUGBorder"] = "DiagnosticHint",
-              ["NotifyTRACEBorder"] = "DiagnosticOk",
-              ["NotifyERRORIcon"] = "DiagnosticError",
-              ["NotifyWARNIcon"] = "DiagnosticWarn",
-              ["NotifyINFOIcon"] = "DiagnosticInfo",
-              ["NotifyDEBUGIcon"] = "DiagnosticHint",
-              ["NotifyTRACEIcon"] = "DiagnosticOk",
-              ["NotifyERRORTitle"] = "DiagnosticError",
-              ["NotifyWARNTitle"] = "DiagnosticWarn",
-              ["NotifyINFOTitle"] = "DiagnosticInfo",
-              ["NotifyDEBUGTitle"] = "DiagnosticHint",
-              ["NotifyTRACETitle"] = "DiagnosticOk",
+              
+              -- Level-specific highlighting for icons, borders, and titles
+              ["NoiceNotifyERRORBorder"] = "DiagnosticError",
+              ["NoiceNotifyWARNBorder"] = "DiagnosticWarn", 
+              ["NoiceNotifyINFOBorder"] = "DiagnosticInfo",
+              ["NoiceNotifyDEBUGBorder"] = "DiagnosticHint",
+              ["NoiceNotifyTRACEBorder"] = "DiagnosticOk",
+              
+              ["NoiceNotifyERRORIcon"] = "DiagnosticError",
+              ["NoiceNotifyWARNIcon"] = "DiagnosticWarn",
+              ["NoiceNotifyINFOIcon"] = "DiagnosticInfo",
+              ["NoiceNotifyDEBUGIcon"] = "DiagnosticHint",
+              ["NoiceNotifyTRACEIcon"] = "DiagnosticOk",
+              
+              ["NoiceNotifyERRORTitle"] = "DiagnosticError",
+              ["NoiceNotifyWARNTitle"] = "DiagnosticWarn",
+              ["NoiceNotifyINFOTitle"] = "DiagnosticInfo",
+              ["NoiceNotifyDEBUGTitle"] = "DiagnosticHint",
+              ["NoiceNotifyTRACETitle"] = "DiagnosticOk",
             },
           },
         },

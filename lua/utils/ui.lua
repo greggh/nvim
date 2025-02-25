@@ -91,15 +91,16 @@ M.notify_operation_status = function(operation, status, details)
 
   if has_noice then
     -- Use the correct Noice API function for notifications with better styling
-    -- This should use the configured notify view from noice.lua
+    -- Force specific options to get exactly the style we want
     noice.notify(message, level, {
       title = title,
       icon = icon,       -- Pass icon separately for proper display
       replace = false,
       timeout = 5000,
-      render = "default", -- Use default render to show title in the box
+      render = "minimal", -- Use minimal render for cleaner look
       animate = true,     -- Add animation
-      kind = status,      -- Use status (success/error/etc) for proper coloring
+      level = level,      -- Force level for proper coloring
+      kind = "notify",    -- Force "notify" kind for consistent styling
     })
   else
     -- Fallback to standard notification
