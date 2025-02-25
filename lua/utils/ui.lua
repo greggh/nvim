@@ -97,7 +97,8 @@ M.notify_operation_status = function(operation, status, details)
       timeout = 3000,
       render = "default",    -- Get boxed design
       stages = "fade",       -- Smooth animation
-      top_down = false,      -- Display from bottom to top (appears on top)
+      top_down = true,       -- Display from top to bottom
+      position = "top-right", -- Explicitly set top-right position
       max_width = 80,
       animate = true,
     })

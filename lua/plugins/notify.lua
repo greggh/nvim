@@ -30,8 +30,9 @@ return {
     -- Modify how notifications are laid out
     max_width = 80,
     max_height = 20,
-    -- Top right position
-    top_down = false,
+    -- Position settings
+    top_down = true,
+    position = "top-right",
     -- Notification appearance
     background_colour = "#000000",
     -- Set minimum width
