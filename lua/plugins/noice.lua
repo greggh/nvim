@@ -89,19 +89,45 @@ return {
           -- This is the important part - make notifications appear properly
           replace = false,
           merge = false,
-          render = "wrapped-compact",
+          render = "default",  -- Use default render to show title in the box
           timeout = 5000,
           top_down = false,
           backend = "popup",
           relative = "editor",
           position = { row = 3, col = "99%" },
           size = { width = 40, height = "auto", max_height = 20 },
-          border = { style = "rounded", padding = { 0, 1 } },
+          border = { 
+            style = "rounded", 
+            padding = { 0, 1 },
+            text = {
+              top = " Notification ",
+            },
+          },
+          format = {  -- Format to include title, icon, level 
+            "{level} {title} {message}"
+          },
           win_options = {
             winblend = 0, -- No transparency
             winhighlight = {
               Normal = "NormalFloat",
               FloatBorder = "FloatBorder",
+              Title = "FloatTitle",
+              -- Different highlights based on level
+              ["NotifyERRORBorder"] = "DiagnosticError",
+              ["NotifyWARNBorder"] = "DiagnosticWarn",
+              ["NotifyINFOBorder"] = "DiagnosticInfo",
+              ["NotifyDEBUGBorder"] = "DiagnosticHint",
+              ["NotifyTRACEBorder"] = "DiagnosticOk",
+              ["NotifyERRORIcon"] = "DiagnosticError",
+              ["NotifyWARNIcon"] = "DiagnosticWarn",
+              ["NotifyINFOIcon"] = "DiagnosticInfo",
+              ["NotifyDEBUGIcon"] = "DiagnosticHint",
+              ["NotifyTRACEIcon"] = "DiagnosticOk",
+              ["NotifyERRORTitle"] = "DiagnosticError",
+              ["NotifyWARNTitle"] = "DiagnosticWarn",
+              ["NotifyINFOTitle"] = "DiagnosticInfo",
+              ["NotifyDEBUGTitle"] = "DiagnosticHint",
+              ["NotifyTRACETitle"] = "DiagnosticOk",
             },
           },
         },

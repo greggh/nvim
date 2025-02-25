@@ -86,9 +86,6 @@ M.notify_operation_status = function(operation, status, details)
     warning = vim.log.levels.WARN,
   })[status] or vim.log.levels.INFO
 
-  -- Construct separate title and message for better formatting
-  local title_with_icon = icon .. " " .. title
-  
   -- Check if Noice is available using pcall
   local has_noice, noice = pcall(require, "noice")
 
@@ -96,12 +93,13 @@ M.notify_operation_status = function(operation, status, details)
     -- Use the correct Noice API function for notifications with better styling
     -- This should use the configured notify view from noice.lua
     noice.notify(message, level, {
-      title = title_with_icon,
+      title = title,
+      icon = icon,       -- Pass icon separately for proper display
       replace = false,
       timeout = 5000,
-      render = "wrapped-compact", -- Force wrapped-compact style
-      animate = true,             -- Add animation
-      kind = "noice",             -- Use a specific kind for styling
+      render = "default", -- Use default render to show title in the box
+      animate = true,     -- Add animation
+      kind = status,      -- Use status (success/error/etc) for proper coloring
     })
   else
     -- Fallback to standard notification
