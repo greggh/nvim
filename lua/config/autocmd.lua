@@ -24,9 +24,25 @@ vim.api.nvim_create_autocmd("TextYankPost", {
 require("utils.dependencies").missing_dependencies_notification()
 
 ------------------------------------
+-- MAINTENANCE
+------------------------------------
+-- Setup automatic maintenance for Neovim with user commands
+require("utils.maintenance").setup()
+
+------------------------------------
 -- SNIPPETS
 ------------------------------------
 require("utils.snippets")
+
+------------------------------------
+-- LSP OPTIMIZATION
+------------------------------------
+-- This section was previously using a complex lazy-loading mechanism
+-- that caused errors. For now, we'll rely on the improved LSP memory limits
+-- set in lua/plugins/lsp.lua and the optimizations in that file.
+--
+-- The lazy-loading by filetype approach will be reimplemented in a future
+-- update after more testing and compatibility checks with nvim-lspconfig.
 
 ------------------------------------
 -- PYTHON

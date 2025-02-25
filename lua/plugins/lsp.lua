@@ -183,7 +183,11 @@ return {
         server.capabilities = vim.tbl_deep_extend("force", {}, capabilities, server.capabilities or {})
         
         -- Add memory limits for heavy LSP servers
-        if server_name == "vtsls" or server_name == "lua_ls" or server_name == "pyright" then
+        local heavy_servers = {
+          "vtsls", "lua_ls", "pyright", "rust_analyzer", "gopls", 
+          "clangd", "tailwindcss", "jdtls", "yamlls"
+        }
+        if vim.tbl_contains(heavy_servers, server_name) then
           server.settings = server.settings or {}
           server.settings.memory = {
             limitMb = get_memory_limit_mb()

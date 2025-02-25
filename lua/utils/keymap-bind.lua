@@ -148,22 +148,47 @@ function bind.escape_termcode(cmd_string)
 end
 
 ---@param mapping table<string, map_rhs>
-function bind.nvim_load_mapping(mapping)
-  for key, value in pairs(mapping) do
-    local modes, keymap = key:match("([^|]*)|?(.*)")
-    if type(value) == "table" then
-      for _, mode in ipairs(vim.split(modes, "")) do
+---@param defer boolean|nil Whether to defer the keymap loading
+function bind.nvim_load_mapping(mapping, defer)
+  -- If defer is true, use defer_fn to load keymaps after a short delay
+  if defer then
+    vim.defer_fn(function()
+      bind.nvim_load_mapping(mapping, false)
+    end, 10) -- Small delay to improve startup time
+    return
+  end
+  
+  -- Use a more efficient loop with pcall for error handling
+  vim.api.nvim_create_autocmd("User", {
+    pattern = "KeymapsLoading",
+    once = true,
+    callback = function()
+      for key, value in pairs(mapping) do
+        if type(value) ~= "table" then goto continue end
+        
+        local modes, keymap = key:match("([^|]*)|?(.*)")
         local rhs = value.cmd
         local options = value.options
         local buf = value.buffer
-        if buf and type(buf) == "number" then
-          vim.api.nvim_buf_set_keymap(buf, mode, keymap, rhs, options)
-        else
-          vim.api.nvim_set_keymap(mode, keymap, rhs, options)
+        
+        for i = 1, #modes do
+          local mode = modes:sub(i, i)
+          pcall(function()
+            if buf and type(buf) == "number" then
+              vim.api.nvim_buf_set_keymap(buf, mode, keymap, rhs, options)
+            else
+              vim.api.nvim_set_keymap(mode, keymap, rhs, options)
+            end
+          end)
         end
+        
+        ::continue::
       end
     end
-  end
+  })
+  
+  -- Trigger the autocmd immediately
+  vim.api.nvim_exec_autocmds("User", { pattern = "KeymapsLoading" })
 end
 
 return bind

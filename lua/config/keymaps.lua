@@ -61,7 +61,18 @@ local builtin_map = {
   ["n|<leader>wtc"] = map_cr("tabonly"):with_noremap():with_silent():with_desc("tab: Only keep current tab"),
 }
 
-bind.nvim_load_mapping(builtin_map)
+-- Load essential keymaps immediately (save and quit)
+local essential_keymaps = {
+  ["n|<leader>qs"] = builtin_map["n|<leader>qs"],
+  ["n|<leader>qq"] = builtin_map["n|<leader>qq"],
+  ["n|<C-s>"] = builtin_map["n|<C-s>"],
+}
+bind.nvim_load_mapping(essential_keymaps)
+
+-- Defer loading of other builtin keymaps
+vim.defer_fn(function()
+  bind.nvim_load_mapping(builtin_map)
+end, 10)
 
 local plug_map = {
   -- Plugin: avante
@@ -450,7 +461,10 @@ local plug_map = {
     :with_desc("Screenkey: Redraw"),
 }
 
-bind.nvim_load_mapping(plug_map)
+-- Defer loading of plugin keymaps
+vim.defer_fn(function() 
+  bind.nvim_load_mapping(plug_map)
+end, 20)
 
 local misc_map = {
   -- Misc: toggle IDE view
@@ -499,47 +513,55 @@ local misc_map = {
   end):with_noremap():with_silent():with_desc("Buffer: Close all except current"),
 }
 
-bind.nvim_load_mapping(misc_map)
+-- Defer loading of miscellaneous keymaps  
+vim.defer_fn(function()
+  bind.nvim_load_mapping(misc_map)
+end, 30)
 
-local wk = require("which-key")
+-- Lazy load which-key registrations
+vim.defer_fn(function()
+  local wk = require("which-key")
 
--- basic
-wk.add({ mode = "n" }, {
-  { "ccb", desc = "Togggle block comment" },
-  { "ccc", desc = "Toggle line comment" },
-  { "cbc", desc = "Toggle comment" },
-})
+  -- Register keymap descriptions with which-key in batches
+  -- basic
+  wk.add({ mode = "n" }, {
+    { "ccb", desc = "Togggle block comment" },
+    { "ccc", desc = "Toggle line comment" },
+    { "cbc", desc = "Toggle comment" },
+  })
 
-wk.add({ mode = "x" }, {
-  { "cc", desc = "Toggle line comment" },
-  { "cb", desc = "Togggle block comment" },
-})
+  wk.add({ mode = "x" }, {
+    { "cc", desc = "Toggle line comment" },
+    { "cb", desc = "Togggle block comment" },
+  })
 
--- extra
-wk.add({ mode = "n" }, {
-  { "ccA", desc = "Comment end of line" },
-  { "cco", desc = "Comment next line" },
-  { "ccO", desc = "Comment prev line" },
-})
+  -- extra
+  wk.add({ mode = "n" }, {
+    { "ccA", desc = "Comment end of line" },
+    { "cco", desc = "Comment next line" },
+    { "ccO", desc = "Comment prev line" },
+  })
 
--- extended
-wk.add({ mode = "n" }, {
-  { "c>", desc = "Comment region" },
-  { "c<lt>", desc = "Uncomment region" },
-  { "c<lt>c", desc = "Remove line comment" },
-  { "c<lt>b", desc = "Remove block comment" },
-  { "c>c", desc = "Add line comment" },
-  { "c>b", desc = "Add block comment" },
-})
+  -- extended
+  wk.add({ mode = "n" }, {
+    { "c>", desc = "Comment region" },
+    { "c<lt>", desc = "Uncomment region" },
+    { "c<lt>c", desc = "Remove line comment" },
+    { "c<lt>b", desc = "Remove block comment" },
+    { "c>c", desc = "Add line comment" },
+    { "c>b", desc = "Add block comment" },
+  })
 
-wk.add({ mode = "x" }, {
-  { "c>", desc = "Comment region" },
-  { "c<lt>", desc = "Uncomment region" },
-})
+  wk.add({ mode = "x" }, {
+    { "c>", desc = "Comment region" },
+    { "c<lt>", desc = "Uncomment region" },
+  })
+end, 40)
 
--- Add icons to everything in Whick-key
-
-wk.add({
+-- Add icons to everything in which-key (deferred loading)
+vim.defer_fn(function()
+  local wk = require("which-key")
+  wk.add({
   mode = "n",
   -- Claude Code keymaps are now handled by the plugin
   { "<leader>m", desc = "Arrow: Open", icon = "󰁕" },
@@ -617,21 +639,22 @@ wk.add({
   { "<leader>wtc", desc = "Only keep current tab", icon = "" },
 })
 
--- Register folding keymaps with which-key
-wk.add({
-  mode = "n",
-  { "<leader>z0", desc = "Toggle level 0 folds", icon = "󰈔" },
-  { "<leader>z1", desc = "Toggle level 1 folds", icon = "󰈕" },
-  { "<leader>z2", desc = "Toggle level 2 folds", icon = "󰈖" },
-})
+  -- Register folding keymaps with which-key
+  wk.add({
+    mode = "n",
+    { "<leader>z0", desc = "Toggle level 0 folds", icon = "󰈔" },
+    { "<leader>z1", desc = "Toggle level 1 folds", icon = "󰈕" },
+    { "<leader>z2", desc = "Toggle level 2 folds", icon = "󰈖" },
+  })
 
--- Register window/buffer management keymaps with which-key
-wk.add({
-  mode = "n",
-  { "<leader>wm", desc = "Toggle maximize window", icon = "󰆟" },
-  { "<leader>bw", desc = "Close buffer (safe)", icon = "󰅖" },
-  { "<leader>bo", desc = "Close all buffers except current", icon = "󰆐" },
-})
+  -- Register window/buffer management keymaps with which-key
+  wk.add({
+    mode = "n",
+    { "<leader>wm", desc = "Toggle maximize window", icon = "󰆟" },
+    { "<leader>bw", desc = "Close buffer (safe)", icon = "󰅖" },
+    { "<leader>bo", desc = "Close all buffers except current", icon = "󰆐" },
+  })
+end, 50)
 
 local readme_map = {
   ["n|<leader>pr"] = map_callback(function()
@@ -707,4 +730,7 @@ local readme_map = {
     :with_desc("Generate README.md"),
 }
 
-bind.nvim_load_mapping(readme_map)
+-- Load with small delay after the core keymaps
+vim.defer_fn(function()
+  bind.nvim_load_mapping(readme_map)
+end, 60)

@@ -31,7 +31,7 @@ require("lazy").setup("plugins", {
   },
   performance = {
     rtp = {
-      -- Disable some built-in plugins we don't need to improve startup time
+      -- Disable built-in plugins to improve startup time
       disabled_plugins = {
         "gzip",
         "tarPlugin",
@@ -40,13 +40,18 @@ require("lazy").setup("plugins", {
         "zipPlugin",
         "netrwPlugin", -- Using other file explorers
         "matchit",     -- Using better alternatives
-        "matchparen",  -- Can be heavy, consider disabling if not needed
+        "matchparen",  -- Can be heavy in large files
         "rplugin",     -- If not using remote plugins
+        "man",         -- Disable if not using man pages within Neovim
+        "shada",       -- Only disable if you don't need session history
       },
     },
     reset_packpath = true, -- More aggressive optimization
     cache = {
       enabled = true,
+      path = vim.fn.stdpath("cache") .. "/lazy/cache",
+      -- Increase cache TTL for better performance
+      ttl = 3600 * 24 * 5, -- 5 days
     },
   },
   rocks = { enabled = false }, -- disable luarocks
