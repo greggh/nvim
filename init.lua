@@ -1,9 +1,17 @@
--- Load profiling module first if profiling is enabled
-if os.getenv("NVIM_PROFILE") then
-  local profile = require("utils.profile").setup()
-  profile.record_event("profile_module_loaded")
-  profile.record_event("init_start")
-end
+-- Load profiling module with error handling
+local profile_module
+pcall(function()
+  profile_module = require("utils.profile").setup()
+
+  -- Register global access to profiling module for easier debugging
+  _G.profile_module = profile_module
+
+  -- Record events if profiling is enabled
+  if os.getenv("NVIM_PROFILE") then
+    profile_module.record_event("profile_module_loaded")
+    profile_module.record_event("init_start")
+  end
+end)
 
 -- Track startup time with more granular logging
 local startup_time = os.clock()
@@ -15,10 +23,12 @@ local function track(name)
   local duration = os.clock() - start
   table.insert(module_timing, { name = name, time = duration })
 
-  -- Record in profile module if available
-  if os.getenv("NVIM_PROFILE") and package.loaded["utils.profile"] then
-    package.loaded["utils.profile"].record_event("load_" .. name)
-    package.loaded["utils.profile"].record_plugin(name, duration)
+  -- Record in profile module if profiling is enabled
+  if os.getenv("NVIM_PROFILE") and profile_module then
+    pcall(function()
+      profile_module.record_event("load_" .. name)
+      profile_module.record_plugin(name, duration)
+    end)
   end
 
   return module
@@ -45,9 +55,11 @@ local function mark_event(name)
     timestamp = now,
   }
 
-  -- Record in profile module if available
-  if os.getenv("NVIM_PROFILE") and package.loaded["utils.profile"] then
-    package.loaded["utils.profile"].record_event(name)
+  -- Record in profile module if profiling is enabled
+  if os.getenv("NVIM_PROFILE") and profile_module then
+    pcall(function()
+      profile_module.record_event(name)
+    end)
   end
 
   return now
@@ -200,20 +212,57 @@ if os.getenv("NVIM_PROFILE") then
       end
 
       -- Run our separate profiler too (for more details)
-      if package.loaded["utils.profile"] then
-        vim.defer_fn(function()
-          package.loaded["utils.profile"].write_profile_log()
-        end, 1000) -- Wait a bit to ensure everything is loaded
-      end
+      vim.defer_fn(function()
+        if profile_module then
+          pcall(function()
+            profile_module.write_profile_log()
+          end)
+        end
+      end, 1000) -- Wait a bit to ensure everything is loaded
     end,
   })
 
-  -- Register command to run profiler anytime
+  -- Register commands for profiling
   vim.api.nvim_create_user_command("ProfileDetail", function()
-    if package.loaded["utils.profile"] then
-      package.loaded["utils.profile"].write_profile_log()
+    if profile_module then
+      pcall(function()
+        profile_module.write_profile_log()
+      end)
     else
-      require("utils.profile").setup().write_profile_log()
+      -- Attempt to load profile module directly
+      pcall(function()
+        require("utils.profile").setup().write_profile_log()
+      end)
     end
   end, { desc = "Generate detailed profiling report" })
+
+  -- Set up an autocmd to register all profile commands after startup
+  vim.api.nvim_create_autocmd("VimEnter", {
+    pattern = "*",
+    callback = function()
+      vim.defer_fn(function()
+        -- Load and setup profile commands
+        local status, msg = pcall(function()
+          return require("utils.profile_commands").setup_commands()
+        end)
+
+        if status and msg then
+          vim.notify(msg, vim.log.levels.INFO)
+
+          -- Update keymaps to use the commands
+          local keymap_cmd = vim.keymap.set
+          keymap_cmd("n", "<leader>pp", "<cmd>Profile<CR>", { silent = true, desc = "Generate profile report" })
+          keymap_cmd("n", "<leader>ps", "<cmd>ProfileSummary<CR>", { silent = true, desc = "Show profile summary" })
+          keymap_cmd("n", "<leader>pL", "<cmd>ProfileLogs<CR>", { silent = true, desc = "List profile logs" })
+          keymap_cmd(
+            "n",
+            "<leader>pa",
+            "<cmd>ProfilePlugins<CR>",
+            { silent = true, desc = "Analyze plugin performance" }
+          )
+        end
+      end, 500) -- Short delay to ensure everything is loaded
+    end,
+    once = true,
+  })
 end

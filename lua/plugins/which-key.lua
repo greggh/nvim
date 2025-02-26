@@ -40,7 +40,7 @@ return {
       { "<leader>l", group = "LSP", icon = "󱜙" },
       { "<leader>n", group = "Notifications", icon = "" },
       { "<leader>o", group = "Options", icon = "" },
-      { "<leader>p", group = "Packages", icon = "" },
+      { "<leader>p", group = "Packages & Profiling", icon = "" },
       { "<leader>q", group = "Quit & Save", icon = "" },
       { "<leader>s", group = "Sessions", icon = "" },
       { "<leader>t", group = "Tests", icon = "" },

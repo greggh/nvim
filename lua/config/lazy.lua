@@ -29,6 +29,9 @@ local lazy_stats = {
   loaded_plugins = 0,
 }
 
+-- Make stats available globally for profiling
+_G.lazy_stats = lazy_stats
+
 -- For debug/profile mode, add event tracking to Lazy
 if os.getenv("NVIM_PROFILE") then
   local lazy_orig_load = require("lazy.core.loader").load
@@ -43,6 +46,24 @@ if os.getenv("NVIM_PROFILE") then
       lazy_stats.plugin_times = {}
     end
     lazy_stats.plugin_times[plugin] = load_time
+    
+    -- Record in profile module if available
+    pcall(function()
+      if _G.profile_module and _G.profile_module.record_plugin then
+        -- Extract the proper plugin name
+        local name
+        if type(plugin) == "string" then
+          name = plugin
+        elseif type(plugin) == "table" and plugin.name then
+          name = plugin.name
+        else
+          -- Create a placeholder name with the memory address
+          name = "plugin_" .. tostring(plugin):gsub("table: ", "")
+        end
+        
+        _G.profile_module.record_plugin(name, load_time)
+      end
+    end)
 
     return result
   end
@@ -150,11 +171,40 @@ end
 
 -- For profiling in debug mode, output plugin stats
 if os.getenv("NVIM_PROFILE") then
+  -- Track when plugins are loaded
+  vim.api.nvim_create_autocmd("User", {
+    pattern = "LazyLoad",
+    callback = function(args)
+      local plugin = args.data
+      if plugin and plugin.name and _G.profile_module then
+        pcall(function()
+          -- Record when a plugin is loaded
+          if _G.profile_module.record_plugin then
+            -- Extract the plugin name properly
+            local name = plugin.name
+            if type(name) ~= "string" then
+              name = tostring(plugin)
+            end
+            _G.profile_module.record_plugin(name, plugin.time or 0)
+          end
+        end)
+      end
+    end,
+  })
+  
+  -- When all plugins have loaded
   vim.api.nvim_create_autocmd("User", {
     pattern = "LazyDone",
     callback = function()
       lazy_stats.loaded_plugins = #require("lazy.core.config").plugins
       write_lazy_stats() -- Use the common function
+      
+      -- Record stats in profile module
+      pcall(function()
+        if _G.profile_module and _G.profile_module.record_event then
+          _G.profile_module.record_event("lazy_done")
+        end
+      end)
     end,
   })
 end
