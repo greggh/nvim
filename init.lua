@@ -1,3 +1,11 @@
+-- Load profiling module first if profiling is enabled
+if os.getenv("NVIM_PROFILE") then
+  local profile_start = os.clock()
+  local profile = require("utils.profile").setup()
+  profile.record_event("profile_module_loaded")
+  profile.record_event("init_start")
+end
+
 -- Track startup time with more granular logging
 local startup_time = os.clock()
 local startup_timestamps = {}
@@ -9,6 +17,13 @@ local function track(name)
   local duration = os.clock() - start
   startup_timestamps[name] = duration
   table.insert(module_timing, { name = name, time = duration })
+  
+  -- Record in profile module if available
+  if os.getenv("NVIM_PROFILE") and package.loaded["utils.profile"] then
+    package.loaded["utils.profile"].record_event("load_" .. name)
+    package.loaded["utils.profile"].record_plugin(name, duration)
+  end
+  
   return module
 end
 
@@ -32,6 +47,12 @@ local function mark_event(name)
     time = duration,
     timestamp = now
   }
+  
+  -- Record in profile module if available
+  if os.getenv("NVIM_PROFILE") and package.loaded["utils.profile"] then
+    package.loaded["utils.profile"].record_event(name)
+  end
+  
   return now
 end
 
@@ -181,6 +202,22 @@ if os.getenv("NVIM_PROFILE") then
       else
         print(string.format("Startup Time: %.2f ms", total_time))
       end
+      
+      -- Run our separate profiler too (for more details)
+      if package.loaded["utils.profile"] then
+        vim.defer_fn(function()
+          package.loaded["utils.profile"].write_profile_log()
+        end, 1000) -- Wait a bit to ensure everything is loaded
+      end
     end,
   })
+  
+  -- Register command to run profiler anytime
+  vim.api.nvim_create_user_command("ProfileDetail", function()
+    if package.loaded["utils.profile"] then
+      package.loaded["utils.profile"].write_profile_log()
+    else
+      require("utils.profile").setup().write_profile_log()
+    end
+  end, { desc = "Generate detailed profiling report" })
 end
