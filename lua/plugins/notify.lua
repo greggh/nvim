@@ -4,7 +4,10 @@ return {
   keys = {
     {
       "<leader>nd",
-      function() require("notify").dismiss() end,
+      function()
+        ---@diagnostic disable-next-line: missing-parameter
+        require("notify").dismiss()
+      end,
       desc = "Dismiss notifications",
     },
   },
@@ -49,3 +52,4 @@ return {
     vim.notify = notify
   end,
 }
+

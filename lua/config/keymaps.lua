@@ -462,7 +462,7 @@ local plug_map = {
 }
 
 -- Defer loading of plugin keymaps
-vim.defer_fn(function() 
+vim.defer_fn(function()
   bind.nvim_load_mapping(plug_map)
 end, 20)
 
@@ -482,38 +482,60 @@ local misc_map = {
     :with_noremap()
     :with_silent()
     :with_desc("Populate workspace diagnostics"),
-    
+
   -- Folding controls
-  ["n|<leader>z0"] = map_callback(function() require("utils.ui").toggle_fold_level(0) end)
-    :with_noremap():with_silent():with_desc("Toggle level 0 folds"),
-  ["n|<leader>z1"] = map_callback(function() require("utils.ui").toggle_fold_level(1) end)
-    :with_noremap():with_silent():with_desc("Toggle level 1 folds"),
-  ["n|<leader>z2"] = map_callback(function() require("utils.ui").toggle_fold_level(2) end)
-    :with_noremap():with_silent():with_desc("Toggle level 2 folds"),
-    
+  ["n|<leader>z0"] = map_callback(function()
+      require("utils.ui").toggle_fold_level(0)
+    end)
+    :with_noremap()
+    :with_silent()
+    :with_desc("Toggle level 0 folds"),
+  ["n|<leader>z1"] = map_callback(function()
+      require("utils.ui").toggle_fold_level(1)
+    end)
+    :with_noremap()
+    :with_silent()
+    :with_desc("Toggle level 1 folds"),
+  ["n|<leader>z2"] = map_callback(function()
+      require("utils.ui").toggle_fold_level(2)
+    end)
+    :with_noremap()
+    :with_silent()
+    :with_desc("Toggle level 2 folds"),
+
   -- Enhanced window management
-  ["n|<leader>wm"] = map_callback(function() require("utils.ui").maximize_current_split() end)
-    :with_noremap():with_silent():with_desc("Window: Toggle maximize"),
-    
+  ["n|<leader>wm"] = map_callback(function()
+      require("utils.ui").maximize_current_split()
+    end)
+    :with_noremap()
+    :with_silent()
+    :with_desc("Window: Toggle maximize"),
+
   -- Enhanced buffer management
   ["n|<C-PageDown>"] = map_cmd("<CMD>bn<CR>"):with_noremap():with_silent():with_desc("Buffer: Next"),
   ["n|<C-PageUp>"] = map_cmd("<CMD>bp<CR>"):with_noremap():with_silent():with_desc("Buffer: Previous"),
   ["n|<leader>bw"] = map_callback(function()
-    -- Only delete buffer when not last
-    if #vim.fn.getbufinfo({buflisted = 1}) > 1 then
-      vim.cmd("bd")
-    else
-      require("utils.ui").notify_operation_status("Buffer close", "warning", "Cannot close last buffer")
-    end
-  end):with_noremap():with_silent():with_desc("Buffer: Close (safe)"),
+      -- Only delete buffer when not last
+      if #vim.fn.getbufinfo({ buflisted = 1 }) > 1 then
+        vim.cmd("bd")
+      else
+        require("utils.ui").notify_operation_status("Buffer close", "warning", "Cannot close last buffer")
+      end
+    end)
+    :with_noremap()
+    :with_silent()
+    :with_desc("Buffer: Close (safe)"),
   ["n|<leader>bo"] = map_callback(function()
-    -- Close all buffers except current
-    vim.cmd("%bd|e#|bd#")
-    require("utils.ui").notify_operation_status("Buffers", "success", "Closed all except current")
-  end):with_noremap():with_silent():with_desc("Buffer: Close all except current"),
+      -- Close all buffers except current
+      vim.cmd("%bd|e#|bd#")
+      require("utils.ui").notify_operation_status("Buffers", "success", "Closed all except current")
+    end)
+    :with_noremap()
+    :with_silent()
+    :with_desc("Buffer: Close all except current"),
 }
 
--- Defer loading of miscellaneous keymaps  
+-- Defer loading of miscellaneous keymaps
 vim.defer_fn(function()
   bind.nvim_load_mapping(misc_map)
 end, 30)
@@ -562,82 +584,82 @@ end, 40)
 vim.defer_fn(function()
   local wk = require("which-key")
   wk.add({
-  mode = "n",
-  -- Claude Code keymaps are now handled by the plugin
-  { "<leader>m", desc = "Arrow: Open", icon = "󰁕" },
-  { "<leader>e", desc = "Picker: Explorer", icon = "" },
-  { "<leader>f/", desc = "Yazi: Current file", icon = "" },
-  { "<leader>f-", desc = "Yazi: nvim working directory", icon = "󰘦" },
-  { "<leader>f\\", desc = "Yazi: Resume last session", icon = "↺" },
-  { "<leader>pl", desc = "✓ Lazy: Sync", icon = "󰒲" },
-  { "<leader>pm", desc = "Mason: Toggle", icon = "" },
-  { "<leader>F", desc = "Flags", icon = "⚐" },
-  { "<leader><tab>", desc = "Buffer: Switch back & forth", icon = "" },
-  { "<leader>b[", desc = "Buffer: Previous", icon = "<-" },
-  { "<leader>b]", desc = "Buffer: Next", icon = "->" },
-  { "<leader>cp", desc = "Color Picker", icon = "󰏘" },
-  { "<leader>gb", desc = "Gitsigns: Toggle current line blame", icon = "" },
-  { "<leader>gs", desc = "Gitsigns: Stage hunk", icon = "" },
-  { "<leader>gu", desc = "Gitsigns: Undo stage hunk", icon = "" },
-  { "<leader>gt", desc = "Gitsigns: Toggle signs", icon = "" },
-  { "<leader>gi", desc = "Gitsigns: Preview hunk inline", icon = "" },
-  { "<leader>gr", desc = "Gitsigns: Reset hunk", icon = "" },
-  { "<leader>gR", desc = "Gitigns: Reset buffer", icon = "" },
-  { "<leader>gp", desc = "Gitsigns: Preview hunk", icon = "" },
-  { "<leader>g]", desc = "Gitsigns: Next hunk", icon = "" },
-  { "<leader>g[", desc = "Gitsigns: Prev hunk", icon = "" },
-  { "<leader>gg", desc = "Lazygit", icon = "󰒲" },
-  { "<leader>gl", desc = "Lazygit log", icon = "" },
-  { "<leader>gx", desc = "Diff clipboard", icon = "📋" },
-  { "<leader>gv", desc = "Diff view", icon = "" },
-  { "<leader>oa", desc = "Toggle auto save", icon = "󰑖" },
-  { "<leader>r", desc = "Search and replace", icon = "" },
-  { "<leader>s<backspace>", desc = "Load last session", icon = "󰙠" },
-  { "<leader>sl", desc = "Load session", icon = "" },
-  { "<leader>ss", desc = "Save session", icon = "" },
-  { "<leader>sw", desc = "Current session", icon = "" },
-  { "<leader>tS", desc = "Stop (Neotest)", icon = "󰝤" },
-  { "<leader>tT", desc = "TODO (Neotest)", icon = "" },
-  { "<leader>ta", desc = "Code Actions", icon = "" },
-  { "<leader>tl", desc = "Run Last (Neotest)", icon = "" },
-  { "<leader>to", desc = "Show Output (Neotest)", icon = "" },
-  { "<leader>tO", desc = "Toggle Output Panel (Neotest)", icon = "" },
-  { "<leader>tr", desc = "Run Nearest (Neotest)", icon = "" },
-  { "<leader>ts", desc = "Toggle Summary (Neotest)", icon = "" },
-  { "<leader>tt", desc = "Run File (Neotest)", icon = "" },
-  { "<leader>tw", desc = "Toggle Watch (Neotest)", icon = "" },
-  { "<leader>xq", desc = "Trouble: quickfix list", icon = "" },
-  { "<leader>xd", desc = "Populate workspace diagnostics", icon = "" },
-  { "<leader>xl", desc = "Trouble: location list", icon = "󰀹" },
-  { "<leader>xp", desc = "Trouble: LSP", icon = "󱜙" },
-  { "<leader>xs", desc = "Trouble: Symbols", icon = "" },
-  { "<leader>xw", desc = "Trouble: workspace diagnostics", icon = "" },
-  { "<leader>xx", desc = "Trouble: document diagnostics", icon = "" },
-  { "<leader>xt", desc = "Trouble: TODO", icon = "" },
-  { "<leader>xc", desc = "Todo Comments: show TODO", icon = "" },
-  { "<leader>ua", desc = "Surround: Add", icon = "" },
-  { "<leader>ud", desc = "Surround: Delete", icon = "" },
-  { "<leader>ur", desc = "Surround: Replace", icon = "󰏫" },
-  { "<leader>qz", desc = "Force quit", icon = "󰝥" },
-  { "<leader>qf", desc = "Force quit all (no save)", icon = "" },
-  { "<leader>qx", desc = "Save all and quit", icon = "" },
-  { "<leader>qq", desc = "Save file and quit", icon = "" },
-  { "<leader>qs", desc = "Save file", icon = "" },
-  { "<leader>qS", desc = "Suda: Write", icon = "󰌋" },
-  { "<leader>qv", desc = "Suda: Write and quit", icon = "󰌋" },
-  { "<leader>qa", desc = "Suda: Write and quit all", icon = "󱕴" },
-  { "<leader>wh", desc = "Move window left", icon = "←" },
-  { "<leader>wj", desc = "Move window down", icon = "↓" },
-  { "<leader>wk", desc = "Move window up", icon = "↑" },
-  { "<leader>wl", desc = "Move window right", icon = "→" },
-  { "<leader>lo", desc = "Toggle Outline", icon = "󰌗" },
-  { "<leader>ca", desc = "Code Actions", icon = "" },
-  { "<leader>fR", desc = "Rename file", icon = "󰬶" },
-  { "<leader>wtn", desc = "Create a new tab", icon = "+" },
-  { "<leader>wth", desc = "Move to next tab", icon = "" },
-  { "<leader>wtl", desc = "Move to previous tab", icon = "" },
-  { "<leader>wtc", desc = "Only keep current tab", icon = "" },
-})
+    mode = "n",
+    -- Claude Code keymaps are now handled by the plugin
+    { "<leader>m", desc = "Arrow: Open", icon = "󰁕" },
+    { "<leader>e", desc = "Picker: Explorer", icon = "" },
+    { "<leader>f/", desc = "Yazi: Current file", icon = "" },
+    { "<leader>f-", desc = "Yazi: nvim working directory", icon = "󰘦" },
+    { "<leader>f\\", desc = "Yazi: Resume last session", icon = "↺" },
+    { "<leader>pl", desc = "✓ Lazy: Sync", icon = "󰒲" },
+    { "<leader>pm", desc = "Mason: Toggle", icon = "" },
+    { "<leader>F", desc = "Flags", icon = "⚐" },
+    { "<leader><tab>", desc = "Buffer: Switch back & forth", icon = "" },
+    { "<leader>b[", desc = "Buffer: Previous", icon = "<-" },
+    { "<leader>b]", desc = "Buffer: Next", icon = "->" },
+    { "<leader>cp", desc = "Color Picker", icon = "󰏘" },
+    { "<leader>gb", desc = "Gitsigns: Toggle current line blame", icon = "" },
+    { "<leader>gs", desc = "Gitsigns: Stage hunk", icon = "" },
+    { "<leader>gu", desc = "Gitsigns: Undo stage hunk", icon = "" },
+    { "<leader>gt", desc = "Gitsigns: Toggle signs", icon = "" },
+    { "<leader>gi", desc = "Gitsigns: Preview hunk inline", icon = "" },
+    { "<leader>gr", desc = "Gitsigns: Reset hunk", icon = "" },
+    { "<leader>gR", desc = "Gitigns: Reset buffer", icon = "" },
+    { "<leader>gp", desc = "Gitsigns: Preview hunk", icon = "" },
+    { "<leader>g]", desc = "Gitsigns: Next hunk", icon = "" },
+    { "<leader>g[", desc = "Gitsigns: Prev hunk", icon = "" },
+    { "<leader>gg", desc = "Lazygit", icon = "󰒲" },
+    { "<leader>gl", desc = "Lazygit log", icon = "" },
+    { "<leader>gx", desc = "Diff clipboard", icon = "📋" },
+    { "<leader>gv", desc = "Diff view", icon = "" },
+    { "<leader>oa", desc = "Toggle auto save", icon = "󰑖" },
+    { "<leader>r", desc = "Search and replace", icon = "" },
+    { "<leader>s<backspace>", desc = "Load last session", icon = "󰙠" },
+    { "<leader>sl", desc = "Load session", icon = "" },
+    { "<leader>ss", desc = "Save session", icon = "" },
+    { "<leader>sw", desc = "Current session", icon = "" },
+    { "<leader>tS", desc = "Stop (Neotest)", icon = "󰝤" },
+    { "<leader>tT", desc = "TODO (Neotest)", icon = "" },
+    { "<leader>ta", desc = "Code Actions", icon = "" },
+    { "<leader>tl", desc = "Run Last (Neotest)", icon = "" },
+    { "<leader>to", desc = "Show Output (Neotest)", icon = "" },
+    { "<leader>tO", desc = "Toggle Output Panel (Neotest)", icon = "" },
+    { "<leader>tr", desc = "Run Nearest (Neotest)", icon = "" },
+    { "<leader>ts", desc = "Toggle Summary (Neotest)", icon = "" },
+    { "<leader>tt", desc = "Run File (Neotest)", icon = "" },
+    { "<leader>tw", desc = "Toggle Watch (Neotest)", icon = "" },
+    { "<leader>xq", desc = "Trouble: quickfix list", icon = "" },
+    { "<leader>xd", desc = "Populate workspace diagnostics", icon = "" },
+    { "<leader>xl", desc = "Trouble: location list", icon = "󰀹" },
+    { "<leader>xp", desc = "Trouble: LSP", icon = "󱜙" },
+    { "<leader>xs", desc = "Trouble: Symbols", icon = "" },
+    { "<leader>xw", desc = "Trouble: workspace diagnostics", icon = "" },
+    { "<leader>xx", desc = "Trouble: document diagnostics", icon = "" },
+    { "<leader>xt", desc = "Trouble: TODO", icon = "" },
+    { "<leader>xc", desc = "Todo Comments: show TODO", icon = "" },
+    { "<leader>ua", desc = "Surround: Add", icon = "" },
+    { "<leader>ud", desc = "Surround: Delete", icon = "" },
+    { "<leader>ur", desc = "Surround: Replace", icon = "󰏫" },
+    { "<leader>qz", desc = "Force quit", icon = "󰝥" },
+    { "<leader>qf", desc = "Force quit all (no save)", icon = "" },
+    { "<leader>qx", desc = "Save all and quit", icon = "" },
+    { "<leader>qq", desc = "Save file and quit", icon = "" },
+    { "<leader>qs", desc = "Save file", icon = "" },
+    { "<leader>qS", desc = "Suda: Write", icon = "󰌋" },
+    { "<leader>qv", desc = "Suda: Write and quit", icon = "󰌋" },
+    { "<leader>qa", desc = "Suda: Write and quit all", icon = "󱕴" },
+    { "<leader>wh", desc = "Move window left", icon = "←" },
+    { "<leader>wj", desc = "Move window down", icon = "↓" },
+    { "<leader>wk", desc = "Move window up", icon = "↑" },
+    { "<leader>wl", desc = "Move window right", icon = "→" },
+    { "<leader>lo", desc = "Toggle Outline", icon = "󰌗" },
+    { "<leader>ca", desc = "Code Actions", icon = "" },
+    { "<leader>fR", desc = "Rename file", icon = "󰬶" },
+    { "<leader>wtn", desc = "Create a new tab", icon = "+" },
+    { "<leader>wth", desc = "Move to next tab", icon = "" },
+    { "<leader>wtl", desc = "Move to previous tab", icon = "" },
+    { "<leader>wtc", desc = "Only keep current tab", icon = "" },
+  })
 
   -- Register folding keymaps with which-key
   wk.add({

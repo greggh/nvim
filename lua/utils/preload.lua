@@ -9,9 +9,9 @@ local loaded_modules = {}
 
 -- Default options
 local default_opts = {
-  batch_size = 5,     -- How many modules to load in each batch
-  delay = 10,         -- Milliseconds to wait between batches
-  verbose = false,    -- Whether to print debug information
+  batch_size = 5, -- How many modules to load in each batch
+  delay = 10, -- Milliseconds to wait between batches
+  verbose = false, -- Whether to print debug information
 }
 
 -- Track timing for performance analysis
@@ -20,7 +20,7 @@ local function measure_load_time(module_name, verbose)
   local ok, result = pcall(require, module_name)
   local end_time = vim.loop.hrtime()
   local elapsed = (end_time - start_time) / 1e6 -- Convert to milliseconds
-  
+
   if verbose then
     if ok then
       print(string.format("Preloaded %s in %.2f ms", module_name, elapsed))
@@ -28,14 +28,14 @@ local function measure_load_time(module_name, verbose)
       print(string.format("Failed to preload %s: %s", module_name, result))
     end
   end
-  
+
   return ok, result, elapsed
 end
 
 -- Preload a list of modules in batches
 function M.preload_modules(modules_list, opts)
   opts = vim.tbl_deep_extend("force", default_opts, opts or {})
-  
+
   -- Filter out already loaded modules
   local modules_to_load = {}
   for _, module in ipairs(modules_list) do
@@ -44,16 +44,16 @@ function M.preload_modules(modules_list, opts)
       loaded_modules[module] = true
     end
   end
-  
+
   -- Process in batches
   local total_modules = #modules_to_load
   local total_batches = math.ceil(total_modules / opts.batch_size)
   local total_load_time = 0
-  
+
   for batch = 1, total_batches do
     local start_idx = (batch - 1) * opts.batch_size + 1
     local end_idx = math.min(batch * opts.batch_size, total_modules)
-    
+
     if batch == 1 then
       -- Load first batch immediately
       for i = start_idx, end_idx do
@@ -72,7 +72,7 @@ function M.preload_modules(modules_list, opts)
       end, opts.delay * (batch - 1))
     end
   end
-  
+
   return total_modules, total_load_time
 end
 
@@ -83,19 +83,19 @@ function M.preload_common_modules()
     "vim.lsp",
     "vim.treesitter",
     "vim.diagnostic",
-    
+
     -- Common utilities
     "plenary",
     "utils.keymap-bind",
     "utils.ui",
     "utils.maintenance",
-    
+
     -- Common plugins
     "trouble",
     "gitsigns",
     "which-key",
   }
-  
+
   return M.preload_modules(common_modules, { verbose = false })
 end
 
@@ -104,33 +104,34 @@ function M.preload_filetype_modules(filetype)
   local filetype_modules = {
     lua = {
       "lua-language-server",
-      "neodev"
+      "neodev",
     },
     python = {
       "pyright",
-      "black"
+      "black",
     },
     javascript = {
       "tsserver",
-      "eslint"
+      "eslint",
     },
     typescript = {
       "tsserver",
-      "eslint"
+      "eslint",
     },
     go = {
-      "gopls"
+      "gopls",
     },
     rust = {
-      "rust_analyzer"
+      "rust_analyzer",
     },
   }
-  
+
   if filetype_modules[filetype] then
     return M.preload_modules(filetype_modules[filetype], { verbose = false })
   end
-  
+
   return 0, 0
 end
 
 return M
+

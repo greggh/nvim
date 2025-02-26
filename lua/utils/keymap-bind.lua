@@ -157,20 +157,22 @@ function bind.nvim_load_mapping(mapping, defer)
     end, 10) -- Small delay to improve startup time
     return
   end
-  
+
   -- Use a more efficient loop with pcall for error handling
   vim.api.nvim_create_autocmd("User", {
     pattern = "KeymapsLoading",
     once = true,
     callback = function()
       for key, value in pairs(mapping) do
-        if type(value) ~= "table" then goto continue end
-        
+        if type(value) ~= "table" then
+          goto continue
+        end
+
         local modes, keymap = key:match("([^|]*)|?(.*)")
         local rhs = value.cmd
         local options = value.options
         local buf = value.buffer
-        
+
         for i = 1, #modes do
           local mode = modes:sub(i, i)
           pcall(function()
@@ -181,12 +183,12 @@ function bind.nvim_load_mapping(mapping, defer)
             end
           end)
         end
-        
+
         ::continue::
       end
-    end
+    end,
   })
-  
+
   -- Trigger the autocmd immediately
   vim.api.nvim_exec_autocmds("User", { pattern = "KeymapsLoading" })
 end

@@ -26,7 +26,7 @@ local plugins_load_start = os.clock()
 local lazy_stats = {
   load_time = nil,
   total_plugins = 0,
-  loaded_plugins = 0
+  loaded_plugins = 0,
 }
 
 -- For debug/profile mode, add event tracking to Lazy
@@ -37,11 +37,13 @@ if os.getenv("NVIM_PROFILE") then
     local start_time = os.clock()
     local result = lazy_orig_load(plugin, ...)
     local load_time = os.clock() - start_time
-    
+
     -- Track plugin loading stats
-    if not lazy_stats.plugin_times then lazy_stats.plugin_times = {} end
+    if not lazy_stats.plugin_times then
+      lazy_stats.plugin_times = {}
+    end
     lazy_stats.plugin_times[plugin] = load_time
-    
+
     return result
   end
 end
@@ -57,7 +59,7 @@ require("lazy").setup("plugins", {
     notify = false,
     -- Check less frequently to improve startup
     frequency = 86400, -- once a day
-    concurrency = 1,   -- lower concurrency to reduce CPU
+    concurrency = 1, -- lower concurrency to reduce CPU
   },
   install = {
     colorscheme = { "catppuccin" },
@@ -85,16 +87,16 @@ require("lazy").setup("plugins", {
         "tutor",
         "zipPlugin",
         "netrwPlugin", -- Using other file explorers
-        "matchit",     -- Using better alternatives
-        "matchparen",  -- Can be heavy in large files
-        "rplugin",     -- If not using remote plugins
-        "man",         -- Disable if not using man pages within Neovim
-        "shada",       -- Only disable if you don't need session history
+        "matchit", -- Using better alternatives
+        "matchparen", -- Can be heavy in large files
+        "rplugin", -- If not using remote plugins
+        "man", -- Disable if not using man pages within Neovim
+        "shada", -- Only disable if you don't need session history
       },
     },
   },
   rocks = { enabled = false }, -- disable luarocks
-  
+
   -- Improve profiling data
   profiling = {
     -- Set to true to generate loading profile with :Lazy profile
@@ -111,32 +113,32 @@ lazy_stats.total_plugins = #require("lazy.core.config").plugins
 local function write_lazy_stats()
   local log_path = vim.fn.stdpath("cache") .. "/lazy_plugins.log"
   local log_file = io.open(log_path, "w")
-  
+
   if log_file then
     log_file:write(string.format("Lazy.nvim load time: %.2f ms\n", lazy_stats.load_time * 1000))
     log_file:write(string.format("Total plugins: %d\n", lazy_stats.total_plugins))
     if lazy_stats.loaded_plugins then
       log_file:write(string.format("Loaded plugins: %d\n", lazy_stats.loaded_plugins))
     end
-    
+
     -- If we have plugin times, sort and output them
     if lazy_stats.plugin_times then
       log_file:write("\nPlugin loading times:\n")
-      
+
       local plugins_by_time = {}
       for plugin, time in pairs(lazy_stats.plugin_times) do
         table.insert(plugins_by_time, { name = plugin, time = time })
       end
-      
+
       table.sort(plugins_by_time, function(a, b)
         return a.time > b.time
       end)
-      
+
       for _, data in ipairs(plugins_by_time) do
         log_file:write(string.format("- %s: %.2f ms\n", data.name, data.time * 1000))
       end
     end
-    
+
     log_file:close()
   end
 end

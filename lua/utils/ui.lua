@@ -46,7 +46,6 @@ end
 
 -- Maximize current split window
 M.maximize_current_split = function()
-  local current_winnr = vim.fn.winnr()
   local windows = vim.api.nvim_list_wins()
 
   if #windows <= 1 then
@@ -95,9 +94,9 @@ M.notify_operation_status = function(operation, status, details)
       title = title,
       icon = icon,
       timeout = 3000,
-      render = "default",    -- Get boxed design
-      stages = "fade",       -- Smooth animation
-      top_down = true,       -- Display from top to bottom
+      render = "default", -- Get boxed design
+      stages = "fade", -- Smooth animation
+      top_down = true, -- Display from top to bottom
       position = "top-right", -- Explicitly set top-right position
       max_width = 80,
       animate = true,

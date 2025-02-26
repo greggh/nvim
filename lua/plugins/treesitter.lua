@@ -16,21 +16,34 @@ return {
     treesitter.setup({
       auto_install = true,
       ensure_installed = {
-        "regex", "diff", "python", "toml", "json", "rst", 
-        "ninja", "markdown", "markdown_inline",
+        "regex",
+        "diff",
+        "python",
+        "toml",
+        "json",
+        "rst",
+        "ninja",
+        "markdown",
+        "markdown_inline",
         -- Add parsers for web development
-        "javascript", "typescript", "tsx", "html", "css",
+        "javascript",
+        "typescript",
+        "tsx",
+        "html",
+        "css",
         -- Add Lua since you're writing Neovim config
-        "lua", "vim", "vimdoc",
+        "lua",
+        "vim",
+        "vimdoc",
         -- Add bash for shell scripting
-        "bash"
+        "bash",
       },
-      highlight = { 
+      highlight = {
         enable = true,
         additional_vim_regex_highlighting = false,
       },
       indent = { enable = true },
-      incremental_selection = { 
+      incremental_selection = {
         enable = true,
         keymaps = {
           init_selection = "<C-space>",

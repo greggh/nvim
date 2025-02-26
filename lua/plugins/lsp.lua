@@ -149,11 +149,11 @@ return {
     ---------------------
     local capabilities = vim.lsp.protocol.make_client_capabilities()
     capabilities = vim.tbl_deep_extend("force", capabilities, require("blink.cmp").get_lsp_capabilities())
-    
+
     -- Add folding range capability
     capabilities.textDocument.foldingRange = {
       dynamicRegistration = false,
-      lineFoldingOnly = true
+      lineFoldingOnly = true,
     }
 
     ---------------------
@@ -181,24 +181,31 @@ return {
       function(server_name)
         local server = servers[server_name] or {}
         server.capabilities = vim.tbl_deep_extend("force", {}, capabilities, server.capabilities or {})
-        
+
         -- Add memory limits for heavy LSP servers
         local heavy_servers = {
-          "vtsls", "lua_ls", "pyright", "rust_analyzer", "gopls", 
-          "clangd", "tailwindcss", "jdtls", "yamlls"
+          "vtsls",
+          "lua_ls",
+          "pyright",
+          "rust_analyzer",
+          "gopls",
+          "clangd",
+          "tailwindcss",
+          "jdtls",
+          "yamlls",
         }
         if vim.tbl_contains(heavy_servers, server_name) then
           server.settings = server.settings or {}
           server.settings.memory = {
-            limitMb = get_memory_limit_mb()
+            limitMb = get_memory_limit_mb(),
           }
         end
-        
+
         -- Add offsetEncoding capability for clangd
         if server_name == "clangd" then
           server.capabilities.offsetEncoding = { "utf-16" }
         end
-        
+
         server.on_attach = function(client, bufnr) -- Attach the following to every buffer.
           require("workspace-diagnostics").populate_workspace_diagnostics(client, bufnr) -- Populate Workspace-Diagnostics plugin information.
         end
@@ -350,7 +357,7 @@ return {
     -- error lens
     ---------------------
     vim.diagnostic.config({
-      float = { 
+      float = {
         border = "rounded",
         max_width = 100,
         max_height = 20,
@@ -377,16 +384,14 @@ return {
     ---------------------
     -- signature help handler
     ---------------------
-    vim.lsp.handlers["textDocument/signatureHelp"] = vim.lsp.with(
-      vim.lsp.handlers.signature_help, {
-        border = "rounded",
-        close_events = {"CursorMoved", "BufHidden", "InsertLeave"},
-        focusable = false,
-        relative = "cursor",
-        max_height = 20,
-        max_width = 120,
-      }
-    )
+    vim.lsp.handlers["textDocument/signatureHelp"] = vim.lsp.with(vim.lsp.handlers.signature_help, {
+      border = "rounded",
+      close_events = { "CursorMoved", "BufHidden", "InsertLeave" },
+      focusable = false,
+      relative = "cursor",
+      max_height = 20,
+      max_width = 120,
+    })
 
     ---------------------
     -- inlay hints
