@@ -58,6 +58,30 @@ timing.modules["config.autocmd"] = os.clock() - last_time
 -- After core modules are loaded, do optimization-specific setup
 mark_event("core_modules_loaded")
 
+-- Register more event markers
+vim.api.nvim_create_autocmd("UIEnter", {
+  callback = function()
+    mark_event("ui_enter")
+  end,
+  once = true
+})
+
+vim.api.nvim_create_autocmd("User", {
+  pattern = "LazyDone",
+  callback = function()
+    mark_event("lazy_done")
+  end,
+  once = true
+})
+
+vim.api.nvim_create_autocmd("User", {
+  pattern = "VeryLazy",
+  callback = function()
+    mark_event("very_lazy")
+  end,
+  once = true
+})
+
 -- Preload common modules in the background after a small delay
 if timing.flags.preload_enabled then
   vim.defer_fn(function()
