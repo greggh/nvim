@@ -13,6 +13,7 @@ return {
         json = { "prettier" },
         lua = { "stylua" },
         markdown = { "prettier" },
+        php = { "php_cs_fixer" }, -- Requires installing php-cs-fixer via composer
         python = { "ruff" },
         scss = { "prettier" },
         sh = { "shfmt" },

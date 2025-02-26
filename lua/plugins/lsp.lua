@@ -27,7 +27,7 @@ return {
       docker_compose_language_service = {},
       dockerls = {},
       emmet_language_server = {
-        filetypes = { "html", "typescriptreact", "javascriptreact", "css", "sass", "scss" },
+        filetypes = { "html", "typescriptreact", "javascriptreact", "css", "sass", "scss", "php" },
       },
       eslint_d = {
         root_dir = vim.fs.root(0, { "package.json", ".eslintrc.json", ".eslintrc.js", ".git" }),
@@ -45,6 +45,48 @@ return {
       },
       gopls = {},
       html = {},
+      intelephense = {
+        init_options = {
+          licenceKey = nil, -- Set your license key here if you have one
+          globalStoragePath = vim.env.HOME .. "/.local/share/intelephense",
+        },
+        settings = {
+          intelephense = {
+            files = {
+              maxSize = 1000000, -- Increased for larger files
+            },
+            environment = {
+              includePaths = {},
+            },
+            format = {
+              enable = false, -- We'll use a dedicated formatter for PHP
+            },
+            stubs = {
+              "apache", "bcmath", "bz2", "calendar", "com_dotnet", "Core", "ctype", 
+              "curl", "date", "dba", "dom", "enchant", "exif", "FFI", "fileinfo", 
+              "filter", "fpm", "ftp", "gd", "gettext", "gmp", "hash", "iconv", 
+              "imap", "intl", "json", "ldap", "libxml", "mbstring", "meta", "mysqli",
+              "oci8", "odbc", "openssl", "pcntl", "pcre", "PDO", "pdo_ibm", "pdo_mysql",
+              "pdo_pgsql", "pdo_sqlite", "pgsql", "Phar", "posix", "pspell", 
+              "readline", "Reflection", "session", "shmop", "SimpleXML", "snmp", 
+              "soap", "sockets", "sodium", "SPL", "sqlite3", "standard", "superglobals",
+              "sysvmsg", "sysvsem", "sysvshm", "tidy", "tokenizer", "xml", "xmlreader",
+              "xmlrpc", "xmlwriter", "xsl", "zip", "zlib",
+              "wordpress", "phpunit", "laravel", "wordpress-globals", "woocommerce"
+            },
+            completion = {
+              maxItems = 100,
+              insertUseDeclaration = true,
+              fullyQualifyGlobalConstantsAndFunctions = false,
+              triggerParameterHints = true,
+            },
+            phpdoc = {
+              returnVoid = false, -- Don't add @return void
+              useFullyQualifiedNames = false,
+            },
+          },
+        },
+      },
       jsonls = {},
       lua_ls = {
         settings = {
@@ -136,6 +178,7 @@ return {
     ---------------------
     local LSP_TOOLS = {
       "goimports",
+      "phpcs", -- PHP CodeSniffer for PHP linting
       "prettier",
       "shfmt",
       "sqlfluff",
@@ -193,6 +236,7 @@ return {
           "tailwindcss",
           "jdtls",
           "yamlls",
+          "intelephense", -- PHP LSP can be memory hungry
         }
         if vim.tbl_contains(heavy_servers, server_name) then
           server.settings = server.settings or {}

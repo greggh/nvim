@@ -9,6 +9,7 @@ return {
       css = { "stylelint" },
       javascript = { "eslint_d" },
       typescript = { "eslint_d" },
+      php = { "phpcs", "php" }, -- phpcs for coding standards, php for syntax errors
       scss = { "stylelint" },
       sql = { "sqlfluff" },
       python = { "ruff" },
