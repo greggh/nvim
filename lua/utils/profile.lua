@@ -34,7 +34,18 @@ function M.write_profile_log()
   
   -- System information
   log_file:write("## System Information\n")
-  log_file:write("- Neovim Version: " .. vim.version.major .. "." .. vim.version.minor .. "." .. vim.version.patch .. "\n")
+  -- Get version safely
+  local nvim_version = ""
+  if type(vim.version) == "function" then
+    nvim_version = vim.version()
+  elseif type(vim.version) == "table" then
+    if vim.version.major then
+      nvim_version = vim.version.major .. "." .. 
+                     (vim.version.minor or "0") .. "." .. 
+                     (vim.version.patch or "0")
+    end
+  end
+  log_file:write("- Neovim Version: " .. nvim_version .. "\n")
   
   -- Memory usage
   if vim.loop.resident_set_memory then
