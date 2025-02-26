@@ -533,6 +533,28 @@ local misc_map = {
     :with_noremap()
     :with_silent()
     :with_desc("Buffer: Close all except current"),
+    
+  -- Profiling and diagnostics
+  ["n|<leader>pp"] = map_cmd("<CMD>Profile<CR><CMD>PP<CR>")
+    :with_noremap()
+    :with_silent()
+    :with_desc("Generate detailed profile report"),
+  ["n|<leader>ps"] = map_cmd("<CMD>ProfileSummary<CR><CMD>PS<CR>")
+    :with_noremap()
+    :with_silent()
+    :with_desc("Show profile summary"),
+  ["n|<leader>pL"] = map_cmd("<CMD>ProfileLogs<CR><CMD>PL<CR>")
+    :with_noremap()
+    :with_silent()
+    :with_desc("List profile logs"),
+  ["n|<leader>pa"] = map_cmd("<CMD>ProfilePlugins<CR>")
+    :with_noremap()
+    :with_silent()
+    :with_desc("Analyze plugin performance"),
+  ["n|<leader>pc"] = map_cmd("<CMD>ProfileClean<CR>")
+    :with_noremap()
+    :with_silent()
+    :with_desc("Clean up profile logs"),
 }
 
 -- Defer loading of miscellaneous keymaps
@@ -592,6 +614,11 @@ vim.defer_fn(function()
     { "<leader>f-", desc = "Yazi: nvim working directory", icon = "󰘦" },
     { "<leader>f\\", desc = "Yazi: Resume last session", icon = "↺" },
     { "<leader>pl", desc = "✓ Lazy: Sync", icon = "󰒲" },
+    { "<leader>pp", desc = "Profile: Generate report", icon = "📊" },
+    { "<leader>ps", desc = "Profile: Show summary", icon = "📈" },
+    { "<leader>pL", desc = "Profile: List logs", icon = "📋" },
+    { "<leader>pa", desc = "Profile: Analyze plugins", icon = "🔍" },
+    { "<leader>pc", desc = "Profile: Clean logs", icon = "🧹" },
     { "<leader>pm", desc = "Mason: Toggle", icon = "" },
     { "<leader>F", desc = "Flags", icon = "⚐" },
     { "<leader><tab>", desc = "Buffer: Switch back & forth", icon = "" },
