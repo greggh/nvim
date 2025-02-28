@@ -3,6 +3,7 @@ return {
   dependencies = {
     "williamboman/mason.nvim",
     "williamboman/mason-lspconfig.nvim",
+    "MunifTanjim/nui.nvim", -- Required for floating windows in IDE Helper
   },
   event = { "BufReadPre", "BufNewFile" },
   ft = { "php" },
