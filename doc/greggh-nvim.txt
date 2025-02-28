@@ -50,14 +50,14 @@ This will automatically install all required plugins on first launch.
 - Modern UI with Catppuccin theme
 - LSP integration with auto-setup
 - Treesitter for syntax highlighting
-- Fuzzy finding with Telescope
+- Fuzzy finding with Snacks picker module
 - Git integration
 - Debugging capabilities
-- Autocompletion with nvim-cmp
-- Snippets support
+- Autocompletion with blink.cmp
+- Snippets support with LuaSnip
 - Markdown preview
 - Terminal integration
-- File tree explorer
+- File explorer integration
 - And much more...
 
 ================================================================================
