@@ -31,6 +31,7 @@ return {
         "tsx",
         "html",
         "css",
+        "php",
         -- Add Lua since you're writing Neovim config
         "lua",
         "vim",

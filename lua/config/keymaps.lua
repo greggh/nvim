@@ -5,6 +5,22 @@ local map_cmd = bind.map_cmd
 local map_callback = bind.map_callback
 
 local builtin_map = {
+  -- Command mode tab completion
+  ["c|<tab>"] = map_cmd("<C-z>"):with_noremap():with_desc("edit: Command completion"),
+
+  -- fix stupid typo
+  ["n|q:"] = map_cmd("<Cmd>q<CR>"):with_noremap():with_silent():with_desc("edit: Quit"),
+
+  -- Paste replace visual selection without yanking: https://vim.fandom.com/wiki/Pasting_over_visual_selection
+  ["v|p"] = map_cmd('"_dP'):with_noremap():with_silent():with_desc("edit: Paste replace visual selection"),
+
+  -- Easy insertion of a trailing ; or , from insert mode
+  ["i|;;"] = map_cmd("<Esc>A;"):with_noremap():with_silent():with_desc("edit: Insert trailing semicolon"),
+  ["i|,,"] = map_cmd("<Esc>A,"):with_noremap():with_silent():with_desc("edit: Insert trailing comma"),
+
+  -- Quickly clear search highlights
+  ["n|<leader>k"] = map_cr("nohlsearch"):with_noremap():with_silent():with_desc("edit: Clear search highlights"),
+
   -- Builtin: save & quit
   ["n|<leader>qs"] = map_cu("write"):with_noremap():with_silent():with_desc("edit: Save file"),
   ["n|<leader>qq"] = map_cr("wq"):with_desc("edit: Save file and quit"),
@@ -82,10 +98,13 @@ local plug_map = {
   -- The keymaps are now set up by the claude-code.nvim plugin
   -- These local keymaps are removed to avoid conflicts
   -- See lua/plugins/claude-code.lua for configuration
-  ["nt|<C-O>"] = map_cmd("<CMD>ClaudeCode<CR>"):with_noremap():with_silent():with_desc("Claude Code: Toggle"),
+  ["nt|<C-,>"] = map_cmd("<CMD>ClaudeCode<CR>"):with_noremap():with_silent():with_desc("Claude Code: Toggle"),
 
-  -- Plugin: arrow
-  ["n|<leader>m"] = map_cmd("<CMD>Arrow open<CR>"):with_noremap():with_silent():with_desc("Arrow: Open"),
+  -- Plugin: tide
+  ["n|<leader>'"] = map_cmd("<CMD>lua require('tide.api').toggle_panel()<CR>")
+    :with_noremap()
+    :with_silent()
+    :with_desc("Tide: Open"),
 
   -- Plugin: snacks
   ["n|<leader>e"] = map_callback(function()
@@ -533,7 +552,7 @@ local misc_map = {
     :with_noremap()
     :with_silent()
     :with_desc("Buffer: Close all except current"),
-    
+
   -- Profiling and diagnostics
   ["n|<leader>pp"] = map_cmd("<CMD>Profile<CR><CMD>PP<CR>")
     :with_noremap()
@@ -551,10 +570,7 @@ local misc_map = {
     :with_noremap()
     :with_silent()
     :with_desc("Analyze plugin performance"),
-  ["n|<leader>pc"] = map_cmd("<CMD>ProfileClean<CR>")
-    :with_noremap()
-    :with_silent()
-    :with_desc("Clean up profile logs"),
+  ["n|<leader>pc"] = map_cmd("<CMD>ProfileClean<CR>"):with_noremap():with_silent():with_desc("Clean up profile logs"),
 }
 
 -- Defer loading of miscellaneous keymaps
@@ -608,7 +624,7 @@ vim.defer_fn(function()
   wk.add({
     mode = "n",
     -- Claude Code keymaps are now handled by the plugin
-    { "<leader>m", desc = "Arrow: Open", icon = "󰁕" },
+    { "<leader>'", desc = "Tide: Open", icon = "󰁕" },
     { "<leader>e", desc = "Picker: Explorer", icon = "" },
     { "<leader>f/", desc = "Yazi: Current file", icon = "" },
     { "<leader>f-", desc = "Yazi: nvim working directory", icon = "󰘦" },

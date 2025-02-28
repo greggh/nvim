@@ -14,7 +14,7 @@ local commands_registered = false
 -- Get Neovim version safely using multiple approaches
 local function get_nvim_version()
   local nvim_version = "Unknown"
-  
+
   -- Try vim.version() function first (newer Neovim versions)
   if type(vim.version) == "function" then
     local v = vim.version()
@@ -22,28 +22,28 @@ local function get_nvim_version()
       nvim_version = v
     end
   end
-  
+
   -- If that didn't work, try the vim.version table
   if nvim_version == "Unknown" and type(vim.version) == "table" then
     if vim.version.major then
-      nvim_version = vim.version.major .. "." .. 
-                     (vim.version.minor or "0") .. "." .. 
-                     (vim.version.patch or "0")
+      nvim_version = vim.version.major .. "." .. (vim.version.minor or "0") .. "." .. (vim.version.patch or "0")
     end
   end
-  
+
   -- If both failed, try api.nvim_get_version()
   if nvim_version == "Unknown" then
-    local ok, v = pcall(function() return vim.api.nvim_get_version() end)
+    local ok, v = pcall(function()
+      return vim.api.nvim_get_version()
+    end)
     if ok and type(v) == "table" and v.major then
       nvim_version = v.major .. "." .. v.minor .. "." .. v.patch
     end
   end
-  
+
   -- As a last resort, try :version and parse output
   if nvim_version == "Unknown" then
-    local ok, v = pcall(function() 
-      local output = vim.fn.execute('version')
+    local ok, v = pcall(function()
+      local output = vim.fn.execute("version")
       local ver = output:match("NVIM v([%d%.]+)")
       return ver or "Unknown"
     end)
@@ -51,7 +51,7 @@ local function get_nvim_version()
       nvim_version = v
     end
   end
-  
+
   return nvim_version
 end
 
@@ -140,7 +140,7 @@ function M.show_profile_summary()
   -- Get current memory usage
   local memory = vim.loop.resident_set_memory and vim.loop.resident_set_memory() or 0
   local memory_mb = memory / 1024 / 1024
-  
+
   -- Get Neovim version
   local nvim_version = get_nvim_version()
 
@@ -219,41 +219,43 @@ end
 function M.list_profile_logs()
   local cache_dir = vim.fn.stdpath("cache")
   local log_files = vim.fn.glob(cache_dir .. "/nvim_profile_*.log", true, true)
-  table.sort(log_files, function(a, b) return a > b end) -- Sort newest first
-  
+  table.sort(log_files, function(a, b)
+    return a > b
+  end) -- Sort newest first
+
   if #log_files == 0 then
     vim.notify("No profile logs found", vim.log.levels.WARN)
     return
   end
-  
+
   -- Create a nice display of the log files with their timestamps
   local lines = {}
   local file_lookup = {}
-  
+
   for i, file in ipairs(log_files) do
     local timestamp = file:match("nvim_profile_(%d%d%d%d%d%d%d%d_%d%d%d%d%d%d)%.log$")
     local display_line
-    
+
     if timestamp then
       local formatted = timestamp:gsub("(%d%d%d%d)(%d%d)(%d%d)_(%d%d)(%d%d)(%d%d)", "%1-%2-%3 %4:%5:%6")
       display_line = string.format("%s - %s", formatted, vim.fn.fnamemodify(file, ":t"))
     else
       display_line = vim.fn.fnamemodify(file, ":t")
     end
-    
+
     -- Add to our displayed lines and lookup table
     table.insert(lines, display_line)
     file_lookup[display_line] = file
   end
-  
+
   -- Create buffer and window
   local buf = vim.api.nvim_create_buf(false, true)
   vim.api.nvim_buf_set_lines(buf, 0, -1, false, lines)
-  
+
   -- Calculate window size
   local width = math.min(80, vim.o.columns - 4)
   local height = math.min(#lines + 2, vim.o.lines - 4)
-  
+
   -- Create window
   local win = vim.api.nvim_open_win(buf, true, {
     relative = "editor",
@@ -265,25 +267,25 @@ function M.list_profile_logs()
     border = "rounded",
     title = "Profile Logs",
   })
-  
+
   -- Set window options
   vim.api.nvim_win_set_option(win, "wrap", true)
   vim.api.nvim_win_set_option(win, "foldenable", false)
   vim.api.nvim_win_set_option(win, "cursorline", true)
-  
+
   -- Set up syntax highlighting for the log list
   vim.api.nvim_buf_set_option(buf, "filetype", "markdown")
-  
+
   -- Function to open the selected log
   local function open_selected_log()
     local cursor_pos = vim.api.nvim_win_get_cursor(win)
-    local current_line = vim.api.nvim_buf_get_lines(buf, cursor_pos[1]-1, cursor_pos[1], false)[1]
+    local current_line = vim.api.nvim_buf_get_lines(buf, cursor_pos[1] - 1, cursor_pos[1], false)[1]
     local selected_file = file_lookup[current_line]
-    
+
     if selected_file then
       -- Close picker window
       vim.api.nvim_win_close(win, true)
-      
+
       -- Read the log file content
       local log_content = {}
       local file = io.open(selected_file, "r")
@@ -296,18 +298,18 @@ function M.list_profile_logs()
         vim.notify("Could not open log file: " .. selected_file, vim.log.levels.ERROR)
         return
       end
-      
+
       -- Create a new buffer for the log content
       local log_buf = vim.api.nvim_create_buf(false, true)
       vim.api.nvim_buf_set_lines(log_buf, 0, -1, false, log_content)
-      
+
       -- Apply markdown formatting
       vim.api.nvim_buf_set_option(log_buf, "filetype", "markdown")
-      
+
       -- Calculate window size
       local width = math.min(90, vim.o.columns - 4)
       local height = math.min(#log_content + 2, vim.o.lines - 4)
-      
+
       -- Create window for the log file
       local log_win = vim.api.nvim_open_win(log_buf, true, {
         relative = "editor",
@@ -319,46 +321,46 @@ function M.list_profile_logs()
         border = "rounded",
         title = vim.fn.fnamemodify(selected_file, ":t"),
       })
-      
+
       -- Set window options
       vim.api.nvim_win_set_option(log_win, "wrap", true)
       vim.api.nvim_win_set_option(log_win, "conceallevel", 2)
       vim.api.nvim_win_set_option(log_win, "foldenable", false)
-      
+
       -- Add keymaps to close the window
       vim.api.nvim_buf_set_keymap(log_buf, "n", "q", "<cmd>close<CR>", { noremap = true, silent = true })
       vim.api.nvim_buf_set_keymap(log_buf, "n", "<Esc>", "<cmd>close<CR>", { noremap = true, silent = true })
-      
+
       -- Set buffer options
       vim.api.nvim_buf_set_option(log_buf, "modifiable", false)
       vim.api.nvim_buf_set_option(log_buf, "bufhidden", "wipe")
-      
+
       -- Return to the beginning of the file
-      vim.api.nvim_win_set_cursor(log_win, {1, 0})
+      vim.api.nvim_win_set_cursor(log_win, { 1, 0 })
     end
   end
-  
+
   -- Add keymaps for selection
   vim.api.nvim_buf_set_keymap(buf, "n", "<CR>", "", {
     noremap = true,
     silent = true,
-    callback = open_selected_log
+    callback = open_selected_log,
   })
-  
+
   vim.api.nvim_buf_set_keymap(buf, "n", "<2-LeftMouse>", "", {
     noremap = true,
     silent = true,
-    callback = open_selected_log
+    callback = open_selected_log,
   })
-  
+
   -- Add keymaps to close the window
   vim.api.nvim_buf_set_keymap(buf, "n", "q", "<cmd>close<CR>", { noremap = true, silent = true })
   vim.api.nvim_buf_set_keymap(buf, "n", "<Esc>", "<cmd>close<CR>", { noremap = true, silent = true })
-  
+
   -- Set buffer options
   vim.api.nvim_buf_set_option(buf, "modifiable", false)
   vim.api.nvim_buf_set_option(buf, "bufhidden", "wipe")
-  
+
   -- Add buffer-local autocommands
   vim.api.nvim_create_autocmd("BufLeave", {
     buffer = buf,
@@ -368,39 +370,39 @@ function M.list_profile_logs()
         vim.api.nvim_win_close(win, true)
       end
     end,
-    once = true
+    once = true,
   })
-  
+
   -- Set the cursor at the first item
-  vim.api.nvim_win_set_cursor(win, {1, 0})
-  
+  vim.api.nvim_win_set_cursor(win, { 1, 0 })
+
   return buf, win
 end
 
 -- Generate a detailed analysis of plugins
 function M.analyze_plugins()
   -- Check if lazy is available
-  local has_lazy, lazy_config = pcall(require, 'lazy.core.config')
+  local has_lazy, lazy_config = pcall(require, "lazy.core.config")
   if not has_lazy then
     vim.notify("Lazy.nvim not available", vim.log.levels.ERROR)
     return
   end
-  
+
   local plugins = lazy_config.plugins
-  local has_stats, stats = pcall(require, 'lazy.stats')
+  local has_stats, stats = pcall(require, "lazy.stats")
   local stats_data = has_stats and stats.stats() or { count = 0, loaded = 0, startuptime = 0 }
-  
+
   -- First, update the plugin mapping without showing a window
   M.update_plugin_mapping()
-  
+
   -- Create a complete mapping of plugin references to names
   local plugin_lookup = {}
-  
+
   -- Initialize if needed
   if not M.memory_address_to_name then
     M.memory_address_to_name = {}
   end
-  
+
   -- Copy over all entries from the static mapping updated by debug_plugin_names
   -- Make sure it exists and is a table
   if M.memory_address_to_name and type(M.memory_address_to_name) == "table" then
@@ -408,35 +410,35 @@ function M.analyze_plugins()
       plugin_lookup[addr] = name
     end
   end
-  
+
   -- Direct plugin object to name mapping
   for name, plugin in pairs(plugins) do
     -- Store the name with the plugin object as key
     plugin_lookup[plugin] = name
-    
+
     -- Also store by string representation (memory address)
     local addr = tostring(plugin):gsub("table: ", "")
     plugin_lookup["plugin_" .. addr] = name
     plugin_lookup[addr] = name
     plugin_lookup["0x" .. addr:gsub("0x", "")] = name
-    
+
     -- Store additional variations for better matching
     local addr_plain = addr:gsub("^0x", "")
     plugin_lookup["plugin_" .. addr_plain] = name
     plugin_lookup[addr_plain] = name
     plugin_lookup["0x" .. addr_plain] = name
     plugin_lookup["plugin_0x" .. addr_plain] = name
-    
+
     -- Store by plugin name itself
     plugin_lookup[name] = name
   end
-  
+
   -- Build a reverse lookup of all plugin_data entries to find their real names
   if profile_data.plugins and #profile_data.plugins > 0 then
     for i, plugin_data in ipairs(profile_data.plugins) do
       if plugin_data.name and plugin_data.name:match("^plugin_0x") then
         local addr = plugin_data.name:gsub("^plugin_", "")
-        
+
         -- Try to find a real name for this plugin
         for name, plugin in pairs(plugins) do
           local plugin_addr = tostring(plugin):gsub("table: ", "")
@@ -449,10 +451,10 @@ function M.analyze_plugins()
       end
     end
   end
-  
+
   -- Get Neovim version
   local nvim_version = get_nvim_version()
-  
+
   -- Create report
   local lines = {
     "# Neovim Plugin Analysis",
@@ -460,37 +462,40 @@ function M.analyze_plugins()
     "",
     "## System Information",
     string.format("- Neovim Version: %s", nvim_version),
-    string.format("- Memory Usage: %.2f MB", vim.loop.resident_set_memory and vim.loop.resident_set_memory() / 1024 / 1024 or 0),
+    string.format(
+      "- Memory Usage: %.2f MB",
+      vim.loop.resident_set_memory and vim.loop.resident_set_memory() / 1024 / 1024 or 0
+    ),
     "",
     "## Plugin Manager Statistics",
     string.format("- Total plugins: %d", stats_data.count or vim.tbl_count(plugins)),
     string.format("- Loaded plugins: %d", stats_data.loaded or 0),
     string.format("- Startup time: %.2f ms", stats_data.startuptime or 0),
   }
-  
+
   -- Get plugin loading times
   table.insert(lines, "")
   table.insert(lines, "## Heaviest Plugins (Startup Impact)")
-  
+
   -- Collect plugins with load time info
   local load_times = {}
   local has_timing_data = false
-  
+
   -- Try to get data from lazy.nvim first
   for name, plugin in pairs(plugins) do
     if plugin.loaded and plugin.time and plugin.time > 0 then
       has_timing_data = true
-      table.insert(load_times, {name = name, time = plugin.time})
+      table.insert(load_times, { name = name, time = plugin.time })
     end
   end
-  
+
   -- Try to get data from lazy's plugin_times table if available
   local lazy_stats_data
   pcall(function()
     -- Access the plugin_times from the global scope or from require
     lazy_stats_data = _G.lazy_stats and _G.lazy_stats.plugin_times or nil
   end)
-  
+
   if lazy_stats_data then
     for plugin, time in pairs(lazy_stats_data) do
       if time > 0 then
@@ -505,7 +510,7 @@ function M.analyze_plugins()
           -- Try lookup
           plugin_name = plugin_lookup[plugin] or ("plugin_" .. tostring(plugin):gsub("table: ", ""))
         end
-        
+
         -- Check if this plugin is already in our list
         local exists = false
         for _, p in ipairs(load_times) do
@@ -514,14 +519,14 @@ function M.analyze_plugins()
             break
           end
         end
-        
+
         if not exists then
-          table.insert(load_times, {name = plugin_name, time = time})
+          table.insert(load_times, { name = plugin_name, time = time })
         end
       end
     end
   end
-  
+
   -- Always try to use our profile_data as it should have the most complete information
   if profile_data.plugins and #profile_data.plugins > 0 then
     for _, plugin_data in ipairs(profile_data.plugins) do
@@ -538,7 +543,7 @@ function M.analyze_plugins()
             break
           end
         end
-        
+
         if not exists then
           has_timing_data = true
           -- Try to look up a better name if this is a memory address
@@ -547,7 +552,7 @@ function M.analyze_plugins()
             local addr = name:gsub("^plugin_", "")
             name = plugin_lookup[addr] or plugin_lookup[name] or name
           end
-          
+
           -- Final sanity check: if we have a plugin with this exact name, use that
           for plug_name, _ in pairs(plugins) do
             if string.lower(plug_name) == string.lower(name) then
@@ -555,13 +560,13 @@ function M.analyze_plugins()
               break
             end
           end
-          
-          table.insert(load_times, {name = name, time = plugin_data.time})
+
+          table.insert(load_times, { name = name, time = plugin_data.time })
         end
       end
     end
   end
-  
+
   -- If we still have no data but NVIM_PROFILE is set, suggest running with profiling
   if not has_timing_data then
     if not os.getenv("NVIM_PROFILE") then
@@ -576,7 +581,7 @@ function M.analyze_plugins()
     table.sort(load_times, function(a, b)
       return a.time > b.time
     end)
-    
+
     -- Add top 20 plugins to the report
     for i = 1, math.min(20, #load_times) do
       local plugin = load_times[i]
@@ -584,14 +589,14 @@ function M.analyze_plugins()
       local function force_name(plugin_entry, index)
         local raw_name = plugin_entry.name
         local debug_output = {} -- For debugging
-        
+
         -- Add debug message
         local function debug(msg)
           table.insert(debug_output, msg)
         end
-        
+
         debug("Original name: " .. tostring(raw_name))
-        
+
         -- Already a clean string name without memory address?
         if type(raw_name) == "string" and not raw_name:match("0x") then
           -- Try to match case exactly with a known plugin name
@@ -604,138 +609,138 @@ function M.analyze_plugins()
           debug("Keeping original name")
           return raw_name -- Keep as is
         end
-        
-        -- Try lookup table if name is a reference 
+
+        -- Try lookup table if name is a reference
         if plugin_lookup[raw_name] then
           debug("Found in plugin_lookup direct key")
           return plugin_lookup[raw_name]
         end
-        
+
         -- Is it a memory address format? Try different variants
         if type(raw_name) == "string" then
           -- With plugin_ prefix
           if raw_name:match("^plugin_0x") then
             local addr = raw_name:gsub("^plugin_", "")
             debug("Checking address: " .. addr)
-            
+
             -- Try directly with the current format
             if plugin_lookup[addr] then
               debug("Found in plugin_lookup[addr]")
               return plugin_lookup[addr]
             end
-            
+
             if M.memory_address_to_name[addr] then
               debug("Found in M.memory_address_to_name[addr]")
               return M.memory_address_to_name[addr]
             end
-            
+
             -- Try without 0x prefix
             local addr_plain = addr:gsub("^0x", "")
             debug("Checking plain address: " .. addr_plain)
-            
+
             if plugin_lookup[addr_plain] then
               debug("Found in plugin_lookup[addr_plain]")
               return plugin_lookup[addr_plain]
             end
-            
+
             if M.memory_address_to_name[addr_plain] then
               debug("Found in M.memory_address_to_name[addr_plain]")
               return M.memory_address_to_name[addr_plain]
             end
-            
+
             -- Try with 0x prefix regardless of source
             if not addr:match("^0x") then
               local addr_with_0x = "0x" .. addr
               debug("Checking with 0x: " .. addr_with_0x)
-              
+
               if plugin_lookup[addr_with_0x] then
                 debug("Found in plugin_lookup[addr_with_0x]")
                 return plugin_lookup[addr_with_0x]
               end
-              
+
               if M.memory_address_to_name[addr_with_0x] then
                 debug("Found in M.memory_address_to_name[addr_with_0x]")
                 return M.memory_address_to_name[addr_with_0x]
               end
             end
           end
-          
+
           -- Direct address (with 0x prefix but no plugin_)
           if raw_name:match("^0x") then
             debug("Direct 0x address: " .. raw_name)
-            
+
             if plugin_lookup[raw_name] then
               debug("Found in plugin_lookup direct 0x")
               return plugin_lookup[raw_name]
             end
-            
+
             if M.memory_address_to_name[raw_name] then
               debug("Found in M.memory_address_to_name direct 0x")
               return M.memory_address_to_name[raw_name]
             end
-            
+
             -- Try without 0x prefix
             local addr_plain = raw_name:gsub("^0x", "")
             debug("Checking plain from 0x: " .. addr_plain)
-            
+
             if plugin_lookup[addr_plain] then
               debug("Found in plugin_lookup plain from 0x")
               return plugin_lookup[addr_plain]
             end
-            
+
             if M.memory_address_to_name[addr_plain] then
               debug("Found in M.memory_address_to_name plain from 0x")
               return M.memory_address_to_name[addr_plain]
             end
           end
-          
+
           -- Try without any prefix at all
           if not raw_name:match("^plugin_") and not raw_name:match("^0x") then
             debug("No prefix address: " .. raw_name)
-            
+
             -- Try with 0x prefix
             local addr_with_0x = "0x" .. raw_name
             debug("Adding 0x: " .. addr_with_0x)
-            
+
             if plugin_lookup[addr_with_0x] then
               debug("Found in plugin_lookup with added 0x")
               return plugin_lookup[addr_with_0x]
             end
-            
+
             if M.memory_address_to_name[addr_with_0x] then
               debug("Found in M.memory_address_to_name with added 0x")
               return M.memory_address_to_name[addr_with_0x]
             end
-            
+
             -- Try with plugin_ prefix
             local addr_with_plugin = "plugin_" .. raw_name
             debug("Adding plugin_: " .. addr_with_plugin)
-            
+
             if plugin_lookup[addr_with_plugin] then
               debug("Found in plugin_lookup with added plugin_")
               return plugin_lookup[addr_with_plugin]
             end
-            
+
             if M.memory_address_to_name[addr_with_plugin] then
               debug("Found in M.memory_address_to_name with added plugin_")
               return M.memory_address_to_name[addr_with_plugin]
             end
-            
+
             -- Try with both prefixes
             local addr_with_both = "plugin_0x" .. raw_name
             debug("Adding plugin_0x: " .. addr_with_both)
-            
+
             if plugin_lookup[addr_with_both] then
               debug("Found in plugin_lookup with added plugin_0x")
               return plugin_lookup[addr_with_both]
             end
-            
+
             if M.memory_address_to_name[addr_with_both] then
               debug("Found in M.memory_address_to_name with added plugin_0x")
               return M.memory_address_to_name[addr_with_both]
             end
           end
-          
+
           -- Last check - look for any memory_address with partial match at the end
           for addr, name in pairs(M.memory_address_to_name) do
             if type(addr) == "string" and type(raw_name) == "string" then
@@ -747,18 +752,18 @@ function M.analyze_plugins()
             end
           end
         end
-        
+
         -- Still no match? Try all plugins to see if any match this reference's string representation
         local ref_str = tostring(raw_name)
         for name, plugin in pairs(plugins) do
           if tostring(plugin) == ref_str then
             return name
           end
-          
+
           -- Check if the raw_name contains the address of this plugin
           local plugin_addr = tostring(plugin):gsub("table: ", "")
           local plugin_addr_plain = plugin_addr:gsub("^0x", "")
-          
+
           if type(raw_name) == "string" then
             if raw_name:match(plugin_addr_plain) then
               -- Found a match by address substring, store it for future use
@@ -767,7 +772,7 @@ function M.analyze_plugins()
             end
           end
         end
-        
+
         -- Check the static mapping table from Lazy
         if _G.lazy_stats and _G.lazy_stats.plugin_times then
           for plugin, _ in pairs(_G.lazy_stats.plugin_times) do
@@ -785,14 +790,14 @@ function M.analyze_plugins()
             end
           end
         end
-        
+
         -- Last resort fallback
         return raw_name or ("Plugin " .. index)
       end
-      
+
       -- Get the best possible name for this plugin
       local name = force_name(plugin, i)
-      
+
       -- Add to our mapping for future use
       -- This helps with progressive resolution of names across multiple runs
       if type(plugin.name) == "string" and plugin.name:match("^plugin_0x") then
@@ -807,7 +812,7 @@ function M.analyze_plugins()
           M.memory_address_to_name["plugin_" .. addr_plain] = name
         end
       end
-      
+
       -- Format the time value correctly based on its magnitude
       local time_ms = plugin.time
       -- Apply multiplier if needed - sometimes time is already in ms
@@ -817,7 +822,7 @@ function M.analyze_plugins()
       table.insert(lines, string.format("%d. %s - %.2f ms", i, name, time_ms))
     end
   end
-  
+
   -- Count modules by category
   local module_categories = {}
   for module_name, _ in pairs(package.loaded) do
@@ -826,25 +831,25 @@ function M.analyze_plugins()
       module_categories[category] = (module_categories[category] or 0) + 1
     end
   end
-  
+
   -- Add module category counts
   table.insert(lines, "")
   table.insert(lines, "## Module Categories")
   local categories = {}
   for category, count in pairs(module_categories) do
-    table.insert(categories, {name = category, count = count})
+    table.insert(categories, { name = category, count = count })
   end
-  
+
   table.sort(categories, function(a, b)
     return a.count > b.count
   end)
-  
+
   for _, category in ipairs(categories) do
     if category.count > 5 then -- Only show categories with more than 5 modules
       table.insert(lines, string.format("- %s: %d modules", category.name, category.count))
     end
   end
-  
+
   -- Write to file
   local report_path = vim.fn.stdpath("cache") .. "/nvim_plugins_analysis.log"
   local file = io.open(report_path, "w")
@@ -856,18 +861,18 @@ function M.analyze_plugins()
     vim.notify("Failed to write plugin analysis", vim.log.levels.ERROR)
     return
   end
-  
+
   -- Display in floating window
   local buf = vim.api.nvim_create_buf(false, true)
   vim.api.nvim_buf_set_lines(buf, 0, -1, false, lines)
-  
+
   -- Apply markdown highlighting
   vim.api.nvim_buf_set_option(buf, "filetype", "markdown")
-  
+
   -- Calculate window size
   local width = math.min(90, vim.o.columns - 4)
   local height = math.min(#lines + 2, vim.o.lines - 4)
-  
+
   -- Create window
   local win = vim.api.nvim_open_win(buf, true, {
     relative = "editor",
@@ -879,22 +884,27 @@ function M.analyze_plugins()
     border = "rounded",
     title = "Plugin Analysis",
   })
-  
+
   -- Set window options
   vim.api.nvim_win_set_option(win, "wrap", true)
   vim.api.nvim_win_set_option(win, "conceallevel", 2)
   vim.api.nvim_win_set_option(win, "foldenable", false)
-  
+
   -- Add keymaps to close the window
   vim.api.nvim_buf_set_keymap(buf, "n", "q", "<cmd>close<CR>", { noremap = true, silent = true })
   vim.api.nvim_buf_set_keymap(buf, "n", "<Esc>", "<cmd>close<CR>", { noremap = true, silent = true })
-  vim.api.nvim_buf_set_keymap(buf, "n", "o", "<cmd>e " .. report_path .. "<CR>", 
-    { noremap = true, silent = true, desc = "Open full report" })
-  
+  vim.api.nvim_buf_set_keymap(
+    buf,
+    "n",
+    "o",
+    "<cmd>e " .. report_path .. "<CR>",
+    { noremap = true, silent = true, desc = "Open full report" }
+  )
+
   -- Set buffer options
   vim.api.nvim_buf_set_option(buf, "modifiable", false)
   vim.api.nvim_buf_set_option(buf, "bufhidden", "wipe")
-  
+
   return buf, win, report_path
 end
 
@@ -916,10 +926,10 @@ function M.record_plugin(name, time)
       plugin_name = "plugin_" .. tostring(name):gsub("table: ", "")
     end
   end
-  
+
   -- Ensure we have a string
   plugin_name = tostring(plugin_name)
-  
+
   -- Add to our plugin data
   table.insert(profile_data.plugins, { name = plugin_name, time = time })
 end
@@ -941,7 +951,7 @@ M.memory_address_to_name = {}
 
 -- Debug function to identify plugins and their names
 function M.update_plugin_mapping()
-  local has_lazy, lazy_config = pcall(require, 'lazy.core.config')
+  local has_lazy, lazy_config = pcall(require, "lazy.core.config")
   if not has_lazy then
     vim.notify("Lazy.nvim not available", vim.log.levels.ERROR)
     return {}
@@ -949,10 +959,10 @@ function M.update_plugin_mapping()
 
   -- Make profile module available globally for recording
   _G.profile_module = M
-  
+
   local plugins = lazy_config.plugins
   local debug_lines = { "# Plugin Names Debug", "" }
-  
+
   -- Only reset if empty - we want to keep any mappings we've built up
   if not M.memory_address_to_name or vim.tbl_isempty(M.memory_address_to_name) then
     M.memory_address_to_name = {}
@@ -962,7 +972,7 @@ function M.update_plugin_mapping()
     local orig_addr = tostring(plugin):gsub("table: ", "")
     local addr_with_0x = "0x" .. orig_addr:gsub("^0x", "")
     local addr_plain = orig_addr:gsub("^0x", "")
-    
+
     -- Store all variations
     M.memory_address_to_name[orig_addr] = name
     M.memory_address_to_name["plugin_" .. orig_addr] = name
@@ -972,7 +982,7 @@ function M.update_plugin_mapping()
     M.memory_address_to_name["plugin_" .. addr_plain] = name
     M.memory_address_to_name["0x" .. addr_plain] = name
     M.memory_address_to_name["plugin_0x" .. addr_plain] = name
-    
+
     -- Build the debug output
     table.insert(debug_lines, string.format("Plugin: %s", name))
     table.insert(debug_lines, string.format("  - Reference: %s", tostring(plugin)))
@@ -981,12 +991,15 @@ function M.update_plugin_mapping()
     table.insert(debug_lines, string.format("  - Time: %s", plugin.time or "N/A"))
     table.insert(debug_lines, "")
   end
-  
+
   -- Also update the profile data with the correct names
   if profile_data.plugins and #profile_data.plugins > 0 then
     for i, plugin_data in ipairs(profile_data.plugins) do
-      if plugin_data.name and type(plugin_data.name) == "string" and 
-         (plugin_data.name:match("^plugin_0x") or plugin_data.name:match("^0x")) then
+      if
+        plugin_data.name
+        and type(plugin_data.name) == "string"
+        and (plugin_data.name:match("^plugin_0x") or plugin_data.name:match("^0x"))
+      then
         -- Extract the address part
         local addr
         if plugin_data.name:match("^plugin_0x") then
@@ -994,7 +1007,7 @@ function M.update_plugin_mapping()
         else
           addr = plugin_data.name
         end
-        
+
         -- Look up the name
         if M.memory_address_to_name[addr] then
           profile_data.plugins[i].name = M.memory_address_to_name[addr]
@@ -1002,22 +1015,22 @@ function M.update_plugin_mapping()
       end
     end
   end
-  
+
   return {
     mapping = M.memory_address_to_name,
-    debug_lines = debug_lines
+    debug_lines = debug_lines,
   }
 end
 
 -- Debug function to display plugin mapping information
 function M.debug_plugin_names()
   local result = M.update_plugin_mapping()
-  
+
   if not result or not result.debug_lines then
     vim.notify("Failed to generate plugin mapping information", vim.log.levels.ERROR)
     return
   end
-  
+
   -- Display in a buffer
   local buf = vim.api.nvim_create_buf(false, true)
   vim.api.nvim_buf_set_lines(buf, 0, -1, false, result.debug_lines)
@@ -1029,29 +1042,29 @@ end
 -- Function to clean up profile logs with confirmation
 function M.clean_profile_logs()
   local cache_dir = vim.fn.stdpath("cache")
-  
+
   -- Get all types of profile logs
   local log_patterns = {
-    cache_dir .. "/nvim_profile_*.log",       -- Main profile logs
-    cache_dir .. "/nvim_plugins_analysis.log",  -- Plugin analysis logs
-    cache_dir .. "/nvim_startup.log",         -- Startup logs
-    cache_dir .. "/lazy_plugins.log"          -- Lazy plugin logs
+    cache_dir .. "/nvim_profile_*.log", -- Main profile logs
+    cache_dir .. "/nvim_plugins_analysis.log", -- Plugin analysis logs
+    cache_dir .. "/nvim_startup.log", -- Startup logs
+    cache_dir .. "/lazy_plugins.log", -- Lazy plugin logs
   }
-  
+
   local log_files = {}
   local type_counts = {
     profile = 0,
     plugins = 0,
     startup = 0,
-    lazy = 0
+    lazy = 0,
   }
-  
+
   -- Collect all log files
   for _, pattern in ipairs(log_patterns) do
     local files = vim.fn.glob(pattern, true, true)
     for _, file in ipairs(files) do
       table.insert(log_files, file)
-      
+
       -- Count by type
       if file:match("nvim_profile_") then
         type_counts.profile = type_counts.profile + 1
@@ -1064,44 +1077,46 @@ function M.clean_profile_logs()
       end
     end
   end
-  
-  table.sort(log_files, function(a, b) return a > b end) -- Sort newest first
-  
+
+  table.sort(log_files, function(a, b)
+    return a > b
+  end) -- Sort newest first
+
   if #log_files == 0 then
     vim.notify("No profile logs found to clean up", vim.log.levels.WARN)
     return
   end
-  
+
   -- Create a nice display of the log files that will be deleted
   local lines = { "# Profile Logs to Delete", "", "The following profile logs will be deleted:" }
-  
+
   -- Group files by type
   local grouped_files = {
     ["Profile Logs"] = {},
     ["Plugin Analysis"] = {},
     ["Startup Logs"] = {},
-    ["Lazy Plugin Logs"] = {}
+    ["Lazy Plugin Logs"] = {},
   }
-  
+
   for _, file in ipairs(log_files) do
     local filename = vim.fn.fnamemodify(file, ":t")
     if filename:match("^nvim_profile_") then
-      table.insert(grouped_files["Profile Logs"], {file = file, name = filename})
+      table.insert(grouped_files["Profile Logs"], { file = file, name = filename })
     elseif filename:match("^nvim_plugins_analysis") then
-      table.insert(grouped_files["Plugin Analysis"], {file = file, name = filename})
+      table.insert(grouped_files["Plugin Analysis"], { file = file, name = filename })
     elseif filename:match("^nvim_startup") then
-      table.insert(grouped_files["Startup Logs"], {file = file, name = filename})
+      table.insert(grouped_files["Startup Logs"], { file = file, name = filename })
     elseif filename:match("^lazy_plugins") then
-      table.insert(grouped_files["Lazy Plugin Logs"], {file = file, name = filename})
+      table.insert(grouped_files["Lazy Plugin Logs"], { file = file, name = filename })
     end
   end
-  
+
   -- Display files by group
   for group_name, files in pairs(grouped_files) do
     if #files > 0 then
       table.insert(lines, "")
       table.insert(lines, "## " .. group_name .. " (" .. #files .. ")")
-      
+
       for i, file_data in ipairs(files) do
         local file = file_data.file
         if file:match("nvim_profile_(%d%d%d%d%d%d%d%d_%d%d%d%d%d%d)%.log$") then
@@ -1114,7 +1129,7 @@ function M.clean_profile_logs()
       end
     end
   end
-  
+
   table.insert(lines, "")
   table.insert(lines, string.format("## Summary"))
   table.insert(lines, string.format("- Profile logs: %d", type_counts.profile))
@@ -1124,18 +1139,18 @@ function M.clean_profile_logs()
   table.insert(lines, string.format("- Total: %d files", #log_files))
   table.insert(lines, "")
   table.insert(lines, "Press 'y' to confirm deletion or any other key to cancel.")
-  
+
   -- Create buffer and window
   local buf = vim.api.nvim_create_buf(false, true)
   vim.api.nvim_buf_set_lines(buf, 0, -1, false, lines)
-  
+
   -- Apply markdown highlighting
   vim.api.nvim_buf_set_option(buf, "filetype", "markdown")
-  
+
   -- Calculate window size
   local width = math.min(80, vim.o.columns - 4)
   local height = math.min(#lines + 2, vim.o.lines - 4)
-  
+
   -- Create window
   local win = vim.api.nvim_open_win(buf, true, {
     relative = "editor",
@@ -1147,17 +1162,17 @@ function M.clean_profile_logs()
     border = "rounded",
     title = "Clean Profile Logs",
   })
-  
+
   -- Set window options
   vim.api.nvim_win_set_option(win, "wrap", true)
   vim.api.nvim_win_set_option(win, "conceallevel", 2)
   vim.api.nvim_win_set_option(win, "foldenable", false)
-  
+
   -- Function to delete logs when confirmed
   local function delete_logs()
     -- Close the window
     vim.api.nvim_win_close(win, true)
-    
+
     -- Delete the files
     local deleted_count = 0
     for _, file in ipairs(log_files) do
@@ -1168,47 +1183,57 @@ function M.clean_profile_logs()
         vim.notify("Failed to delete " .. file .. ": " .. (err or "unknown error"), vim.log.levels.ERROR)
       end
     end
-    
+
     -- Show a summary of what was deleted by type
     local msg = string.format(
       "Cleaned up %d/%d files:\n- %d profile logs\n- %d plugin analysis logs\n- %d startup logs\n- %d lazy plugin logs",
-      deleted_count, #log_files,
-      type_counts.profile, type_counts.plugins, type_counts.startup, type_counts.lazy
+      deleted_count,
+      #log_files,
+      type_counts.profile,
+      type_counts.plugins,
+      type_counts.startup,
+      type_counts.lazy
     )
     vim.notify(msg, vim.log.levels.INFO)
   end
-  
+
   -- Function to cancel deletion
   local function cancel_deletion()
     vim.api.nvim_win_close(win, true)
     vim.notify("Log cleanup cancelled", vim.log.levels.INFO)
   end
-  
+
   -- Add keymaps for confirmation
   vim.api.nvim_buf_set_keymap(buf, "n", "y", "", {
-    noremap = true, silent = true, callback = delete_logs
+    noremap = true,
+    silent = true,
+    callback = delete_logs,
   })
-  
+
   vim.api.nvim_buf_set_keymap(buf, "n", "Y", "", {
-    noremap = true, silent = true, callback = delete_logs
+    noremap = true,
+    silent = true,
+    callback = delete_logs,
   })
-  
+
   -- All other keys cancel
   local function add_cancel_keymap(key)
     vim.api.nvim_buf_set_keymap(buf, "n", key, "", {
-      noremap = true, silent = true, callback = cancel_deletion
+      noremap = true,
+      silent = true,
+      callback = cancel_deletion,
     })
   end
-  
+
   add_cancel_keymap("n")
   add_cancel_keymap("q")
   add_cancel_keymap("<Esc>")
   add_cancel_keymap("<CR>")
-  
+
   -- Set buffer options
   vim.api.nvim_buf_set_option(buf, "modifiable", false)
   vim.api.nvim_buf_set_option(buf, "bufhidden", "wipe")
-  
+
   return buf, win
 end
 
@@ -1228,29 +1253,29 @@ function M.setup()
     vim.api.nvim_create_user_command("ProfileSummary", function()
       M.show_profile_summary()
     end, { desc = "Show profile summary in a float window" })
-    
+
     -- Command to list profile logs
     vim.api.nvim_create_user_command("ProfileLogs", function()
       M.list_profile_logs()
     end, { desc = "List profile logs" })
-    
+
     -- Command to clean up profile logs
     vim.api.nvim_create_user_command("ProfileClean", function()
       M.clean_profile_logs()
     end, { desc = "Clean up profile logs" })
-    
+
     -- Command to analyze plugins
     vim.api.nvim_create_user_command("ProfilePlugins", function()
       M.analyze_plugins()
     end, { desc = "Analyze plugin performance" })
-    
+
     -- Debug command
     vim.api.nvim_create_user_command("ProfileDebug", function()
       M.debug_plugin_names()
     end, { desc = "Debug plugin names" })
-    
+
     commands_registered = true
-    
+
     -- Log successful registration
     vim.notify("Profile commands registered", vim.log.levels.INFO)
   end
@@ -1283,4 +1308,3 @@ function M.setup()
 end
 
 return M
-

@@ -130,6 +130,10 @@ return {
 
     snippets = { preset = "luasnip" },
 
+    cmdline = {
+      sources = {},
+    },
+
     sources = {
       default = sources_default,
 

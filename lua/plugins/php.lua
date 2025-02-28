@@ -30,6 +30,11 @@ return {
             php_utils.install_ide_helper()
           end, vim.tbl_extend("force", opts, { desc = "Install Laravel IDE Helper" }))
           
+          -- Toggle debug mode for Laravel IDE Helper
+          vim.keymap.set("n", "<leader>lpd", function()
+            php_utils.toggle_debug_mode()
+          end, vim.tbl_extend("force", opts, { desc = "Toggle Laravel IDE Helper debug mode" }))
+          
           -- Run Artisan commands
           vim.keymap.set("n", "<leader>lpa", function()
             vim.ui.input({
@@ -86,6 +91,7 @@ return {
               ["<leader>lp"] = { name = "Laravel PHP" },
               ["<leader>lph"] = { desc = "Generate IDE Helper", icon = "𝓗" },
               ["<leader>lpi"] = { desc = "Install IDE Helper", icon = "𝓘" },
+              ["<leader>lpd"] = { desc = "Toggle Debug Mode", icon = "𝓓" },
               ["<leader>lpa"] = { desc = "Artisan Command", icon = "𝓐" },
             }, { mode = "n" })
           end

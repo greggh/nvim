@@ -7,6 +7,7 @@ M.DEBUGGERS = {
   "debugpy",
   "delve",
   "js-debug-adapter",
+  "php-debug-adapter",
 }
 
 function M.debugger_icons()
