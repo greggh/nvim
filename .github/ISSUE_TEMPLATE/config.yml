@@ -1,0 +1,11 @@
+blank_issues_enabled: true
+contact_links:
+  - name: Neovim Documentation
+    url: https://neovim.io/doc/
+    about: Check the official Neovim documentation first
+  - name: Neovim FAQ
+    url: https://github.com/neovim/neovim/wiki/FAQ
+    about: Check if your question is answered in the Neovim FAQ
+  - name: Lua Guide for Neovim
+    url: https://github.com/nanotee/nvim-lua-guide
+    about: Helpful guide for understanding Lua in Neovim contexts

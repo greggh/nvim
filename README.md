@@ -38,6 +38,18 @@ Open Neovim with this config:
 NVIM_APPNAME=greggh/nvim/ nvim
 ```
 
+## Contributing
+
+Contributions are welcome! If you'd like to help improve this configuration:
+
+1. Check the [open issues](https://github.com/greggh/nvim/issues) or create a new one to discuss your idea
+2. Fork the repository
+3. Create a new branch for your feature
+4. Make your changes
+5. Submit a pull request
+
+Please read [CONTRIBUTING.md](CONTRIBUTING.md) for detailed guidelines on how to contribute.
+
 ## 💤 Plugin manager
 
 - [lazy.nvim](https://github.com/folke/lazy.nvim)

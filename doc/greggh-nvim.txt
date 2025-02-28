@@ -1,0 +1,163 @@
+*greggh-nvim.txt*  Gregg's Neovim Configuration
+
+                                                                *greggh-nvim*
+
+================================================================================
+CONTENTS                                                  *greggh-nvim-contents*
+
+    1. Introduction ................................. |greggh-nvim-introduction|
+    2. Installation ................................. |greggh-nvim-installation|
+    3. Features ..................................... |greggh-nvim-features|
+    4. Key Mappings ................................. |greggh-nvim-keymappings|
+    5. Configuration ................................ |greggh-nvim-configuration|
+    6. Plugins ...................................... |greggh-nvim-plugins|
+    7. Customization ................................ |greggh-nvim-customization|
+    8. Troubleshooting .............................. |greggh-nvim-troubleshooting|
+    9. Contributing ................................. |greggh-nvim-contributing|
+
+================================================================================
+1. INTRODUCTION                                        *greggh-nvim-introduction*
+
+This is a comprehensive Neovim configuration designed for modern software
+development. It integrates popular plugins with custom configurations to create
+a powerful, fast, and user-friendly editing environment.
+
+Requirements:
+- Neovim 0.10.0 or newer
+- Nerd Font (for icons)
+- External tools: ripgrep, fd, fzf, lazygit
+
+================================================================================
+2. INSTALLATION                                        *greggh-nvim-installation*
+
+To install this configuration:
+
+1. Clone the repository:
+>
+    git clone git@github.com:greggh/nvim ~/.config/greggh/nvim
+<
+
+2. Launch Neovim with this configuration:
+>
+    NVIM_APPNAME=greggh/nvim/ nvim
+<
+
+This will automatically install all required plugins on first launch.
+
+================================================================================
+3. FEATURES                                              *greggh-nvim-features*
+
+- Modern UI with Catppuccin theme
+- LSP integration with auto-setup
+- Treesitter for syntax highlighting
+- Fuzzy finding with Telescope
+- Git integration
+- Debugging capabilities
+- Autocompletion with nvim-cmp
+- Snippets support
+- Markdown preview
+- Terminal integration
+- File tree explorer
+- And much more...
+
+================================================================================
+4. KEY MAPPINGS                                        *greggh-nvim-keymappings*
+
+Leader key: <Space>
+
+General:
+- <C-s> : Save file
+- <leader>qs : Save file
+- <leader>qq : Quit
+- <leader>qa : Quit all
+
+Navigation:
+- <leader>ff : Find files
+- <leader>fg : Live grep
+- <leader>fb : Browse buffers
+- <leader>fh : Help tags
+
+LSP:
+- gd : Go to definition
+- gr : Go to references
+- K : Show hover documentation
+- <leader>ca : Code actions
+- <leader>rn : Rename symbol
+
+Git:
+- <leader>gg : Open Lazygit
+- <leader>gs : Git status
+- <leader>gb : Git blame
+- <leader>gl : Git log
+
+See lua/config/keymaps.lua for a complete list of key mappings.
+
+================================================================================
+5. CONFIGURATION                                      *greggh-nvim-configuration*
+
+The configuration is organized in a modular structure:
+
+- init.lua: Main configuration file
+- lua/config/: Core configuration files
+  - lazy.lua: Plugin manager setup
+  - options.lua: Vim options
+  - keymaps.lua: Key mappings
+  - autocmd.lua: Autocommands
+- lua/plugins/: Plugin configurations
+- lua/utils/: Utility functions
+
+================================================================================
+6. PLUGINS                                                *greggh-nvim-plugins*
+
+This configuration uses lazy.nvim for plugin management. See README.md for a
+complete list of plugins.
+
+To manage plugins:
+- :Lazy : Open the plugin manager UI
+- :LazyUpdate : Update all plugins
+- :LazySync : Sync plugins (install/clean)
+
+================================================================================
+7. CUSTOMIZATION                                      *greggh-nvim-customization*
+
+To customize this configuration:
+
+1. Fork the repository
+2. Modify files in ~/.config/greggh/nvim/
+3. Add new plugins in lua/plugins/
+4. Override settings in lua/config/
+
+For temporary local changes, create a file at:
+~/.config/greggh/nvim/lua/local.lua
+
+================================================================================
+8. TROUBLESHOOTING                                  *greggh-nvim-troubleshooting*
+
+If you encounter issues:
+
+1. Update Neovim to the latest version
+2. Run :checkhealth for diagnostics
+3. Update plugins with :LazySync
+4. Check for errors in :messages
+5. Remove plugin cache: rm -rf ~/.local/share/nvim/lazy/
+
+For more help, create an issue on GitHub:
+https://github.com/greggh/nvim/issues
+
+================================================================================
+9. CONTRIBUTING                                        *greggh-nvim-contributing*
+
+Contributions are welcome! To contribute:
+
+1. Fork the repository
+2. Create a feature branch
+3. Make your changes
+4. Submit a pull request
+
+Please read CONTRIBUTING.md for detailed guidelines.
+
+Visit the GitHub repository for more information:
+https://github.com/greggh/nvim
+
+================================================================================
+vim:tw=78:ts=8:ft=help:norl:
