@@ -16,6 +16,11 @@ return {
     -- Use a local path override during development
     dir = vim.fn.expand("~/Projects/neovim/plugins/laravel-helper"),
     dependencies = {
+      -- Enhanced command interface 
+      "ColinKennedy/mega.cmdparse",  -- Optional but recommended
+      "ColinKennedy/mega.logging",   -- Required by mega.cmdparse
+      
+      -- Core dependencies
       "MunifTanjim/nui.nvim", -- Required for floating windows in IDE Helper
     },
     ft = { "php" },
@@ -57,13 +62,19 @@ return {
             -- Register keymappings with which-key if available
             local ok_wk, wk = pcall(require, "which-key")
             if ok_wk then
-              wk.register({
-                ["<leader>lp"] = { name = "Laravel PHP" },
-                ["<leader>lph"] = { desc = "Generate IDE Helper", icon = "𝓗" },
-                ["<leader>lpi"] = { desc = "Install IDE Helper", icon = "𝓘" },
-                ["<leader>lpd"] = { desc = "Toggle Debug Mode", icon = "𝓓" },
-                ["<leader>lpa"] = { desc = "Artisan Command", icon = "𝓐" },
-              }, { mode = "n" })
+              -- Add group specification
+              wk.add({
+                { "<leader>lp", group = "Laravel PHP", icon = "󰘙" }
+              })
+              
+              -- Register individual keys using the correct format
+              wk.add({
+                mode = "n",
+                { "<leader>lph", desc = "Generate IDE Helper", icon = "𝓗" },
+                { "<leader>lpi", desc = "Install IDE Helper", icon = "𝓘" },
+                { "<leader>lpd", desc = "Toggle Debug Mode", icon = "𝓓" },
+                { "<leader>lpa", desc = "Artisan Command", icon = "𝓐" },
+              })
             end
           end
         end,
