@@ -5,6 +5,10 @@
 - Nerd Font for icons
 - External dependencies: ripgrep, fd, fzf, lazygit
 
+## Configuration Notes
+- Laravel Helper functionality has been moved to a standalone plugin
+- The file lua/utils/php.lua can be safely removed as its functionality is now in the plugin
+
 ## Commands and Keybindings
 - Leader key is <Space>
 - Save: <C-s> or <leader>qs
