@@ -181,7 +181,7 @@ function M.show_profile_summary()
   vim.api.nvim_buf_set_lines(buf, 0, -1, false, lines)
 
   -- Apply markdown highlighting
-  vim.api.nvim_buf_set_option(buf, "filetype", "markdown")
+  vim.bo[buf].filetype = "markdown"
 
   -- Calculate window size
   local width = math.min(80, vim.o.columns - 4)
@@ -200,17 +200,17 @@ function M.show_profile_summary()
   })
 
   -- Set window options
-  vim.api.nvim_win_set_option(win, "wrap", true)
-  vim.api.nvim_win_set_option(win, "conceallevel", 2)
-  vim.api.nvim_win_set_option(win, "foldenable", false)
+  vim.wo[win].wrap = true
+  vim.wo[win].conceallevel = 2
+  vim.wo[win].foldenable = false
 
   -- Add keymaps to close the window
   vim.api.nvim_buf_set_keymap(buf, "n", "q", "<cmd>close<CR>", { noremap = true, silent = true })
   vim.api.nvim_buf_set_keymap(buf, "n", "<Esc>", "<cmd>close<CR>", { noremap = true, silent = true })
 
   -- Set buffer options
-  vim.api.nvim_buf_set_option(buf, "modifiable", false)
-  vim.api.nvim_buf_set_option(buf, "bufhidden", "wipe")
+  vim.bo[buf].modifiable = false
+  vim.bo[buf].bufhidden = "wipe"
 
   return buf, win
 end
@@ -232,6 +232,7 @@ function M.list_profile_logs()
   local lines = {}
   local file_lookup = {}
 
+  ---@diagnostic disable-next-line: unused-local
   for i, file in ipairs(log_files) do
     local timestamp = file:match("nvim_profile_(%d%d%d%d%d%d%d%d_%d%d%d%d%d%d)%.log$")
     local display_line
@@ -269,12 +270,12 @@ function M.list_profile_logs()
   })
 
   -- Set window options
-  vim.api.nvim_win_set_option(win, "wrap", true)
-  vim.api.nvim_win_set_option(win, "foldenable", false)
-  vim.api.nvim_win_set_option(win, "cursorline", true)
+  vim.wo[win].wrap = true
+  vim.wo[win].foldenable = false
+  vim.wo[win].cursorline = true
 
   -- Set up syntax highlighting for the log list
-  vim.api.nvim_buf_set_option(buf, "filetype", "markdown")
+  vim.bo[buf].filetype = "markdown"
 
   -- Function to open the selected log
   local function open_selected_log()
@@ -304,7 +305,7 @@ function M.list_profile_logs()
       vim.api.nvim_buf_set_lines(log_buf, 0, -1, false, log_content)
 
       -- Apply markdown formatting
-      vim.api.nvim_buf_set_option(log_buf, "filetype", "markdown")
+      vim.bo[log_buf].filetype = "markdown"
 
       -- Calculate window size
       local win_width = math.min(90, vim.o.columns - 4)
@@ -323,17 +324,17 @@ function M.list_profile_logs()
       })
 
       -- Set window options
-      vim.api.nvim_win_set_option(log_win, "wrap", true)
-      vim.api.nvim_win_set_option(log_win, "conceallevel", 2)
-      vim.api.nvim_win_set_option(log_win, "foldenable", false)
+      vim.wo[log_win].wrap = true
+      vim.wo[log_win].conceallevel = 2
+      vim.wo[log_win].foldenable = false
 
       -- Add keymaps to close the window
       vim.api.nvim_buf_set_keymap(log_buf, "n", "q", "<cmd>close<CR>", { noremap = true, silent = true })
       vim.api.nvim_buf_set_keymap(log_buf, "n", "<Esc>", "<cmd>close<CR>", { noremap = true, silent = true })
 
       -- Set buffer options
-      vim.api.nvim_buf_set_option(log_buf, "modifiable", false)
-      vim.api.nvim_buf_set_option(log_buf, "bufhidden", "wipe")
+      vim.bo[log_buf].modifiable = false
+      vim.bo[log_buf].bufhidden = "wipe"
 
       -- Return to the beginning of the file
       vim.api.nvim_win_set_cursor(log_win, { 1, 0 })
@@ -358,8 +359,8 @@ function M.list_profile_logs()
   vim.api.nvim_buf_set_keymap(buf, "n", "<Esc>", "<cmd>close<CR>", { noremap = true, silent = true })
 
   -- Set buffer options
-  vim.api.nvim_buf_set_option(buf, "modifiable", false)
-  vim.api.nvim_buf_set_option(buf, "bufhidden", "wipe")
+  vim.bo[buf].modifiable = false
+  vim.bo[buf].bufhidden = "wipe"
 
   -- Add buffer-local autocommands
   vim.api.nvim_create_autocmd("BufLeave", {
@@ -867,7 +868,7 @@ function M.analyze_plugins()
   vim.api.nvim_buf_set_lines(buf, 0, -1, false, lines)
 
   -- Apply markdown highlighting
-  vim.api.nvim_buf_set_option(buf, "filetype", "markdown")
+  vim.bo[buf].filetype = "markdown"
 
   -- Calculate window size
   local width = math.min(90, vim.o.columns - 4)
@@ -886,9 +887,9 @@ function M.analyze_plugins()
   })
 
   -- Set window options
-  vim.api.nvim_win_set_option(win, "wrap", true)
-  vim.api.nvim_win_set_option(win, "conceallevel", 2)
-  vim.api.nvim_win_set_option(win, "foldenable", false)
+  vim.wo[win].wrap = true
+  vim.wo[win].conceallevel = 2
+  vim.wo[win].foldenable = false
 
   -- Add keymaps to close the window
   vim.api.nvim_buf_set_keymap(buf, "n", "q", "<cmd>close<CR>", { noremap = true, silent = true })
@@ -902,8 +903,8 @@ function M.analyze_plugins()
   )
 
   -- Set buffer options
-  vim.api.nvim_buf_set_option(buf, "modifiable", false)
-  vim.api.nvim_buf_set_option(buf, "bufhidden", "wipe")
+  vim.bo[buf].modifiable = false
+  vim.bo[buf].bufhidden = "wipe"
 
   return buf, win, report_path
 end
@@ -1034,7 +1035,7 @@ function M.debug_plugin_names()
   -- Display in a buffer
   local buf = vim.api.nvim_create_buf(false, true)
   vim.api.nvim_buf_set_lines(buf, 0, -1, false, result.debug_lines)
-  vim.api.nvim_buf_set_option(buf, "filetype", "markdown")
+  vim.bo[buf].filetype = "markdown"
   vim.api.nvim_command("split")
   vim.api.nvim_win_set_buf(vim.api.nvim_get_current_win(), buf)
 end
@@ -1117,6 +1118,7 @@ function M.clean_profile_logs()
       table.insert(lines, "")
       table.insert(lines, "## " .. group_name .. " (" .. #files .. ")")
 
+      ---@diagnostic disable-next-line: unused-local
       for i, file_data in ipairs(files) do
         local file = file_data.file
         if file:match("nvim_profile_(%d%d%d%d%d%d%d%d_%d%d%d%d%d%d)%.log$") then
@@ -1145,7 +1147,7 @@ function M.clean_profile_logs()
   vim.api.nvim_buf_set_lines(buf, 0, -1, false, lines)
 
   -- Apply markdown highlighting
-  vim.api.nvim_buf_set_option(buf, "filetype", "markdown")
+  vim.bo[buf].filetype = "markdown"
 
   -- Calculate window size
   local width = math.min(80, vim.o.columns - 4)
@@ -1164,9 +1166,9 @@ function M.clean_profile_logs()
   })
 
   -- Set window options
-  vim.api.nvim_win_set_option(win, "wrap", true)
-  vim.api.nvim_win_set_option(win, "conceallevel", 2)
-  vim.api.nvim_win_set_option(win, "foldenable", false)
+  vim.wo[win].wrap = true
+  vim.wo[win].conceallevel = 2
+  vim.wo[win].foldenable = false
 
   -- Function to delete logs when confirmed
   local function delete_logs()
@@ -1231,8 +1233,8 @@ function M.clean_profile_logs()
   add_cancel_keymap("<CR>")
 
   -- Set buffer options
-  vim.api.nvim_buf_set_option(buf, "modifiable", false)
-  vim.api.nvim_buf_set_option(buf, "bufhidden", "wipe")
+  vim.bo[buf].modifiable = false
+  vim.bo[buf].bufhidden = "wipe"
 
   return buf, win
 end
