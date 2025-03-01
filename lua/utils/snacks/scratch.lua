@@ -1,4 +1,5 @@
 local M = {}
+local Snacks = require("snacks")
 
 local function generate_uuid()
   local random = math.random

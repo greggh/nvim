@@ -22,6 +22,7 @@ return {
             key = "<leader>ff",
             desc = " Find files",
             action = function()
+              local Snacks = require("snacks")
               Snacks.dashboard.pick("files")
             end,
           },
@@ -30,6 +31,7 @@ return {
             key = "<leader>fg",
             desc = " Grep text",
             action = function()
+              local Snacks = require("snacks")
               Snacks.dashboard.pick("live_grep")
             end,
           },
@@ -38,6 +40,7 @@ return {
             key = "<leader>fr",
             desc = " Recent files",
             action = function()
+              local Snacks = require("snacks")
               Snacks.dashboard.pick("recent")
             end,
           },
@@ -46,6 +49,7 @@ return {
             key = "<leader>cc",
             desc = " Config",
             action = function()
+              local Snacks = require("snacks")
               Snacks.dashboard.pick("files", { cwd = vim.fn.stdpath("config") })
             end,
           },

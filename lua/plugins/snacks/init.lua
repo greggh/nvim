@@ -41,6 +41,7 @@ return {
     -- Set up essential debug utilities immediately
     ---@diagnostic disable-next-line: duplicate-set-field
     _G.dd = function(...)
+      local Snacks = package.loaded["snacks"]
       if Snacks and Snacks.debug then
         Snacks.debug.inspect(...)
       else
@@ -50,6 +51,7 @@ return {
 
     ---@diagnostic disable-next-line: duplicate-set-field
     _G.bt = function()
+      local Snacks = package.loaded["snacks"]
       if Snacks and Snacks.debug then
         Snacks.debug.backtrace()
       else
@@ -90,6 +92,7 @@ return {
           }
 
           -- Register toggles in batches with small pauses to avoid UI freezes
+          local Snacks = require("snacks")
           for i, toggle in ipairs(toggles) do
             if toggle.option then
               Snacks.toggle.option(toggle.option, toggle.opts):map(toggle.key)
