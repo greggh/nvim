@@ -7,8 +7,8 @@ let g:_test_verbose = get(g:, '_test_verbose', 0)
 
 " Define a function to run tests
 function! RunBasicTests()
-  " Load the lua test runner
-  lua require('tests.run_tests').run_tests(vim.fn.expand('~/.config/nvim/tests/spec'))
+  " Load the lua test runner with relative path
+  lua require('tests.run_tests').run_tests('tests/spec')
 endfunction
 
 " Run the tests

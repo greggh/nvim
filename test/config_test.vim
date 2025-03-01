@@ -12,8 +12,8 @@ function! RunConfigTests()
   -- Run configuration tests
   local test_runner = require('tests.run_tests')
   
-  -- Load config tests
-  test_runner.run_tests(vim.fn.expand('~/.config/nvim/tests/spec'))
+  -- Load config tests with relative path
+  test_runner.run_tests('tests/spec')
 EOF
 endfunction
 
