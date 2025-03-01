@@ -755,13 +755,13 @@ function M.analyze_plugins()
 
         -- Still no match? Try all plugins to see if any match this reference's string representation
         local ref_str = tostring(raw_name)
-        for name, plugin in pairs(plugins) do
-          if tostring(plugin) == ref_str then
+        for name, plugin_match in pairs(plugins) do
+          if tostring(plugin_match) == ref_str then
             return name
           end
 
           -- Check if the raw_name contains the address of this plugin
-          local plugin_addr = tostring(plugin):gsub("table: ", "")
+          local plugin_addr = tostring(plugin_match):gsub("table: ", "")
           local plugin_addr_plain = plugin_addr:gsub("^0x", "")
 
           if type(raw_name) == "string" then

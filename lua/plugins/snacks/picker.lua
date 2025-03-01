@@ -1,5 +1,6 @@
 local git = require("utils.git")
 local picker_utils = require("utils.snacks.picker")
+local Snacks = require("snacks")
 
 return {
   "snacks.nvim",

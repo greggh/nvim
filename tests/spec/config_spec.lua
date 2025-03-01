@@ -19,12 +19,10 @@ test.describe("Configuration", function()
       -- Make a separate call for more diagnostics
       return require("config.keymaps")
     end)
-    
     -- Print diagnostic information
     print("Load status: " .. tostring(status))
     if not status then
       print("Error loading keymaps: " .. tostring(result))
-      
       -- Check if file exists but can't be loaded due to dependencies
       -- We'll consider this a pass for testing purposes
       local file_exists = io.open("/home/gregg/.config/nvim/lua/config/keymaps.lua", "r")
@@ -34,7 +32,6 @@ test.describe("Configuration", function()
         status = true
       end
     end
-    
     test.expect(status).to_be_truthy()
   end)
 
