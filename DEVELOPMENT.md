@@ -1,6 +1,6 @@
-# Development Guide for Neovim Configuration
+# Development Guide for Neovim Projects
 
-This document outlines the development workflow, testing setup, and requirements for working with this Neovim configuration.
+This document outlines the development workflow, testing setup, and requirements for working with Neovim Lua projects such as this configuration, Laravel Helper plugin, and Claude Code plugin.
 
 ## Requirements
 
@@ -202,6 +202,69 @@ This project uses GitHub Actions for CI:
 - **Jobs**: Install dependencies, Run linting, Run tests
 - **Platforms**: Ubuntu Linux (primary)
 
+## Tools and Their Purposes
+
+Understanding why we use each tool helps in appreciating their role in the development process:
+
+### Neovim
+
+Neovim is the primary development platform and runtime environment. We use version 0.10.0+ because it provides:
+- Better API support for plugin development
+- Improved performance for larger codebases
+- Enhanced LSP integration
+- Support for modern Lua features via LuaJIT
+
+### StyLua
+
+StyLua is a Lua formatter specifically designed for Neovim configurations. It:
+- Ensures consistent code style across all contributors
+- Formats according to Lua best practices
+- Handles Neovim-specific formatting conventions
+- Integrates with our pre-commit hooks for automated formatting
+
+Our configuration uses 2-space indentation and 100-character line length limits.
+
+### LuaCheck
+
+LuaCheck is a static analyzer that helps catch issues before they cause problems:
+- Identifies syntax errors and semantic issues
+- Flags unused variables and unused function parameters
+- Detects global variable access without declaration
+- Warns about whitespace and style issues
+- Ensures code adheres to project-specific standards
+
+We configure LuaCheck with `.luacheckrc` files that define project-specific globals and rules.
+
+### Ripgrep & FD
+
+These tools improve development efficiency:
+- **Ripgrep**: Extremely fast code searching to find patterns and references
+- **FD**: Fast alternative to `find` for locating files in complex directory structures
+
+### Git & Make
+
+- **Git**: Version control with support for feature branches and collaborative development
+- **Make**: Common interface for development tasks that work across different platforms
+
+## Project Structure
+
+All our Neovim projects follow a similar structure:
+
+```
+.
+├── .github/            # GitHub-specific files and workflows
+├── .githooks/          # Git hooks for pre-commit validation
+├── lua/                # Main Lua source code
+│   └── [project-name]/ # Project-specific modules
+├── test/               # Basic test modules
+├── tests/              # Extended test suites
+├── .luacheckrc         # LuaCheck configuration
+├── .stylua.toml        # StyLua configuration
+├── Makefile            # Common commands
+├── CHANGELOG.md        # Project version history
+└── README.md           # Project overview
+```
+
 ## Troubleshooting
 
 ### Common Issues
@@ -209,6 +272,8 @@ This project uses GitHub Actions for CI:
 - **stylua not found**: Make sure it's installed and in your PATH
 - **luacheck errors**: Run `make lint` to see specific issues
 - **Test failures**: Use `make test-verbose` for detailed output
+- **Module not found errors**: Check that you're using the correct module name and path 
+- **Plugin functionality not loading**: Verify your Neovim version is 0.10.0 or higher
 
 ### Getting Help
 
@@ -216,3 +281,5 @@ If you encounter issues:
 1. Check the error messages carefully
 2. Verify all dependencies are correctly installed
 3. Check that your Neovim version is 0.10.0 or higher
+4. Review the project's issues on GitHub for similar problems
+5. Open a new issue with detailed reproduction steps if needed
