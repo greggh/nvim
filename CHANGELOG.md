@@ -12,10 +12,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Comprehensive test framework using BDD-style syntax
 - GitHub Actions workflow for CI/CD
 - Linting and formatting with luacheck and StyLua
+- Development guide with cross-platform tool installation instructions
+- GitHub Sponsors and Ko-fi funding links
 
 ### Changed
 - Improved module loading approach for better performance
 - Enhanced error handling throughout configuration
+- Updated contributing guidelines with references to development guide
 
 ### Fixed
 - Snacks module loading issues
