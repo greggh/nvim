@@ -1,10 +1,8 @@
 -- Config tests
 local test = require("tests.run_tests")
-
 test.describe("Configuration", function()
   -- Print a debug message
   print("Testing configuration modules...")
-
   -- Test each module separately to identify which one is failing
   test.it("Module options should load without errors", function()
     local status, module = pcall(require, "config.options")
@@ -44,13 +42,11 @@ test.describe("Configuration", function()
     print("Attempting to load config.autocmd...")
     -- Try to load the module with proper mocking
     local status, result = pcall(require, "config.autocmd")
-
     -- Print diagnostic information
     print("Load status: " .. tostring(status))
     if not status then
       print("Error loading autocmd: " .. tostring(result))
     end
-
     -- Now we should be able to properly load the module
     test.expect(status).to_be_truthy()
     test.expect(result).to_be_truthy()
@@ -59,7 +55,6 @@ test.describe("Configuration", function()
   test.it("Options module should set basic editor options", function()
     -- Load options module
     require("config.options")
-
     -- Check a few key options
     test.expect(vim.opt.number:get()).to_be_truthy()
     test.expect(vim.opt.termguicolors:get()).to_be_truthy()

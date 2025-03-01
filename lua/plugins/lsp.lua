@@ -314,8 +314,9 @@ return {
           server.capabilities.offsetEncoding = { "utf-16" }
         end
 
-        server.on_attach = function(client, bufnr) -- Attach the following to every buffer.
-          require("workspace-diagnostics").populate_workspace_diagnostics(client, bufnr) -- Populate Workspace-Diagnostics plugin information.
+        server.on_attach = function(client, bufnr) -- Attach to every buffer
+          -- Populate Workspace-Diagnostics plugin information
+          require("workspace-diagnostics").populate_workspace_diagnostics(client, bufnr)
         end
         require("lspconfig")[server_name].setup(server)
       end,

@@ -1,6 +1,7 @@
 local M = {}
 
 local session = require("mini.sessions")
+local Snacks = require("snacks")
 
 function M.has_valid_buffers()
   for _, bufnr in ipairs(vim.api.nvim_list_bufs()) do

@@ -25,9 +25,9 @@ return {
     require("auto-save").setup({
       enabled = true, -- start auto-save when the plugin is loaded
       trigger_events = { -- See :h events
-        immediate_save = { "BufLeave", "FocusLost" }, -- vim events that trigger an immediate save
-        defer_save = { "InsertLeave", "TextChanged" }, -- vim events that trigger a deferred save (saves after `debounce_delay`)
-        cancel_deferred_save = { "InsertEnter" }, -- vim events that cancel a pending deferred save
+        immediate_save = { "BufLeave", "FocusLost" }, -- events for immediate save
+        defer_save = { "InsertLeave", "TextChanged" }, -- events for deferred save
+        cancel_deferred_save = { "InsertEnter" }, -- events that cancel deferred save
       },
       condition = function(buf)
         local bufVar = function(type)
