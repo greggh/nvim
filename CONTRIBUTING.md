@@ -82,25 +82,33 @@ This configuration uses [stylua](https://github.com/JohnnyMorganz/StyLua) for co
 
 ## Development Workflow
 
+For detailed instructions on setting up a development environment, required tools, and testing procedures, please refer to the [DEVELOPMENT.md](DEVELOPMENT.md) file. This comprehensive guide includes:
+
+- Installation instructions for all required development tools on various platforms
+- Detailed explanation of the project structure
+- Testing processes and guidelines
+- Troubleshooting common issues
+
 ### Setting Up Development Environment
 
-1. Clone the repository:
+1. Read the [DEVELOPMENT.md](DEVELOPMENT.md) guide to ensure you have all necessary tools installed
+2. Clone the repository:
    ```bash
    git clone https://github.com/greggh/nvim ~/.config/nvim-dev
    ```
-
-2. Create a script to launch Neovim with this configuration:
+3. Create a script to launch Neovim with this configuration:
    ```bash
    NVIM_APPNAME=nvim-dev nvim
    ```
-
-3. Make your changes and test them thoroughly
+4. Make your changes and test them thoroughly
 
 ### Testing Your Changes
 
 Before submitting a PR, please ensure:
 
-- Your changes don't break existing functionality
+- Your changes pass all tests (`make test`)
+- Your code passes linting checks (`make lint`)
+- Your code is properly formatted (`make format`)
 - New features are well-documented
 - The configuration starts without errors
 - Plugin dependencies are properly specified
