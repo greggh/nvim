@@ -17,11 +17,9 @@ vim.opt.rtp:prepend(lazypath)
 ------------------------------------
 -- PLUGINS
 ------------------------------------
-
 -- Load plugin modules first and then configure them
 -- This can significantly improve startup time
 local plugins_load_start = os.clock()
-
 -- Record plugin loading time for analysis
 local lazy_stats = {
   load_time = nil,
@@ -31,7 +29,6 @@ local lazy_stats = {
 
 -- Make stats available globally for profiling
 _G.lazy_stats = lazy_stats
-
 -- For debug/profile mode, add event tracking to Lazy
 if os.getenv("NVIM_PROFILE") then
   local lazy_orig_load = require("lazy.core.loader").load
@@ -40,13 +37,12 @@ if os.getenv("NVIM_PROFILE") then
     local start_time = os.clock()
     local result = lazy_orig_load(plugin, ...)
     local load_time = os.clock() - start_time
-
     -- Track plugin loading stats
     if not lazy_stats.plugin_times then
       lazy_stats.plugin_times = {}
     end
     lazy_stats.plugin_times[plugin] = load_time
-    
+
     -- Record in profile module if available
     pcall(function()
       if _G.profile_module and _G.profile_module.record_plugin then
@@ -60,7 +56,7 @@ if os.getenv("NVIM_PROFILE") then
           -- Create a placeholder name with the memory address
           name = "plugin_" .. tostring(plugin):gsub("table: ", "")
         end
-        
+
         _G.profile_module.record_plugin(name, load_time)
       end
     end)
@@ -191,14 +187,12 @@ if os.getenv("NVIM_PROFILE") then
       end
     end,
   })
-  
   -- When all plugins have loaded
   vim.api.nvim_create_autocmd("User", {
     pattern = "LazyDone",
     callback = function()
       lazy_stats.loaded_plugins = #require("lazy.core.config").plugins
       write_lazy_stats() -- Use the common function
-      
       -- Record stats in profile module
       pcall(function()
         if _G.profile_module and _G.profile_module.record_event then

@@ -16,10 +16,9 @@ return {
     -- Use a local path override during development
     dir = vim.fn.expand("~/Projects/neovim/plugins/laravel-helper"),
     dependencies = {
-      -- Enhanced command interface 
-      "ColinKennedy/mega.cmdparse",  -- Optional but recommended
-      "ColinKennedy/mega.logging",   -- Required by mega.cmdparse
-      
+      -- Enhanced command interface
+      "ColinKennedy/mega.cmdparse", -- Optional but recommended
+      "ColinKennedy/mega.logging", -- Required by mega.cmdparse
       -- Core dependencies
       "MunifTanjim/nui.nvim", -- Required for floating windows in IDE Helper
     },
@@ -64,9 +63,8 @@ return {
             if ok_wk then
               -- Add group specification
               wk.add({
-                { "<leader>lp", group = "Laravel PHP", icon = "󰘙" }
+                { "<leader>lp", group = "Laravel PHP", icon = "󰘙" },
               })
-              
               -- Register individual keys using the correct format
               wk.add({
                 mode = "n",
@@ -82,4 +80,3 @@ return {
     end,
   },
 }
-

@@ -1,4 +1,5 @@
 local M = {}
+local Snacks = require("snacks")
 
 M.headers = {
   anonymous = "anonymous.cat",

@@ -331,6 +331,7 @@ return {
         local bind = require("utils.keymap-bind")
         local map_cr = bind.map_cr
         local map_callback = bind.map_callback
+        local Snacks = require("snacks")
         local lsp_map = {
           ["n|gr"] = map_callback(function()
               Snacks.picker.lsp_references()

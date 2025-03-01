@@ -2,7 +2,7 @@ return {
   "nvim-dap",
   opts = function()
     local dap = require("dap")
-    local debugger = require("utils.debugger")
+    local _debugger = require("utils.debugger") -- Prefixed with _ to indicate it's unused
     local git = require("utils.git")
     local debug_adapter_path = vim.env.MASON .. "/packages/php-debug-adapter/vscode-php-debug/out/phpDebug.js"
     local cwd = vim.fs.root(0, { "composer.json", "index.php" }) or git.get_git_root() or "${workspaceFolder}"
@@ -213,4 +213,3 @@ return {
     dap.configurations.php = php_configurations
   end,
 }
-
