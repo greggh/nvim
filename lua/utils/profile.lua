@@ -775,13 +775,13 @@ function M.analyze_plugins()
 
         -- Check the static mapping table from Lazy
         if _G.lazy_stats and _G.lazy_stats.plugin_times then
-          for plugin_entry, _ in pairs(_G.lazy_stats.plugin_times) do
-            if type(plugin_entry) == "table" then
-              local entry_addr = tostring(plugin_entry):gsub("table: ", "")
+          for lazy_plugin, _ in pairs(_G.lazy_stats.plugin_times) do
+            if type(lazy_plugin) == "table" then
+              local entry_addr = tostring(lazy_plugin):gsub("table: ", "")
               if type(raw_name) == "string" and raw_name:match(entry_addr:gsub("^0x", "")) then
                 -- Found a match from lazy_stats, get the name
-                local entry_name = plugin_entry.name or "unknown"
-                if plugin_entry.name then
+                local entry_name = lazy_plugin.name or "unknown"
+                if lazy_plugin.name then
                   -- Store for future lookups
                   M.memory_address_to_name[raw_name] = entry_name
                   return entry_name
