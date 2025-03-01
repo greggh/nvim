@@ -1,0 +1,76 @@
+#!/bin/bash
+
+# Pre-commit hook for Neovim config
+
+# Get the top level of the git repository
+TOP_LEVEL=$(git rev-parse --show-toplevel)
+cd "$TOP_LEVEL" || exit 1
+
+# Check for stylua
+if ! command -v stylua &> /dev/null; then
+  echo "Error: stylua is not installed. Please install it to format Lua code."
+  echo "You can install it from: https://github.com/JohnnyMorganz/StyLua"
+  exit 1
+fi
+
+# Check for luacheck
+if ! command -v luacheck &> /dev/null; then
+  echo "Warning: luacheck is not installed. Skipping lint checks."
+  echo "You can install it using luarocks: luarocks install luacheck"
+  HAS_LUACHECK=0
+else
+  HAS_LUACHECK=1
+fi
+
+# Get all staged Lua files
+STAGED_FILES=$(git diff --cached --name-only --diff-filter=ACM | grep -E '\.lua$')
+
+if [ -n "$STAGED_FILES" ]; then
+  echo "Running StyLua on staged Lua files..."
+  
+  # Format all staged Lua files
+  for FILE in $STAGED_FILES; do
+    stylua "$FILE"
+    git add "$FILE"
+  done
+  
+  echo "Lua files have been formatted and staged."
+  
+  # Run luacheck if available
+  if [ "$HAS_LUACHECK" -eq 1 ]; then
+    echo "Running luacheck on staged Lua files..."
+    LINT_ISSUES=0
+    
+    for FILE in $STAGED_FILES; do
+      luacheck "$FILE"
+      if [ $? -ne 0 ]; then
+        LINT_ISSUES=1
+      fi
+    done
+    
+    if [ "$LINT_ISSUES" -eq 1 ]; then
+      echo "Warning: Lua lint issues found. Please fix them before committing."
+      echo "You can bypass this check with git commit --no-verify"
+      # Not exiting with error to allow committing with lint issues
+    fi
+  fi
+  
+  # Run basic tests
+  echo "Running basic tests..."
+  if command -v nvim &> /dev/null; then
+    nvim --headless --noplugin -u test/minimal.vim -c "source test/basic_test.vim" -c "qa!" 2>/dev/null
+    
+    if [ $? -ne 0 ]; then
+      echo "Error: Basic tests failed. Please fix the issues before committing."
+      echo "Run 'make test' to see detailed test output."
+      echo "You can bypass this check with git commit --no-verify"
+      exit 1
+    else
+      echo "Basic tests passed."
+    fi
+  else
+    echo "Warning: nvim not found in PATH. Skipping tests."
+  fi
+fi
+
+exit 0

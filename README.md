@@ -46,9 +46,21 @@ Contributions are welcome! If you'd like to help improve this configuration:
 2. Fork the repository
 3. Create a new branch for your feature
 4. Make your changes
-5. Submit a pull request
+5. Run the tests (`make test`) and ensure they pass
+6. Submit a pull request
 
-Please read [CONTRIBUTING.md](CONTRIBUTING.md) for detailed guidelines on how to contribute.
+Please read [CONTRIBUTING.md](CONTRIBUTING.md) for detailed guidelines on how to contribute and [DEVELOPMENT.md](DEVELOPMENT.md) for development setup instructions.
+
+## Development
+
+This configuration includes a testing framework and development tools:
+
+- **Testing**: Run `make test` to execute all tests
+- **Linting**: Run `make lint` to check code quality
+- **Formatting**: Run `make format` to format Lua code
+- **Git Hooks**: Run `./scripts/setup-hooks.sh` to set up pre-commit hooks
+
+For a complete development environment setup, see [DEVELOPMENT.md](DEVELOPMENT.md).
 
 ## 💤 Plugin manager
 
