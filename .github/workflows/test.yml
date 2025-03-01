@@ -36,16 +36,11 @@ jobs:
           # Install luacheck for linting
           sudo luarocks install luacheck
 
-          # Install stylua for formatting
-          # Get the latest version from GitHub
-          STYLUA_VERSION=$(curl -s https://api.github.com/repos/JohnnyMorganz/StyLua/releases/latest | grep -oP '"tag_name": "\K[^"]+')
-          STYLUA_URL="https://github.com/JohnnyMorganz/StyLua/releases/latest/download/stylua-linux-x86_64.zip"
-          
-          # Download and extract stylua
-          curl -L -o stylua.zip $STYLUA_URL
-          unzip stylua.zip
-          chmod +x stylua
-          sudo mv stylua /usr/local/bin/
+      - name: Install StyLua
+        uses: JohnnyMorganz/stylua-action@v3
+        with:
+          version: latest
+          token: ${{ github.token }}
 
       - name: Check Neovim version
         run: |
