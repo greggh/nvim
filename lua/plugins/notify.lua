@@ -52,4 +52,3 @@ return {
     vim.notify = notify
   end,
 }
-
