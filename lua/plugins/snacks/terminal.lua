@@ -5,6 +5,7 @@ return {
       mode = { "n", "t" },
       "<C-T>",
       function()
+        local Snacks = require("snacks")
         Snacks.terminal.toggle()
       end,
       silent = true,
@@ -13,6 +14,7 @@ return {
     {
       "<c-_>",
       function()
+        local Snacks = require("snacks")
         Snacks.terminal()
       end,
       desc = "which_key_ignore",

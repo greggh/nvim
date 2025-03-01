@@ -47,7 +47,8 @@ function M.find_debug_target(targetPrefix, depth, buildCommand)
     return targetPrefix .. targets[1]
   end
   if #targets == 0 then
-    return vim.fn.system(buildCommand) -- return vim.fn.input("Path to executable: ", get_workspace_root() .. "/", "file")
+    -- If no targets found, run the build command
+    return vim.fn.system(buildCommand)
   end
   return coroutine.create(function(coro)
     vim.ui.select(targets, {

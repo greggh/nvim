@@ -307,16 +307,16 @@ function M.list_profile_logs()
       vim.api.nvim_buf_set_option(log_buf, "filetype", "markdown")
 
       -- Calculate window size
-      local width = math.min(90, vim.o.columns - 4)
-      local height = math.min(#log_content + 2, vim.o.lines - 4)
+      local win_width = math.min(90, vim.o.columns - 4)
+      local win_height = math.min(#log_content + 2, vim.o.lines - 4)
 
       -- Create window for the log file
       local log_win = vim.api.nvim_open_win(log_buf, true, {
         relative = "editor",
-        width = width,
-        height = height,
-        row = math.floor((vim.o.lines - height) / 2),
-        col = math.floor((vim.o.columns - width) / 2),
+        width = win_width,
+        height = win_height,
+        row = math.floor((vim.o.lines - win_height) / 2),
+        col = math.floor((vim.o.columns - win_width) / 2),
         style = "minimal",
         border = "rounded",
         title = vim.fn.fnamemodify(selected_file, ":t"),
@@ -775,16 +775,16 @@ function M.analyze_plugins()
 
         -- Check the static mapping table from Lazy
         if _G.lazy_stats and _G.lazy_stats.plugin_times then
-          for plugin, _ in pairs(_G.lazy_stats.plugin_times) do
-            if type(plugin) == "table" then
-              local plugin_addr = tostring(plugin):gsub("table: ", "")
-              if type(raw_name) == "string" and raw_name:match(plugin_addr:gsub("^0x", "")) then
+          for plugin_entry, _ in pairs(_G.lazy_stats.plugin_times) do
+            if type(plugin_entry) == "table" then
+              local entry_addr = tostring(plugin_entry):gsub("table: ", "")
+              if type(raw_name) == "string" and raw_name:match(entry_addr:gsub("^0x", "")) then
                 -- Found a match from lazy_stats, get the name
-                local plugin_name = plugin.name or "unknown"
-                if plugin.name then
+                local entry_name = plugin_entry.name or "unknown"
+                if plugin_entry.name then
                   -- Store for future lookups
-                  M.memory_address_to_name[raw_name] = plugin_name
-                  return plugin_name
+                  M.memory_address_to_name[raw_name] = entry_name
+                  return entry_name
                 end
               end
             end
@@ -986,7 +986,7 @@ function M.update_plugin_mapping()
     -- Build the debug output
     table.insert(debug_lines, string.format("Plugin: %s", name))
     table.insert(debug_lines, string.format("  - Reference: %s", tostring(plugin)))
-    table.insert(debug_lines, string.format("  - Address: %s", addr))
+    table.insert(debug_lines, string.format("  - Address: %s", tostring(plugin):gsub("table: ", "")))
     table.insert(debug_lines, string.format("  - Loaded: %s", plugin.loaded and "Yes" or "No"))
     table.insert(debug_lines, string.format("  - Time: %s", plugin.time or "N/A"))
     table.insert(debug_lines, "")

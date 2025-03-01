@@ -4,6 +4,7 @@ return {
     {
       "<leader>nn",
       function()
+        local Snacks = require("snacks")
         Snacks.notifier.show_history()
       end,
       desc = "Notification history",
@@ -11,6 +12,7 @@ return {
     {
       "<leader>nd",
       function()
+        local Snacks = require("snacks")
         Snacks.notifier.hide()
       end,
       desc = "Dismiss all notifications",
