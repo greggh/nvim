@@ -37,10 +37,10 @@ jobs:
           sudo luarocks install luacheck
 
       - name: Install StyLua
-        uses: JohnnyMorganz/stylua-action@v3
+        uses: actions/setup-tool@v1
         with:
-          version: latest
-          token: ${{ github.token }}
+          tool: stylua
+          version: "latest"
 
       - name: Check Neovim version
         run: |
