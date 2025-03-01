@@ -49,9 +49,9 @@ if [ -n "$STAGED_FILES" ]; then
     done
     
     if [ "$LINT_ISSUES" -eq 1 ]; then
-      echo "Warning: Lua lint issues found. Please fix them before committing."
+      echo "Error: Lua lint issues found. Please fix them before committing."
       echo "You can bypass this check with git commit --no-verify"
-      # Not exiting with error to allow committing with lint issues
+      exit 1
     fi
   fi
   
