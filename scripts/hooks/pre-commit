@@ -72,6 +72,22 @@ if [ -n "$STAGED_FILES" ]; then
           fi
         done
       fi
+      
+      # Check for undefined variable Snacks
+      UNDEFINED_SNACKS=$(luacheck "$FILE" --formatter=plain 2>/dev/null | grep -o "accessing undefined variable 'Snacks'")
+      if [ -n "$UNDEFINED_SNACKS" ]; then
+        # Find good insertion point (after local declarations at the top)
+        LAST_LOCAL_LINE=$(grep -n "^local " "$FILE" | tail -n 1 | cut -d':' -f1)
+        if [ -n "$LAST_LOCAL_LINE" ]; then
+          # Add import after the last local line
+          sed -i "${LAST_LOCAL_LINE}a local Snacks = require(\"snacks\")" "$FILE"
+        else
+          # If no local lines, add at beginning of the file
+          sed -i "1i local Snacks = require(\"snacks\")" "$FILE"
+        fi
+        FIXABLE_ISSUES=1
+        FIXED_FILES="$FIXED_FILES $FILE"
+      fi
     done
     
     # If we fixed any issues, add them back to staging
