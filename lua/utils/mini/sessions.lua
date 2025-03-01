@@ -1,7 +1,17 @@
 local M = {}
 
 local session = require("mini.sessions")
-local Snacks = require("snacks")
+-- We'll load Snacks when we need it rather than at startup
+local Snacks
+local has_loaded_snacks = false
+
+local function get_snacks()
+  if not has_loaded_snacks then
+    has_loaded_snacks = true
+    Snacks = require("snacks")
+  end
+  return Snacks
+end
 
 function M.has_valid_buffers()
   for _, bufnr in ipairs(vim.api.nvim_list_bufs()) do
@@ -39,7 +49,7 @@ function M.select_session()
   end)
 
   ---@diagnostic disable-next-line: missing-fields
-  Snacks.picker.pick({
+  get_snacks().picker.pick({
     source = "sessions",
     items = items,
     format = "text",

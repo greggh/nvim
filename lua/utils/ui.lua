@@ -1,5 +1,15 @@
 local M = {}
-local Snacks = require("snacks")
+-- We'll load Snacks when we need it rather than at startup
+local Snacks
+local has_loaded_snacks = false
+
+local function get_snacks()
+  if not has_loaded_snacks then
+    has_loaded_snacks = true
+    Snacks = require("snacks")
+  end
+  return Snacks
+end
 
 M.headers = {
   anonymous = "anonymous.cat",
@@ -19,10 +29,11 @@ end
 function M.ToggleIDEView()
   local trouble = require("trouble")
   local edgy = require("edgy")
+  local snacks = get_snacks()
 
   if vim.g.ide_view_open then
     trouble.close("diagnostics")
-    Snacks.explorer.open()
+    snacks.explorer.open()
     edgy.close("right")
     vim.g.ide_view_open = false
   else
@@ -30,7 +41,7 @@ function M.ToggleIDEView()
       require("workspace-diagnostics").populate_workspace_diagnostics(client, 0)
     end
     trouble.open("diagnostics")
-    Snacks.explorer.open()
+    snacks.explorer.open()
     edgy.open("right")
     vim.g.ide_view_open = true
   end

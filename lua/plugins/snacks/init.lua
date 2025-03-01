@@ -1,8 +1,8 @@
 ---@module "Snacks"
 return {
   "folke/snacks.nvim",
-  priority = 1000,
-  lazy = false,
+  priority = 10000, -- increase priority to load it earlier
+  lazy = false, -- ensure it's loaded right away
   import = "plugins.snacks",
   opts = {
     -- Memory optimization settings

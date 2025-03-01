@@ -3,8 +3,18 @@ local map_cr = bind.map_cr
 local map_cu = bind.map_cu
 local map_cmd = bind.map_cmd
 local map_callback = bind.map_callback
--- Import Snacks for keymappings
-local Snacks = require("snacks")
+
+-- We'll load Snacks when we need it rather than at startup
+local Snacks
+local has_loaded_snacks = false
+
+local function get_snacks()
+  if not has_loaded_snacks then
+    has_loaded_snacks = true
+    Snacks = require("snacks")
+  end
+  return Snacks
+end
 
 local builtin_map = {
   -- Command mode tab completion
@@ -107,7 +117,7 @@ local plug_map = {
   -- Plugin: snacks
   ["n|<leader>e"] = map_callback(function()
       ---@diagnostic disable-next-line: missing-fields
-      Snacks.explorer({ cwd = vim.fs.root(0, { ".git" }) })
+      get_snacks().explorer({ cwd = vim.fs.root(0, { ".git" }) })
     end)
     :with_noremap()
     :with_silent()
@@ -152,12 +162,13 @@ local plug_map = {
 
   -- Plugin Lazygit
   ["n|<leader>gg"] = map_callback(function()
+      local snacks = get_snacks()
       if require("utils.git").is_git_repo() then
         ---@diagnostic disable-next-line: missing-fields
-        Snacks.lazygit({ cwd = require("utils.git").get_git_root() })
+        snacks.lazygit({ cwd = require("utils.git").get_git_root() })
       elseif vim.bo.filetype == "snacks_dashboard" then
         ---@diagnostic disable-next-line: missing-fields, assign-type-mismatch
-        Snacks.lazygit({ cwd = vim.fn.stdpath("config") })
+        snacks.lazygit({ cwd = vim.fn.stdpath("config") })
       else
         print("You're not in a git repository")
       end
@@ -167,12 +178,13 @@ local plug_map = {
     :with_desc("Lazygit"),
 
   ["n|<leader>gl"] = map_callback(function()
+      local snacks = get_snacks()
       if require("utils.git").is_git_repo() then
         ---@diagnostic disable-next-line: missing-fields
-        Snacks.lazygit.log({ cwd = require("utils.git").get_git_root() })
+        snacks.lazygit.log({ cwd = require("utils.git").get_git_root() })
       elseif vim.bo.filetype == "snacks_dashboard" then
         ---@diagnostic disable-next-line: missing-fields, assign-type-mismatch
-        Snacks.lazygit.log({ cwd = vim.fn.stdpath("config") })
+        snacks.lazygit.log({ cwd = vim.fn.stdpath("config") })
       else
         print("You're not in a git repository")
       end
@@ -409,7 +421,7 @@ local plug_map = {
   -- Plugin: todo-comments
   ["n|<leader>xc"] = map_callback(function()
       ---@diagnostic disable-next-line: undefined-field
-      Snacks.picker.todo_comments()
+      get_snacks().picker.todo_comments()
     end)
     :with_noremap()
     :with_silent()
@@ -462,7 +474,7 @@ local plug_map = {
 
   -- Plugin: snacks rename
   ["n|<leader>fR"] = map_callback(function()
-      Snacks.rename.rename_file()
+      get_snacks().rename.rename_file()
     end)
     :with_noremap()
     :with_silent()
