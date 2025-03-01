@@ -8,12 +8,13 @@ on:
 
 jobs:
   test:
-    name: Test on ${{ matrix.os }}
+    name: Test on ${{ matrix.os }} with Neovim ${{ matrix.nvim-version }}
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
       matrix:
         os: [ubuntu-latest]
+        nvim-version: [stable, v0.11.0, nightly]
         # Optionally add other OS if needed:
         # os: [ubuntu-latest, macos-latest]
 
@@ -24,7 +25,7 @@ jobs:
         uses: rhysd/action-setup-vim@v1
         with:
           neovim: true
-          version: nightly
+          version: ${{ matrix.nvim-version }}
 
       - name: Install dependencies
         run: |

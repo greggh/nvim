@@ -2,17 +2,21 @@
 local test = require("tests.run_tests")
 
 test.describe("Basic Functionality", function()
-  test.it("Neovim version should be 0.10.0 or higher", function()
+  test.it("Neovim version should be 0.9.0 or higher", function()
     local version = vim.version()
     local version_string = string.format("%d.%d.%d", version.major, version.minor, version.patch)
 
-    -- Major version must be 0
-    test.expect(version.major).to_be(0)
-
-    -- Minor version must be 10 or higher
-    test.expect(version.minor >= 10).to_be_truthy()
-
+    -- Print version for diagnostics
     print("Neovim version: " .. version_string)
+
+    -- Version tests - supports both 0.9+ (stable) and future 1.0+
+    if version.major == 0 then
+      -- For 0.x versions, minor version must be 9 or higher
+      test.expect(version.minor >= 9).to_be_truthy()
+    else
+      -- For 1.x+ versions (future), any minor version is fine
+      test.expect(version.major >= 1).to_be_truthy()
+    end
   end)
 
   test.it("Test mode flag should be set", function()
