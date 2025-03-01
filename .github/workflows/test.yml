@@ -37,10 +37,47 @@ jobs:
           sudo luarocks install luacheck
 
       - name: Install StyLua
-        uses: actions/setup-tool@v1
-        with:
-          tool: stylua
-          version: "latest"
+        run: |
+          # Create a temporary directory
+          mkdir -p ~/.local/bin
+          
+          # Function to retry commands
+          function retry {
+            local retries=$1
+            shift
+            local count=0
+            until "$@"; do
+              exit=$?
+              count=$((count + 1))
+              if [ $count -lt $retries ]; then
+                echo "Command failed. Attempt $count/$retries. Retrying in 5 seconds..."
+                sleep 5
+              else
+                echo "Command failed after $retries attempts. Exiting..."
+                return $exit
+              fi
+            done
+            return 0
+          }
+          
+          # Get latest release with retry
+          echo "Getting StyLua release information..."
+          retry 3 curl -s -o release_info.json https://api.github.com/repos/JohnnyMorganz/StyLua/releases/latest
+          VERSION=$(grep -Po '"tag_name": "\K[^"]*' release_info.json)
+          echo "Found StyLua version: $VERSION"
+          
+          # Download StyLua for Linux with retry
+          echo "Downloading StyLua $VERSION..."
+          retry 3 curl -L -o stylua.zip "https://github.com/JohnnyMorganz/StyLua/releases/latest/download/stylua-linux-x86_64.zip"
+          unzip stylua.zip -d ~/.local/bin
+          chmod +x ~/.local/bin/stylua
+          
+          # Add to PATH
+          echo "$HOME/.local/bin" >> $GITHUB_PATH
+          
+          # Verify installation
+          echo "Verifying StyLua installation..."
+          ~/.local/bin/stylua --version
 
       - name: Check Neovim version
         run: |
