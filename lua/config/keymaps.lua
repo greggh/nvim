@@ -564,18 +564,12 @@ local misc_map = {
     :with_desc("Buffer: Close all except current"),
 
   -- Profiling and diagnostics
-  ["n|<leader>pp"] = map_cmd("<CMD>Profile<CR><CMD>PP<CR>")
+  ["n|<leader>pp"] = map_cmd("<CMD>Profile<CR>")
     :with_noremap()
     :with_silent()
     :with_desc("Generate detailed profile report"),
-  ["n|<leader>ps"] = map_cmd("<CMD>ProfileSummary<CR><CMD>PS<CR>")
-    :with_noremap()
-    :with_silent()
-    :with_desc("Show profile summary"),
-  ["n|<leader>pL"] = map_cmd("<CMD>ProfileLogs<CR><CMD>PL<CR>")
-    :with_noremap()
-    :with_silent()
-    :with_desc("List profile logs"),
+  ["n|<leader>ps"] = map_cmd("<CMD>ProfileSummary<CR>"):with_noremap():with_silent():with_desc("Show profile summary"),
+  ["n|<leader>pL"] = map_cmd("<CMD>ProfileLogs<CR>"):with_noremap():with_silent():with_desc("List profile logs"),
   ["n|<leader>pa"] = map_cmd("<CMD>ProfilePlugins<CR>")
     :with_noremap()
     :with_silent()
