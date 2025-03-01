@@ -19,7 +19,7 @@ return {
     -- Mock system functions
     system = {
       -- Return true for executable checks
-      executable = function(cmd)
+      executable = function(_)
         return true
       end,
     },

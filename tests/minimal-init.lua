@@ -23,7 +23,7 @@ vim.g._test_mode = true
 -- Mock certain functions and modules that might be needed by config modules
 local function setup_mocks()
   -- Mock vim.notify to avoid UI-related errors
-  vim.notify = function(msg, level, opts)
+  vim.notify = function(msg, level, _)
     if level == vim.log.levels.ERROR then
       print("[ERROR] " .. msg)
     elseif level == vim.log.levels.WARN then
@@ -36,27 +36,41 @@ local function setup_mocks()
   end
 
   -- Mock vim.keymap.set to prevent errors when defining keymaps
-  vim.keymap.set = function(mode, lhs, rhs, opts)
+  vim.keymap.set = function(_, _, _, _)
     -- Do nothing in test mode
     return true
   end
 
   -- Mock autocmd-related functions
   if not vim.api.nvim_create_autocmd then
-    vim.api.nvim_create_autocmd = function(event, opts)
+    vim.api.nvim_create_autocmd = function(_, _)
       -- Do nothing in test mode
       return 0 -- Return a dummy autocmd ID
     end
   end
 
   if not vim.api.nvim_create_augroup then
-    vim.api.nvim_create_augroup = function(name, opts)
+    vim.api.nvim_create_augroup = function(_, _)
       -- Do nothing in test mode
       return 0 -- Return a dummy augroup ID
     end
   end
 
   -- Mock common plugin dependencies
+
+  -- Mock Snacks dependency for keymaps
+  package.loaded['snacks'] = {
+    explorer = function(_) return true end,
+    lazygit = {
+      log = function(_) return true end,
+    },
+    picker = {
+      todo_comments = function() return true end,
+    },
+    rename = {
+      rename_file = function() return true end,
+    },
+  }
 
   -- Mock LuaSnip more completely
   local luasnip_mock = {
@@ -175,7 +189,7 @@ local function setup_mocks()
   for _, plugin_name in ipairs(common_plugins) do
     if not package.loaded[plugin_name] then
       package.loaded[plugin_name] = {
-        setup = function(opts)
+        setup = function(_)
           return true
         end,
       }
@@ -216,7 +230,7 @@ vim.opt.backup = false
 vim.opt.writebackup = false
 
 -- Silent mode for notifications during tests
-vim.notify = function(msg, level, opts)
+vim.notify = function(msg, level, _)
   if level == vim.log.levels.ERROR then
     print("[ERROR] " .. msg)
   elseif level == vim.log.levels.WARN then

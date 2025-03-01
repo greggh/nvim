@@ -26,6 +26,12 @@ files["tests/minimal-init.lua"] = {
   ignore = {"212"},
 }
 
+-- Ignore long lines in README generation
+files["lua/config/keymaps.lua"] = {
+  -- Allow long lines in the README generation section
+  ignore = {"631"}, -- Ignore "line is too long" warnings
+}
+
 files["tests/run_tests.lua"] = {
   -- Allow unused arguments in test framework
   ignore = {"212"},

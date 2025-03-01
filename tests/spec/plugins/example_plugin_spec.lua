@@ -5,7 +5,7 @@ local test = require("tests.run_tests")
 test.describe("Example Plugin Test", function()
   -- Mock the plugin module if it doesn't exist
   local plugin_mock = {
-    setup = function(opts)
+    setup = function(_)
       return true
     end,
     get_config = function()

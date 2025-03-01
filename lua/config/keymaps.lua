@@ -3,6 +3,8 @@ local map_cr = bind.map_cr
 local map_cu = bind.map_cu
 local map_cmd = bind.map_cmd
 local map_callback = bind.map_callback
+-- Import Snacks for keymappings
+local Snacks = require("snacks")
 
 local builtin_map = {
   -- Command mode tab completion
@@ -94,10 +96,6 @@ local plug_map = {
   -- Plugin: avante
   -- Avante's keybindings are built into the plugin itself or in avante-prompts.lua
 
-  -- Plugin: claude-code (now handled by the plugin itself)
-  -- The keymaps are now set up by the claude-code.nvim plugin
-  -- These local keymaps are removed to avoid conflicts
-  -- See lua/plugins/claude-code.lua for configuration
   ["nt|<C-,>"] = map_cmd("<CMD>ClaudeCode<CR>"):with_noremap():with_silent():with_desc("Claude Code: Toggle"),
 
   -- Plugin: tide
@@ -721,68 +719,82 @@ vim.defer_fn(function()
   })
 end, 50)
 
+-- stylua: ignore start
 local readme_map = {
   ["n|<leader>pr"] = map_callback(function()
-      local plugins = require("lazy.core.config").plugins
-      local file_content = {
-        "<h1>",
-        '  <img src="https://raw.githubusercontent.com/neovim/neovim.github.io/master/logos/neovim-logo-300x87.png" alt="Neovim">',
-        "</h1>",
-        "",
-        '<a href="https://dotfyle.com/greggh/nvim"><img src="https://dotfyle.com/greggh/nvim/badges/plugins?style=flat" /></a>',
-        '<a href="https://dotfyle.com/greggh/nvim"><img src="https://dotfyle.com/greggh/nvim/badges/leaderkey?style=flat" /></a>',
-        '<a href="https://dotfyle.com/greggh/nvim"><img src="https://dotfyle.com/greggh/nvim/badges/plugin-manager?style=flat" /></a>',
-        "",
-        "![image](assets/readme/neovim.png)",
-        "",
-        "## ⚡️ Requirements",
-        "",
-        "- [Nerd Font](https://www.nerdfonts.com/)",
-        "- [lazygit](https://github.com/jesseduffield/lazygit)",
-        "- [ripgrep](https://github.com/BurntSushi/ripgrep)",
-        "- [fd](https://github.com/sharkdp/fd)",
-        "- [fzf](https://github.comjunegunn/fzf)",
-        "",
-        "## Install Instructions",
-        "",
-        " > **REQUIRES NEOVIM 0.10+**. This configuration uses several Neovim 0.10+ exclusive features including:",
-        " > - `vim.system()` for async operations",
-        " > - `splitkeep` option for better window management",
-        " > - Updated LSP handlers and APIs",
-        " > - Modern UI capabilities",
-        " >",
-        " > Always review the code before installing a configuration.",
-        "",
-        "Clone the repository and install the plugins:",
-        "",
-        "```sh",
-        "git clone git@github.com:greggh/nvim ~/.config/greggh/nvim",
-        "```",
-        "",
-        "Open Neovim with this config:",
-        "",
-        "```sh",
-        "NVIM_APPNAME=greggh/nvim/ nvim",
-        "```",
-        "",
-        "## Contributing",
-        "",
-        "Contributions are welcome! If you'd like to help improve this configuration:",
-        "",
-        "1. Check the [open issues](https://github.com/greggh/nvim/issues) or create a new one to discuss your idea",
-        "2. Fork the repository",
-        "3. Create a new branch for your feature",
-        "4. Make your changes",
-        "5. Submit a pull request",
-        "",
-        "Please read [CONTRIBUTING.md](CONTRIBUTING.md) for detailed guidelines on how to contribute.",
-        "",
-        "## 💤 Plugin manager",
-        "",
-        "- [lazy.nvim](https://github.com/folke/lazy.nvim)",
-        "",
-        "## 🔌 Plugins",
-        "",
+    local plugins = require("lazy.core.config").plugins
+    local file_content = {
+      "<h1>",
+      '  <img src="https://raw.githubusercontent.com/neovim/neovim.github.io/master/logos/neovim-logo-300x87.png" alt="Neovim">',
+      "</h1>",
+      "",
+      '<a href="https://dotfyle.com/greggh/nvim"><img src="https://dotfyle.com/greggh/nvim/badges/plugins?style=flat" /></a>',
+      '<a href="https://dotfyle.com/greggh/nvim"><img src="https://dotfyle.com/greggh/nvim/badges/leaderkey?style=flat" /></a>',
+      '<a href="https://dotfyle.com/greggh/nvim"><img src="https://dotfyle.com/greggh/nvim/badges/plugin-manager?style=flat" /></a>',
+      "",
+      "![image](assets/readme/neovim.png)",
+      "",
+      "## ⚡️ Requirements",
+      "",
+      "- [Nerd Font](https://www.nerdfonts.com/)",
+      "- [lazygit](https://github.com/jesseduffield/lazygit)",
+      "- [ripgrep](https://github.com/BurntSushi/ripgrep)",
+      "- [fd](https://github.com/sharkdp/fd)",
+      "- [fzf](https://github.comjunegunn/fzf)",
+      "",
+      "## Install Instructions",
+      "",
+      " > **REQUIRES NEOVIM 0.10+**. This configuration uses several Neovim 0.10+ exclusive features including:",
+      " > - `vim.system()` for async operations",
+      " > - `splitkeep` option for better window management",
+      " > - Updated LSP handlers and APIs",
+      " > - Modern UI capabilities",
+      " >",
+      " > Always review the code before installing a configuration.",
+      "",
+      "Clone the repository and install the plugins:",
+      "",
+      "```sh",
+      "git clone git@github.com:greggh/nvim ~/.config/greggh/nvim",
+      "```",
+      "",
+      "Open Neovim with this config:",
+      "",
+      "```sh",
+      "NVIM_APPNAME=greggh/nvim/ nvim",
+      "```",
+      "",
+      "## Contributing",
+      "",
+      "Contributions are welcome! If you'd like to help improve this configuration:",
+      "",
+      "1. Check the [open issues](https://github.com/greggh/nvim/issues) or create a new one to discuss your idea",
+      "2. Fork the repository",
+      "3. Create a new branch for your feature",
+      "4. Make your changes",
+      "5. Run the tests (`make test`) and ensure they pass",
+      "6. Submit a pull request",
+      "",
+      "Please read [CONTRIBUTING.md](CONTRIBUTING.md) for detailed guidelines on how to contribute and [DEVELOPMENT.md](DEVELOPMENT.md) for development setup instructions.",
+      "",
+      "## Development",
+      "",
+      "This configuration includes a testing framework and development tools:",
+      "",
+      "- **Testing**: Run `make test` to execute all tests",
+      "- **Linting**: Run `make lint` to check code quality",
+      "- **Formatting**: Run `make format` to format Lua code",
+      "- **Git Hooks**: Run `./scripts/setup-hooks.sh` to set up pre-commit hooks",
+      "",
+      "For a complete development environment setup, see [DEVELOPMENT.md](DEVELOPMENT.md).",
+      "",
+      "## 💤 Plugin manager",
+      "",
+      "- [lazy.nvim](https://github.com/folke/lazy.nvim)",
+      "",
+      "## 🔌 Plugins",
+      "",
+-- stylua: ignore end
       }
       local plugins_md = {}
       for plugin, spec in pairs(plugins) do

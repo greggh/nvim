@@ -27,7 +27,7 @@ test-config:
 lint:
 	@echo "Linting Lua files..."
 	@if command -v luacheck > /dev/null 2>&1; then \
-		luacheck $(LUA_PATH); \
+		luacheck $(LUA_PATH) --config=.luacheckrc; \
 	else \
 		echo "Error: luacheck not installed. Please install it to lint Lua files."; \
 		exit 1; \

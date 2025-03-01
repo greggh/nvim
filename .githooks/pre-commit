@@ -40,7 +40,49 @@ if [ -n "$STAGED_FILES" ]; then
   if [ "$HAS_LUACHECK" -eq 1 ]; then
     echo "Running luacheck on staged Lua files..."
     LINT_ISSUES=0
+    FIXABLE_ISSUES=0
+    FIXED_FILES=""
     
+    # First check for issues that we can automatically fix
+    for FILE in $STAGED_FILES; do
+      # Auto-fix trailing whitespace
+      if grep -q "[[:space:]]$" "$FILE"; then
+        sed -i 's/[[:space:]]*$//' "$FILE"
+        FIXABLE_ISSUES=1
+        FIXED_FILES="$FIXED_FILES $FILE"
+      fi
+      
+      # Auto-fix line endings (ensure LF)
+      if file "$FILE" | grep -q "CRLF"; then
+        dos2unix "$FILE" 2>/dev/null
+        FIXABLE_ISSUES=1
+        FIXED_FILES="$FIXED_FILES $FILE"
+      fi
+      
+      # Check for unused variables that can be prefixed with _ to ignore
+      UNUSED_VARS=$(luacheck "$FILE" --formatter=plain 2>/dev/null | grep -o "unused variable '[^']*'" | grep -o "'[^']*'" | tr -d "'")
+      if [ -n "$UNUSED_VARS" ]; then
+        for VAR in $UNUSED_VARS; do
+          # Only fix if not already prefixed with _
+          if [[ ! $VAR == _* ]]; then
+            # Replace instances of the variable with _variable
+            sed -i "s/\b$VAR\b/_$VAR/g" "$FILE"
+            FIXABLE_ISSUES=1
+            FIXED_FILES="$FIXED_FILES $FILE"
+          fi
+        done
+      fi
+    done
+    
+    # If we fixed any issues, add them back to staging
+    if [ "$FIXABLE_ISSUES" -eq 1 ]; then
+      echo "Fixed some linting issues automatically in:$FIXED_FILES"
+      for FILE in $FIXED_FILES; do
+        git add "$FILE"
+      done
+    fi
+    
+    # Now run the full luacheck to see if there are remaining issues
     for FILE in $STAGED_FILES; do
       luacheck "$FILE"
       if [ $? -ne 0 ]; then
@@ -49,7 +91,8 @@ if [ -n "$STAGED_FILES" ]; then
     done
     
     if [ "$LINT_ISSUES" -eq 1 ]; then
-      echo "Error: Lua lint issues found. Please fix them before committing."
+      echo "Error: Lua lint issues found that couldn't be fixed automatically."
+      echo "Please fix the remaining issues before committing."
       echo "You can bypass this check with git commit --no-verify"
       exit 1
     fi
