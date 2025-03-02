@@ -13,7 +13,8 @@ globals = {
 -- Don't report unused self arguments of methods
 self = false
 
--- Ignore warnings about unused arguments in test fixtures and mocks
+-- Only ignore warnings that we consciously choose to ignore
+-- Note: We don't ignore any whitespace warnings (611, 612, 613, 614)
 ignore = {
   "212/self", -- Unused argument 'self' in test functions is fine
   "212/_.*", -- Unused arguments prefixed with underscore are fine (e.g., _config)
