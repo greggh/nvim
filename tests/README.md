@@ -10,6 +10,10 @@ This directory contains tests for the Neovim configuration files.
 - `spec/`: Directory containing test specifications
   - `basic_spec.lua`: Basic tests for verifying test environment
   - `config_spec.lua`: Tests for configuration modules
+  - `keymappings_spec.lua`: Tests for keybinding configurations
+  - `plugin_management_spec.lua`: Tests for lazy.nvim and plugin setup
+  - `ui_components_spec.lua`: Tests for UI components like statusline
+  - `plugins/example_plugin_spec.lua`: Example of testing plugin configurations
 
 ## Running Tests
 
@@ -17,11 +21,16 @@ You can run tests using the following commands:
 
 ```bash
 # Run all tests
-nvim --headless --noplugin -u test/minimal.vim -c "source test/basic_test.vim" -c "qa!"
+make test
 
-# Run configuration tests
-nvim --headless --noplugin -u test/minimal.vim -c "source test/config_test.vim" -c "qa!"
+# Run with verbose output
+make test-verbose
+
+# Run the test script directly
+./tests/scripts/run_tests.sh
 ```
+
+Tests run automatically as part of the pre-commit hook and in CI workflows. The tests use a standardized `minimal-init.lua` initialization file that works across all related Neovim projects.
 
 ## Writing Tests
 

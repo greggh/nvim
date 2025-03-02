@@ -156,12 +156,25 @@ luarocks install luacheck
 The pre-commit hook automatically runs:
 1. Code formatting with stylua
 2. Linting with luacheck
-3. Basic tests
+3. Comprehensive tests using our custom test framework
 
-If you need to bypass these checks, use:
+These hooks ensure consistent code quality across all contributions. The test infrastructure uses standardized initialization files (`tests/minimal-init.lua`) that isolate tests from your personal configuration.
+
+If you need to bypass these checks in exceptional cases, use:
 ```bash
 git commit --no-verify
 ```
+
+### Automated Workflows
+
+In addition to pre-commit hooks, the project includes:
+
+- **Dependency Update Workflow**: Runs weekly to check for:
+  - GitHub Actions updates
+  - Neovim compatibility changes
+  - Plugin updates
+
+This workflow creates an issue with recommendations for keeping dependencies current.
 
 ## Testing
 
