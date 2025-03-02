@@ -8,7 +8,89 @@ on:
     # Allow manual triggering
 
 jobs:
-  check-dependencies:
+  check-github-actions:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Check GitHub Actions for updates
+        id: actions-check
+        uses: sethvargo/action-github-actions-updater@v1
+        with:
+          workflows: .github/workflows/*.yml
+          token: ${{ secrets.GITHUB_TOKEN }}
+          dry-run: true
+
+      - name: Create Actions Update Report
+        run: |
+          echo "# GitHub Actions Updates" > actions_updates.md
+          echo "" >> actions_updates.md
+          echo "## Available Updates" >> actions_updates.md
+          echo "" >> actions_updates.md
+          
+          if [[ -n "${{ steps.actions-check.outputs.changes }}" ]]; then
+            echo "${{ steps.actions-check.outputs.changes }}" >> actions_updates.md
+            echo "" >> actions_updates.md
+            echo "These updates can be automatically applied by running this workflow with the dry-run option set to false." >> actions_updates.md
+          else
+            echo "All GitHub Actions are up to date!" >> actions_updates.md
+          fi
+          
+      - name: Upload Actions Report
+        uses: actions/upload-artifact@v3
+        with:
+          name: actions-updates
+          path: actions_updates.md
+
+  check-neovim-version:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Check latest Neovim version
+        id: neovim-version
+        run: |
+          LATEST_RELEASE=$(curl -s https://api.github.com/repos/neovim/neovim/releases/latest | jq -r .tag_name)
+          LATEST_VERSION=${LATEST_RELEASE#v}
+          echo "latest=$LATEST_VERSION" >> $GITHUB_OUTPUT
+          
+          # Get current required version from README
+          CURRENT_VERSION=$(grep -o "Neovim [0-9]\+\.[0-9]\+" README.md | head -1 | sed 's/Neovim //')
+          echo "current=$CURRENT_VERSION" >> $GITHUB_OUTPUT
+          
+          # Compare versions
+          if [ "$CURRENT_VERSION" != "$LATEST_VERSION" ]; then
+            echo "update_available=true" >> $GITHUB_OUTPUT
+          else
+            echo "update_available=false" >> $GITHUB_OUTPUT
+          fi
+          
+          # Generate report
+          echo "# Neovim Version Check" > neovim_version.md
+          echo "" >> neovim_version.md
+          echo "Current minimum required version: **$CURRENT_VERSION**" >> neovim_version.md
+          echo "Latest Neovim version: **$LATEST_VERSION**" >> neovim_version.md
+          echo "" >> neovim_version.md
+          
+          if [ "$CURRENT_VERSION" != "$LATEST_VERSION" ]; then
+            echo "⚠️ **Update Available**: Consider updating to support the latest Neovim features." >> neovim_version.md
+            
+            # Get the changelog for the new version
+            echo "" >> neovim_version.md
+            echo "## Notable Changes in Neovim $LATEST_VERSION" >> neovim_version.md
+            echo "" >> neovim_version.md
+            echo "Check the [official release notes](https://github.com/neovim/neovim/releases/tag/$LATEST_RELEASE) for details." >> neovim_version.md
+          else
+            echo "✅ **Up to Date**: Your configuration supports the latest Neovim version." >> neovim_version.md
+          fi
+          
+      - name: Upload Neovim Version Report
+        uses: actions/upload-artifact@v3
+        with:
+          name: neovim-version
+          path: neovim_version.md
+
+  check-plugin-updates:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -19,80 +101,91 @@ jobs:
           neovim: true
           version: v0.10.0
       
-      - name: Install plugin dependencies
+      - name: List top plugins for manual check
         run: |
-          sudo apt-get update
-          sudo apt-get install -y git curl unzip
+          # Find all plugin specs
+          echo "# Plugin Update Check" > plugins_report.md
+          echo "" >> plugins_report.md
+          echo "## Core Plugins to Check" >> plugins_report.md
+          echo "" >> plugins_report.md
+          echo "The following core plugins should be checked for updates:" >> plugins_report.md
+          echo "" >> plugins_report.md
+          
+          # Extract plugin names from plugin files
+          grep -r "\"[^/]*/[^/]*\"" --include="*.lua" lua/plugins/ | 
+          grep -o "\"[^/]*/[^/]*\"" | 
+          sed 's/"//g' | 
+          sort | 
+          uniq -c | 
+          sort -nr |
+          head -20 |
+          while read -r count plugin; do
+            echo "- [$plugin](https://github.com/$plugin) - Used in $count locations" >> plugins_report.md
+          done
+          
+          echo "" >> plugins_report.md
+          echo "To update all plugins at once, use `:Lazy update` from within Neovim." >> plugins_report.md
+          echo "" >> plugins_report.md
+          echo "## Manual Check Recommended" >> plugins_report.md
+          echo "" >> plugins_report.md
+          echo "For critical plugins, check the GitHub repositories for:" >> plugins_report.md
+          echo "" >> plugins_report.md
+          echo "- Breaking changes in recent releases" >> plugins_report.md
+          echo "- New features that could be beneficial" >> plugins_report.md
+          echo "- Performance improvements" >> plugins_report.md
+          echo "- Deprecation notices" >> plugins_report.md
+          
+      - name: Upload Plugin Report
+        uses: actions/upload-artifact@v3
+        with:
+          name: plugins-report
+          path: plugins_report.md
 
-      - name: Check for plugin updates
-        id: plugin-check
+  create-update-issue:
+    needs: [check-github-actions, check-neovim-version, check-plugin-updates]
+    if: github.event_name == 'schedule' # Only create issues on scheduled runs
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Download Neovim version report
+        uses: actions/download-artifact@v3
+        with:
+          name: neovim-version
+          
+      - name: Download Actions report
+        uses: actions/download-artifact@v3
+        with:
+          name: actions-updates
+          
+      - name: Download Plugin report
+        uses: actions/download-artifact@v3
+        with:
+          name: plugins-report
+      
+      - name: Combine reports
         run: |
-          # Create a script to check plugin versions
-          cat > check_plugins.lua << 'EOF'
-          -- Load and parse plugin specification files
-          local function scan_plugin_files()
-            local plugins = {}
-            local plugin_files = vim.fn.glob(vim.fn.stdpath("config") .. "/lua/plugins/**/*.lua", false, true)
-            
-            for _, file in ipairs(plugin_files) do
-              local content = vim.fn.readfile(file)
-              local content_str = table.concat(content, "\n")
-              
-              -- Extract plugin names using pattern matching
-              for plugin_name in string.gmatch(content_str, '"([^/"]+/[^/"]+)"') do
-                table.insert(plugins, plugin_name)
-              end
-            end
-            
-            return plugins
-          end
-
-          -- Generate report on plugin updates available
-          local plugins = scan_plugin_files()
-          local updates = {}
+          echo "# Weekly Dependency Update Report" > combined_report.md
+          echo "" >> combined_report.md
+          echo "This automated report checks for updates to dependencies used in this Neovim configuration." >> combined_report.md
+          echo "" >> combined_report.md
           
-          for _, plugin in ipairs(plugins) do
-            -- Check if plugin exists on GitHub
-            local url = "https://github.com/" .. plugin
-            local cmd = string.format("curl -s -o /dev/null -w '%%{http_code}' %s", url)
-            local status = tonumber(vim.fn.system(cmd))
-            
-            if status == 200 then
-              table.insert(updates, "- " .. plugin .. " ([Repository](" .. url .. "))")
-            end
-          end
+          # Add Neovim version info
+          cat neovim_version.md >> combined_report.md
+          echo "" >> combined_report.md
           
-          -- Write report to file
-          local report = "# Plugin Update Check\n\n"
-          report = report .. "## Plugins Detected: " .. #plugins .. "\n\n"
-          report = report .. "The following plugins were detected in your configuration:\n\n"
+          # Add GitHub Actions info
+          cat actions_updates.md >> combined_report.md
+          echo "" >> combined_report.md
           
-          for _, line in ipairs(updates) do
-            report = report .. line .. "\n"
-          end
-          
-          report = report .. "\n\nTo update these plugins, use `:Lazy update` from within Neovim.\n"
-          vim.fn.writefile(vim.split(report, "\n"), "plugin_report.md")
-          EOF
-          
-          # Run the script
-          nvim --headless -u NONE -c "lua dofile('check_plugins.lua')" -c "q"
-          
-          # Save the output
-          echo "report<<EOF" >> $GITHUB_OUTPUT
-          cat plugin_report.md >> $GITHUB_OUTPUT
-          echo "EOF" >> $GITHUB_OUTPUT
-          
-          echo "::group::Plugin Report"
-          cat plugin_report.md
-          echo "::endgroup::"
+          # Add plugin info
+          cat plugins_report.md >> combined_report.md
 
       - name: Create Issue for Updates
-        if: github.event_name == 'schedule' # Only create issues on scheduled runs
         uses: peter-evans/create-issue-from-file@v4
         with:
-          title: Weekly Plugin Update Check
-          content-filepath: plugin_report.md
+          title: Weekly Dependency Update Check
+          content-filepath: combined_report.md
           labels: |
             dependencies
             automated
