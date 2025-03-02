@@ -114,18 +114,48 @@ if [ -n "$STAGED_FILES" ]; then
     fi
   fi
   
-  # Run basic tests
-  echo "Running basic tests..."
+  # Run tests
+  echo "Running tests to ensure code quality..."
   if command -v nvim &> /dev/null; then
+    # First run basic tests for backward compatibility
     nvim --headless --noplugin -u test/minimal.vim -c "source test/basic_test.vim" -c "qa!" 2>/dev/null
+    BASIC_TEST_RESULT=$?
     
-    if [ $? -ne 0 ]; then
-      echo "Error: Basic tests failed. Please fix the issues before committing."
-      echo "Run 'make test' to see detailed test output."
-      echo "You can bypass this check with git commit --no-verify"
-      exit 1
+    # Check if Plenary tests exist and run them
+    if [ -d "tests/spec" ]; then
+      echo "Running Plenary tests..."
+      
+      # Set up Lua path
+      export LUA_PATH="$TOP_LEVEL/lua/?.lua;$TOP_LEVEL/lua/?/init.lua;$LUA_PATH;;"
+      export LUA_CPATH="$LUA_CPATH;;"
+      
+      # Run Plenary tests
+      nvim --headless --noplugin -u tests/minimal-init.lua \
+        -c 'lua require("plenary.test_harness").test_directory("tests/spec", {minimal_init = "tests/minimal-init.lua"})' \
+        -c 'lua if vim.v.exiting == 0 then vim.cmd("qall!") end'
+      PLENARY_TEST_RESULT=$?
+      
+      # Check test results
+      if [ $BASIC_TEST_RESULT -ne 0 ] || [ $PLENARY_TEST_RESULT -ne 0 ]; then
+        echo "❌ Tests failed! Commit aborted."
+        echo "Please fix the test failures before committing."
+        echo "Run 'make test' to see detailed test output."
+        echo "You can bypass this check with git commit --no-verify"
+        exit 1
+      else
+        echo "✅ All tests passed."
+      fi
     else
-      echo "Basic tests passed."
+      # Only run basic tests if Plenary tests don't exist
+      if [ $BASIC_TEST_RESULT -ne 0 ]; then
+        echo "❌ Basic tests failed! Commit aborted."
+        echo "Please fix the test failures before committing."
+        echo "Run 'make test' to see detailed test output."
+        echo "You can bypass this check with git commit --no-verify"
+        exit 1
+      else
+        echo "✅ Basic tests passed."
+      fi
     fi
   else
     echo "Warning: nvim not found in PATH. Skipping tests."
