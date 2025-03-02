@@ -1,0 +1,98 @@
+name: Dependency Updates
+
+on:
+  schedule:
+    # Run weekly on Monday at 00:00 UTC
+    - cron: '0 0 * * 1'
+  workflow_dispatch:
+    # Allow manual triggering
+
+jobs:
+  check-dependencies:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Setup Neovim
+        uses: rhysd/action-setup-vim@v1
+        with:
+          neovim: true
+          version: v0.10.0
+      
+      - name: Install plugin dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y git curl unzip
+
+      - name: Check for plugin updates
+        id: plugin-check
+        run: |
+          # Create a script to check plugin versions
+          cat > check_plugins.lua << 'EOF'
+          -- Load and parse plugin specification files
+          local function scan_plugin_files()
+            local plugins = {}
+            local plugin_files = vim.fn.glob(vim.fn.stdpath("config") .. "/lua/plugins/**/*.lua", false, true)
+            
+            for _, file in ipairs(plugin_files) do
+              local content = vim.fn.readfile(file)
+              local content_str = table.concat(content, "\n")
+              
+              -- Extract plugin names using pattern matching
+              for plugin_name in string.gmatch(content_str, '"([^/"]+/[^/"]+)"') do
+                table.insert(plugins, plugin_name)
+              end
+            end
+            
+            return plugins
+          end
+
+          -- Generate report on plugin updates available
+          local plugins = scan_plugin_files()
+          local updates = {}
+          
+          for _, plugin in ipairs(plugins) do
+            -- Check if plugin exists on GitHub
+            local url = "https://github.com/" .. plugin
+            local cmd = string.format("curl -s -o /dev/null -w '%%{http_code}' %s", url)
+            local status = tonumber(vim.fn.system(cmd))
+            
+            if status == 200 then
+              table.insert(updates, "- " .. plugin .. " ([Repository](" .. url .. "))")
+            end
+          end
+          
+          -- Write report to file
+          local report = "# Plugin Update Check\n\n"
+          report = report .. "## Plugins Detected: " .. #plugins .. "\n\n"
+          report = report .. "The following plugins were detected in your configuration:\n\n"
+          
+          for _, line in ipairs(updates) do
+            report = report .. line .. "\n"
+          end
+          
+          report = report .. "\n\nTo update these plugins, use `:Lazy update` from within Neovim.\n"
+          vim.fn.writefile(vim.split(report, "\n"), "plugin_report.md")
+          EOF
+          
+          # Run the script
+          nvim --headless -u NONE -c "lua dofile('check_plugins.lua')" -c "q"
+          
+          # Save the output
+          echo "report<<EOF" >> $GITHUB_OUTPUT
+          cat plugin_report.md >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+          
+          echo "::group::Plugin Report"
+          cat plugin_report.md
+          echo "::endgroup::"
+
+      - name: Create Issue for Updates
+        if: github.event_name == 'schedule' # Only create issues on scheduled runs
+        uses: peter-evans/create-issue-from-file@v4
+        with:
+          title: Weekly Plugin Update Check
+          content-filepath: plugin_report.md
+          labels: |
+            dependencies
+            automated
