@@ -31,6 +31,23 @@ run_test() {
   fi
 }
 
+# Function to run Lua spec tests
+run_lua_spec_tests() {
+  echo -e "${BLUE}Running Lua spec tests...${NC}"
+  
+  # Run the test with our minimal init
+  nvim --headless --noplugin -u "tests/minimal-init.lua" -c "lua require('tests.run_tests').run_tests('tests/spec')" -c "qa!"
+  
+  # Check exit code
+  if [ $? -eq 0 ]; then
+    echo -e "${GREEN}✓ Lua spec tests passed${NC}"
+    return 0
+  else
+    echo -e "${RED}✗ Lua spec tests failed${NC}"
+    return 1
+  fi
+}
+
 # Run all tests
 echo -e "${BLUE}Starting Neovim configuration tests${NC}"
 
@@ -41,6 +58,9 @@ run_test "test/basic_test.vim" "Basic" || ((failed++))
 
 # Run config tests
 run_test "test/config_test.vim" "Configuration" || ((failed++))
+
+# Run new spec tests
+run_lua_spec_tests || ((failed++))
 
 # Output summary
 echo ""

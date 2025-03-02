@@ -6,7 +6,15 @@ vim.cmd([[set runtimepath=$VIMRUNTIME]])
 vim.cmd([[set packpath=/tmp/nvim/site]])
 
 -- Add the config directory to runtimepath
-local nvim_config_path = vim.fn.expand("~/.config/nvim")
+-- Use absolute path or relative path depending on where the test is run from
+local nvim_config_path = vim.fn.fnamemodify(vim.fn.resolve("."), ":p")
+-- Ensure we're in the right directory by checking for tests dir
+if vim.fn.isdirectory(nvim_config_path .. "/tests") == 0 then
+  -- Try using absolute path as fallback
+  nvim_config_path = vim.fn.expand("~/.config/nvim")
+end
+
+print("Using config path: " .. nvim_config_path)
 vim.opt.runtimepath:append(nvim_config_path)
 vim.opt.packpath:append(nvim_config_path)
 
@@ -59,16 +67,24 @@ local function setup_mocks()
   -- Mock common plugin dependencies
 
   -- Mock Snacks dependency for keymaps
-  package.loaded['snacks'] = {
-    explorer = function(_) return true end,
+  package.loaded["snacks"] = {
+    explorer = function(_)
+      return true
+    end,
     lazygit = {
-      log = function(_) return true end,
+      log = function(_)
+        return true
+      end,
     },
     picker = {
-      todo_comments = function() return true end,
+      todo_comments = function()
+        return true
+      end,
     },
     rename = {
-      rename_file = function() return true end,
+      rename_file = function()
+        return true
+      end,
     },
   }
 
