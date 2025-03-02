@@ -129,9 +129,9 @@ if [ -n "$STAGED_FILES" ]; then
       export LUA_PATH="$TOP_LEVEL/lua/?.lua;$TOP_LEVEL/lua/?/init.lua;$LUA_PATH;;"
       export LUA_CPATH="$LUA_CPATH;;"
       
-      # Run Plenary tests
+      # Run our own test suite instead of plenary test harness
       nvim --headless --noplugin -u tests/minimal-init.lua \
-        -c 'lua require("plenary.test_harness").test_directory("tests/spec", {minimal_init = "tests/minimal-init.lua"})' \
+        -c 'lua require("tests.run_tests").run_tests("tests/spec")' \
         -c 'lua if vim.v.exiting == 0 then vim.cmd("qall!") end'
       PLENARY_TEST_RESULT=$?
       
