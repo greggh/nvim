@@ -22,6 +22,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Standardized GitHub workflow naming conventions
 - Enhanced test infrastructure for different config structures
 
+### Fixed
+- Pre-commit hook path references for test initialization files
+- Test execution in pre-commit hooks using custom test runner
+- Standardized test initialization file naming across all projects
+
 ## [0.3.0] - 2025-03-01
 
 ### Added
