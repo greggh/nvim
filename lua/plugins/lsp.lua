@@ -6,9 +6,9 @@ return {
       opts = {
         ui = {
           icons = {
-            package_installed = "",
-            package_pending = "",
-            package_uninstalled = "",
+            package_installed = "",
+            package_pending = "",
+            package_uninstalled = "",
           },
         },
       },
@@ -255,7 +255,12 @@ return {
     -- capabilities
     ---------------------
     local capabilities = vim.lsp.protocol.make_client_capabilities()
-    capabilities = vim.tbl_deep_extend("force", capabilities, require("blink.cmp").get_lsp_capabilities())
+
+    -- Load blink.cmp capabilities safely
+    local has_blink, blink = pcall(require, "blink.cmp")
+    if has_blink then
+      capabilities = vim.tbl_deep_extend("force", capabilities, blink.get_lsp_capabilities())
+    end
 
     -- Add folding range capability
     capabilities.textDocument.foldingRange = {
@@ -456,7 +461,7 @@ return {
     ---------------------
     -- diagnostic signs
     ---------------------
-    local signs = { ERROR = " ", WARN = " ", HINT = "󰠠 ", INFO = " " }
+    local signs = { ERROR = " ", WARN = " ", HINT = "󰠠 ", INFO = " " }
     local diagnostic_signs = {}
     for type, icon in pairs(signs) do
       diagnostic_signs[vim.diagnostic.severity[type]] = icon
@@ -507,12 +512,6 @@ return {
     -- inlay hints
     ---------------------
     -- vim.lsp.inlay_hint.enable() -- enabled by default
-    vim.keymap.set("n", "<leader>oi", function()
-      local current_state = vim.lsp.inlay_hint.is_enabled()
-      local icon = current_state and " " or " "
-      local message = current_state and "Inlay hints disabled" or "Inlay hints enabled"
-      vim.lsp.inlay_hint.enable(not current_state)
-      print(icon .. " " .. message)
-    end, { noremap = true, silent = false, desc = "Toggle inlay hints" })
+    -- Keymap is defined in lua/config/keymaps.lua
   end,
 }

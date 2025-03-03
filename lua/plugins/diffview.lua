@@ -51,6 +51,13 @@ return {
 
     return {
       enhanced_diff_hl = true,
+      git = {
+        signs = {
+          fold_closed = "",
+          fold_open = "",
+          done = "✓",
+        },
+      },
       file_panel = {
         listing_style = "list", -- 'list', 'tree'
         tree_options = {
@@ -66,7 +73,7 @@ return {
       hooks = {
         view_opened = function()
           local lib = require("diffview.lib")
-          if lib.get_current_view().class:name() == "DiffView" then
+          if lib.get_current_view() and lib.get_current_view().class:name() == "DiffView" then
             actions.toggle_files()
           end
         end,

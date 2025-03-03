@@ -13,7 +13,6 @@ local prefill_edit_window = function(request)
   vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<C-s>", true, true, true), "v", true)
 end
 
--- NOTE: most templates are inspired from ChatGPT.nvim -> chatgpt-actions.json
 local avante_grammar_correction = "Correct the text to standard English, but keep any code blocks inside intact."
 local avante_keywords = "Extract the main keywords from the following text"
 local avante_code_readability_analysis = [[
@@ -42,7 +41,7 @@ local avante_fix_bugs = "Fix the bugs inside the following codes if any"
 local avante_add_tests = "Implement tests for the following code"
 
 require("which-key").add({
-  { "<leader>a", group = "AI Tools" }, -- NOTE: add for avante.nvim
+  { "<leader>a", group = "AI Tools" },
   {
     mode = { "n", "v" },
     {
@@ -126,7 +125,7 @@ require("which-key").add({
 })
 
 require("which-key").add({
-  { "<leader>a", group = "AI Tools" }, -- NOTE: add for avante.nvim
+  { "<leader>a", group = "AI Tools" },
   {
     mode = { "v" },
     {

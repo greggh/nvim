@@ -12,6 +12,7 @@ vim.g.tests = require("utils.flags").get_flags("tests") or false
 vim.g.ide_view_open = false
 vim.g.current_session = nil
 vim.g.ignore_filetypes = {
+  -- Base filetypes
   "qf",
   "Avante",
   "netrw",
@@ -36,6 +37,27 @@ vim.g.ignore_filetypes = {
   "minifiles",
   "notify",
   "prompt",
+  -- Additional from the old ignored_filetypes list
+  "help",
+  "snacks_explorer",
+  "nofile",
+  "aerial",
+  "dashboard",
+  "edgy",
+  "alpha",
+  "oil",
+  "fidget",
+  "Outline",
+  "neotest-summary",
+  "neotest-output-panel",
+  "diff",
+  "lazyterm",
+  "terminal",
+  -- Telescope filetypes to prevent autocompletion
+  "TelescopePrompt", -- Added to prevent completion in Telescope prompts
+  "TelescopeResults", -- Added to prevent completion in Telescope results
+  -- Laravel Helper custom window
+  "artisan-output", -- Added for the Laravel Helper custom output window
 }
 ------------------------------------
 vim.opt.listchars = { tab = "» ", trail = "·", nbsp = "␣" }

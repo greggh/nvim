@@ -103,6 +103,25 @@ return {
       end,
       debounce = 500, -- Increased debounce to reduce processing frequency
       max_diagnostics = 500, -- Reduced diagnostic limit for better performance
+      diagnostic_groups = {
+        -- Group diagnostics by source name to provide a cleaner overview
+        errors = { severity = vim.diagnostic.severity.ERROR },
+        warnings = { severity = vim.diagnostic.severity.WARN },
+      },
+      on_attach = function(client, bufnr)
+        -- Automatically populate workspace diagnostics when LSP attaches
+        if client.server_capabilities.diagnosticProvider then
+          require("workspace-diagnostics").populate_workspace_diagnostics(client, bufnr)
+        end
+      end,
+      default_diagnostic_config = {
+        -- Ensure workspace diagnostics have proper signs and appearance
+        signs = true,
+        underline = true,
+        virtual_text = false,
+        update_in_insert = false,
+        severity_sort = true,
+      },
     })
   end,
 }

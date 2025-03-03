@@ -1,3 +1,4 @@
+-- Filter function for Trouble plugin windows
 local trouble_filter = function(position)
   return function(_, win)
     return vim.w[win].trouble

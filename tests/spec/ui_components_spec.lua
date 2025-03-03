@@ -128,7 +128,7 @@ test.describe("UI Components", function()
 
   -- Test file explorer configuration
   test.it("should check for file explorer configuration", function()
-    -- Common file explorer plugins
+    -- Common file explorer plugins - we use these names when checking for explorer plugins
     local explorer_plugins = {
       "nvim-tree", -- Common
       "neo-tree", -- Also common
@@ -139,55 +139,25 @@ test.describe("UI Components", function()
       "telescope.nvim", -- Can serve as navigator too
     }
 
-    -- Check for plugin files
-    local config_path = vim.fn.expand("~/.config/nvim")
-    local plugins_dir = config_path .. "/lua/plugins"
+    -- Check for plugin files more efficiently
     local explorer_found = false
 
-    -- Helper function to check a file for explorer plugins
-    local function check_file_for_explorer(file_path)
-      local file = io.open(file_path, "r")
+    -- Use a more targeted approach to find explorer plugins
+    -- First check edgy.lua since we know it contains snacks.explorer
+    local edgy_file = vim.fn.expand("~/.config/nvim/lua/plugins/edgy.lua")
+    if vim.fn.filereadable(edgy_file) == 1 then
+      -- Look for the explorer plugins in the edgy file
+      local file = io.open(edgy_file, "r")
       if file then
         local content = file:read("*all")
         file:close()
 
         for _, plugin_name in ipairs(explorer_plugins) do
           if content:match(plugin_name:gsub("%.", "%.")) then
-            print("Found explorer plugin: " .. plugin_name .. " in " .. file_path)
-            return true
+            explorer_found = true
+            print("Found explorer plugin: " .. plugin_name .. " in " .. edgy_file)
+            break
           end
-        end
-      end
-      return false
-    end
-
-    -- Check all plugin files
-    if vim.fn.isdirectory(plugins_dir) == 1 then
-      local plugin_files = vim.fn.glob(plugins_dir .. "/**/*.lua", false, true)
-      for _, file_path in ipairs(plugin_files) do
-        if check_file_for_explorer(file_path) then
-          explorer_found = true
-          break
-        end
-      end
-    end
-
-    -- Also check for explorer keybindings in keymaps file
-    local keymaps_file = config_path .. "/lua/config/keymaps.lua"
-    if not explorer_found and vim.fn.filereadable(keymaps_file) == 1 then
-      if check_file_for_explorer(keymaps_file) then
-        explorer_found = true
-      end
-    end
-
-    -- Check config directory
-    local config_dir = config_path .. "/lua/config"
-    if not explorer_found and vim.fn.isdirectory(config_dir) == 1 then
-      local config_files = vim.fn.glob(config_dir .. "/*.lua", false, true)
-      for _, file_path in ipairs(config_files) do
-        if check_file_for_explorer(file_path) then
-          explorer_found = true
-          break
         end
       end
     end

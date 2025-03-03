@@ -68,6 +68,28 @@ return {
       definition = { enabled = false },
       implementation = { enabled = false },
       references = { enabled = true, include_declaration = false },
+      vt_position = "end_of_line",
+      disable_relative_path = false,
+      disable_file_types = vim.g.ignore_filetypes,
+      symbols = {
+        parameter = { enabled = false },
+        class = { enabled = true },
+        method = { enabled = true },
+        function_declaration = { enabled = true },
+        function_expression = { enabled = false },
+        field = { enabled = false },
+        enum = { enabled = false },
+      },
+      request_pending_text = "Calculating..",
+      get_definition = function(params)
+        return vim.lsp.buf.definition(params)
+      end,
+      get_references = function(params)
+        return vim.lsp.buf.references(params)
+      end,
+      get_implementation = function(params)
+        return vim.lsp.buf.implementation(params)
+      end,
     })
   end,
 }

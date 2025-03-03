@@ -32,6 +32,21 @@ return {
         lsp_format = "fallback",
         timeout_ms = 500,
       },
+      notify_on_error = true,
+      log_level = vim.log.levels.ERROR,
+      formatters = {
+        shfmt = {
+          prepend_args = { "-i", "2", "-ci" }, -- Use 2 spaces for indentation and indent switch cases
+        },
+        stylua = {
+          prepend_args = { "--indent-type", "Spaces", "--indent-width", "2" },
+        },
+        prettier = {
+          env = {
+            PRETTIERD_DEFAULT_CONFIG = vim.fn.expand("~/.config/nvim/.prettierrc.json"),
+          },
+        },
+      },
     })
   end,
 }

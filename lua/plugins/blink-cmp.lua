@@ -38,6 +38,7 @@ return {
     },
   },
   version = "*",
+  lazy = true, -- Make sure the plugin is truly lazy-loaded
   opts = {
     -- don't show completions or signature help for these filetypes. Keymaps are also disabled.
     enabled = function()

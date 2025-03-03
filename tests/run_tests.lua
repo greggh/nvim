@@ -147,6 +147,7 @@ function M.run_tests(dir)
     vim.cmd("cquit " .. test_counts.failed)
   else
     print("\n✅ All tests passed!")
+    vim.cmd("quit") -- Explicitly exit Neovim with success
   end
 end
 

@@ -32,6 +32,15 @@ return {
         "html",
         "css",
         "php",
+        "astro",
+        "jsdoc",
+        "yaml",
+        -- Programming languages
+        "go",
+        "rust",
+        "sql",
+        "zig",
+        "dockerfile",
         -- Add Lua since you're writing Neovim config
         "lua",
         "vim",

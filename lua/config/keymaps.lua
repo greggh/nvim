@@ -108,6 +108,20 @@ local plug_map = {
 
   ["nt|<C-,>"] = map_cmd("<CMD>ClaudeCode<CR>"):with_noremap():with_silent():with_desc("Claude Code: Toggle"),
 
+  -- Plugin: conform.nvim
+  ["n|<leader>cf"] = map_callback(function()
+      require("conform").format({ async = true, lsp_format = "fallback" })
+    end)
+    :with_noremap()
+    :with_silent()
+    :with_desc("Format buffer"),
+  ["n|<leader>cF"] = map_callback(function()
+      require("conform").format({ formatters = { "trim_whitespace", "trim_newlines" } })
+    end)
+    :with_noremap()
+    :with_silent()
+    :with_desc("Format buffer (whitespace only)"),
+
   -- Plugin: tide
   ["n|<leader>'"] = map_cmd("<CMD>lua require('tide.api').toggle_panel()<CR>")
     :with_noremap()
@@ -512,6 +526,40 @@ local misc_map = {
     :with_silent()
     :with_desc("Populate workspace diagnostics"),
 
+  -- Misc: toggle inlay hints
+  ["n|<leader>oi"] = map_callback(function()
+      local current_state = vim.lsp.inlay_hint.is_enabled()
+      local icon = current_state and " " or " "
+      local message = current_state and "Inlay hints disabled" or "Inlay hints enabled"
+      vim.lsp.inlay_hint.enable(not current_state)
+      print(icon .. " " .. message)
+    end)
+    :with_noremap()
+    :with_silent()
+    :with_desc("Toggle inlay hints"),
+
+  -- Removed HelpView keymap - plugin functionality not needed
+
+  -- Plugin: dropbar
+  ["n|<leader>;"] = map_callback(function()
+      require("dropbar.api").pick()
+    end)
+    :with_noremap()
+    :with_silent()
+    :with_desc("Pick symbols in winbar"),
+  ["n|[;"] = map_callback(function()
+      require("dropbar.api").goto_context_start()
+    end)
+    :with_noremap()
+    :with_silent()
+    :with_desc("Go to start of current context"),
+  ["n|];"] = map_callback(function()
+      require("dropbar.api").select_next_context()
+    end)
+    :with_noremap()
+    :with_silent()
+    :with_desc("Select next context"),
+
   -- Folding controls
   ["n|<leader>z0"] = map_callback(function()
       require("utils.ui").toggle_fold_level(0)
@@ -653,7 +701,7 @@ vim.defer_fn(function()
     { "<leader>e", desc = "Picker: Explorer", icon = "" },
     { "<leader>f/", desc = "Yazi: Current file", icon = "" },
     { "<leader>f-", desc = "Yazi: nvim working directory", icon = "󰘦" },
-    { "<leader>f\\", desc = "Yazi: Resume last session", icon = "↺" },
+    { "<leader>f\\", desc = "Yazi: Resume first session", icon = "↺" },
     { "<leader>pl", desc = "✓ Lazy: Sync", icon = "󰒲" },
     { "<leader>pp", desc = "Profile: Generate report", icon = "📊" },
     { "<leader>ps", desc = "Profile: Show summary", icon = "📈" },
@@ -737,12 +785,45 @@ vim.defer_fn(function()
     { "<leader>z2", desc = "Toggle level 2 folds", icon = "󰈖" },
   })
 
+  -- Register formatting keymaps with which-key
+  wk.add({
+    mode = "n",
+    { "<leader>cf", desc = "Format buffer", icon = "󰁨" },
+    { "<leader>cF", desc = "Format buffer (whitespace only)", icon = "󰗈" },
+  })
+
   -- Register window/buffer management keymaps with which-key
   wk.add({
     mode = "n",
     { "<leader>wm", desc = "Toggle maximize window", icon = "󰆟" },
     { "<leader>bw", desc = "Close buffer (safe)", icon = "󰅖" },
     { "<leader>bo", desc = "Close all buffers except current", icon = "󰆐" },
+  })
+
+  -- Register IDE view toggle
+  wk.add({
+    mode = "n",
+    { "<C-a>", desc = "Toggle IDE view", icon = "󰨞" },
+  })
+
+  -- Register dropbar
+  wk.add({
+    mode = "n",
+    { "<leader>;", desc = "Pick symbols in winbar", icon = "󰓡" },
+    { "[;", desc = "Go to start of current context", icon = "󰁍" },
+    { "];", desc = "Select next context", icon = "󰁔" },
+  })
+
+  -- Register helpview
+  wk.add({
+    mode = "n",
+    { "<leader>hh", desc = "Help: Toggle enhanced view", icon = "󰋖" },
+  })
+
+  -- Register Inlay hints toggle
+  wk.add({
+    mode = "n",
+    { "<leader>oi", desc = "Toggle inlay hints", icon = "󰌵" },
   })
 end, 50)
 

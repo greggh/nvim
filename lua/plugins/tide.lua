@@ -16,6 +16,22 @@ return {
     hints = {
       dictionary = "qwertzuiopsfghjklycvbnm",
     },
+    panel = {
+      width = "70%",
+      height = "70%",
+      border = {
+        style = "rounded",
+        text = {
+          top = " tide ",
+          top_align = "center",
+        },
+      },
+    },
+    window = {
+      border = {
+        style = "rounded",
+      },
+    },
   },
   dependencies = {
     "MunifTanjim/nui.nvim",
