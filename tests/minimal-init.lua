@@ -26,8 +26,9 @@ vim.g.loaded_node_provider = 0
 vim.g.loaded_ruby_provider = 0
 vim.g.loaded_perl_provider = 0
 
--- Test flag to avoid loading all plugins during testing
+-- Test flags to avoid loading all plugins during testing
 vim.g._test_mode = true
+vim.g._disable_which_key = true
 
 -- Mock certain functions and modules that might be needed by config modules
 local function setup_mocks()
