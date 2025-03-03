@@ -1,3 +1,4 @@
+---@diagnostic disable: redundant-parameter
 -- Plugin Management Tests
 local test = require("tests.run_tests")
 

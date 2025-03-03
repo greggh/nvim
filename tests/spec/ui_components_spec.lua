@@ -1,3 +1,4 @@
+---@diagnostic disable: redundant-parameter, duplicate-set-field
 -- UI Components Tests
 local test = require("tests.run_tests")
 

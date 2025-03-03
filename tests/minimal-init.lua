@@ -1,3 +1,4 @@
+---@diagnostic disable: duplicate-set-field
 -- Minimal configuration for testing
 -- Based on the structure from laravel-helper plugin
 

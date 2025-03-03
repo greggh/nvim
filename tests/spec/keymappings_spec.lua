@@ -1,3 +1,4 @@
+---@diagnostic disable: redundant-parameter, param-type-mismatch
 -- Key Mappings Tests
 local test = require("tests.run_tests")
 
