@@ -586,12 +586,12 @@ end, 30)
 vim.defer_fn(function()
   -- Use pcall to handle when which-key isn't available (like in test environments)
   local status, wk = pcall(require, "which-key")
-  if not status then
+  if not status or not wk or type(wk.add) ~= "function" then
     -- Skip which-key registration in test environments
     if vim.g.test_mode then
       vim.notify("Skipping which-key registration in test mode", vim.log.levels.DEBUG)
     else
-      vim.notify("which-key not available", vim.log.levels.WARN)
+      vim.notify("which-key not available or missing add method", vim.log.levels.WARN)
     end
     return
   end
@@ -636,12 +636,12 @@ end, 40)
 vim.defer_fn(function()
   -- Use pcall to handle when which-key isn't available (like in test environments)
   local status, wk = pcall(require, "which-key")
-  if not status then
+  if not status or not wk or type(wk.add) ~= "function" then
     -- Skip which-key registration in test environments
     if vim.g.test_mode then
       vim.notify("Skipping which-key icons registration in test mode", vim.log.levels.DEBUG)
     else
-      vim.notify("which-key not available for icon registration", vim.log.levels.WARN)
+      vim.notify("which-key not available or missing add method for icon registration", vim.log.levels.WARN)
     end
     return
   end
