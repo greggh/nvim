@@ -584,7 +584,17 @@ end, 30)
 
 -- Lazy load which-key registrations
 vim.defer_fn(function()
-  local wk = require("which-key")
+  -- Use pcall to handle when which-key isn't available (like in test environments)
+  local status, wk = pcall(require, "which-key")
+  if not status then
+    -- Skip which-key registration in test environments
+    if vim.g.test_mode then
+      vim.notify("Skipping which-key registration in test mode", vim.log.levels.DEBUG)
+    else
+      vim.notify("which-key not available", vim.log.levels.WARN)
+    end
+    return
+  end
 
   -- Register keymap descriptions with which-key in batches
   -- basic
@@ -624,7 +634,18 @@ end, 40)
 
 -- Add icons to everything in which-key (deferred loading)
 vim.defer_fn(function()
-  local wk = require("which-key")
+  -- Use pcall to handle when which-key isn't available (like in test environments)
+  local status, wk = pcall(require, "which-key")
+  if not status then
+    -- Skip which-key registration in test environments
+    if vim.g.test_mode then
+      vim.notify("Skipping which-key icons registration in test mode", vim.log.levels.DEBUG)
+    else
+      vim.notify("which-key not available for icon registration", vim.log.levels.WARN)
+    end
+    return
+  end
+
   wk.add({
     mode = "n",
     -- Claude Code keymaps are now handled by the plugin
