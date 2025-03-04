@@ -5,6 +5,15 @@ All notable changes to this Neovim configuration will be documented in this file
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.4.2] - 2025-03-03
+
+### Fixed
+- Added "TelescopePrompt" and "TelescopeResults" to ignored filetypes to prevent autocompletion
+- Added "artisan-output" to ignored filetypes for Laravel Helper integration
+- Consolidated duplicate filetype ignore lists into a single global list
+- Fixed test runner not properly exiting after tests
+- Improved handling of which-key in test environment
+
 ## [0.4.1] - 2025-03-03
 
 ### Changed
