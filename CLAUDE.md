@@ -1,4 +1,4 @@
-# CLAUDE.md - Neovim Configuration Guidelines
+# Neovim Configuration Guidelines
 
 ## Requirements
 - Neovim 0.10+ (required for vim.system(), splitkeep, modern LSP features)
@@ -47,3 +47,13 @@
 - Toggles: <leader>ac (normal mode), <C-o> (terminal mode)
 - Window settings: 50% height at bottom of screen
 - Git integration: Automatically uses git project root as CWD when available
+
+## Git Commands
+- `git -C /home/gregg/.config/nvim status` - Check current status
+- `git -C /home/gregg/.config/nvim add .` - Stage all changes
+- `git -C /home/gregg/.config/nvim commit -m "message"` - Commit changes
+- `git -C /home/gregg/.config/nvim push` - Push changes
+
+## Version Management
+- Current version: v0.4.2
+- Version file: `lua/config/version.lua`
