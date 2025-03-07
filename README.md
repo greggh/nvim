@@ -10,6 +10,7 @@
 [![GitHub Last Commit](https://img.shields.io/github/last-commit/greggh/nvim?style=flat-square)](https://github.com/greggh/nvim/commits/main)
 [![Neovim Version](https://img.shields.io/badge/Neovim-0.10%2B-blueviolet?style=flat-square&logo=neovim)](https://github.com/neovim/neovim/releases/tag/v0.10.0)
 [![Version](https://img.shields.io/badge/Version-0.4.2-blue?style=flat-square)](https://github.com/greggh/nvim/releases/tag/v0.4.2)
+[![MIT License](https://img.shields.io/badge/License-MIT-green?style=flat-square)](https://github.com/greggh/nvim/blob/main/LICENSE)
 [![Dotfyle](https://dotfyle.com/greggh/nvim/badges/plugins?style=flat-square)](https://dotfyle.com/greggh/nvim)
 [![Dotfyle](https://dotfyle.com/greggh/nvim/badges/leaderkey?style=flat-square)](https://dotfyle.com/greggh/nvim)
 [![Dotfyle](https://dotfyle.com/greggh/nvim/badges/plugin-manager?style=flat-square)](https://dotfyle.com/greggh/nvim)
@@ -294,5 +295,5 @@ For a complete development environment setup, see [DEVELOPMENT.md](DEVELOPMENT.m
 ---
 
 <div align="center">
-  <p>Made with ❤️ by <a href="https://github.com/greggh">greggh</a></p>
+  <p>Made with ❤️ by <a href="https://github.com/greggh">Gregg Housh</a></p>
 </div>

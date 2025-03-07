@@ -33,9 +33,9 @@ local function track(name)
 
   return module
 end
-
 -- Use a single table to track timing information
 local timing = {
+
   start = startup_time,
   modules = {},
   events = {},

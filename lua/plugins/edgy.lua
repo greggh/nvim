@@ -54,7 +54,7 @@ return {
       { ft = "qf", title = "QuickFix" },
       {
         ft = "snacks_terminal",
-        size = { height = 0.2 },
+        size = { height = 0.5 },
         title = "Terminal %{b:snacks_terminal.id}",
         filter = function(_, win)
           return vim.w[win].snacks_win
