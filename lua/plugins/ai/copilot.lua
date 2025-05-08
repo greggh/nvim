@@ -23,7 +23,17 @@ return {
         },
       },
       panel = { enabled = false },
-
+      filetypes = {
+        yaml = false,
+        markdown = false,
+        help = false,
+        gitcommit = false,
+        gitrebase = false,
+        hgcommit = false,
+        svn = false,
+        cvs = false,
+        ["."] = false,
+      },
       vim.keymap.set("i", "<Tab>", function()
         if suggestion.is_visible() then
           suggestion.accept()

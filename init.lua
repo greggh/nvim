@@ -1,4 +1,4 @@
--- Load profiling module with error handling
+-- "Load the profiling module and include error handling."
 local profile_module
 pcall(function()
   profile_module = require("utils.profile").setup()

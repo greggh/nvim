@@ -137,6 +137,9 @@ return {
 
     sources = {
       default = sources_default,
+      per_filetype = {
+        markdown = { "markview" },
+      },
 
       providers = {
         lazydev = {

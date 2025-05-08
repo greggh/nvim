@@ -108,12 +108,12 @@ return {
         errors = { severity = vim.diagnostic.severity.ERROR },
         warnings = { severity = vim.diagnostic.severity.WARN },
       },
-      on_attach = function(client, bufnr)
-        -- Automatically populate workspace diagnostics when LSP attaches
-        if client.server_capabilities.diagnosticProvider then
-          require("workspace-diagnostics").populate_workspace_diagnostics(client, bufnr)
-        end
-      end,
+      -- on_attach = function(client, bufnr)
+      --   -- Automatically populate workspace diagnostics when LSP attaches
+      --   if client.server_capabilities.diagnosticProvider then
+      --     require("workspace-diagnostics").populate_workspace_diagnostics(client, bufnr)
+      --   end
+      -- end,
       default_diagnostic_config = {
         -- Ensure workspace diagnostics have proper signs and appearance
         signs = true,

@@ -11,5 +11,6 @@ elseif vim.g.suggestions then
 end
 
 table.insert(plugins, require("plugins.ai.avante"))
+table.insert(plugins, require("plugins.ai.squire"))
 
 return plugins
