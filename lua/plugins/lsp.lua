@@ -271,10 +271,10 @@ return {
     ---------------------
     -- memory limiting for LSP servers
     ---------------------
-    local function get_memory_limit_mb()
-      -- Adapt based on available system memory
-      return 1024 -- 1GB limit for LSP servers
-    end
+    -- local function get_memory_limit_mb()
+    --   -- Adapt based on available system memory
+    --   return 1024 -- 1GB limit for LSP servers
+    -- end
 
     ---------------------
     -- mason
@@ -289,43 +289,43 @@ return {
     vim.list_extend(ensure_installed, LSP_TOOLS)
 
     require("mason-tool-installer").setup({ ensure_installed = ensure_installed })
-    require("mason-lspconfig").setup_handlers({
-      function(server_name)
-        local server = servers[server_name] or {}
-        server.capabilities = vim.tbl_deep_extend("force", {}, capabilities, server.capabilities or {})
+    -- require("mason-lspconfig").setup_handlers({
+    --   function(server_name)
+    --     local server = servers[server_name] or {}
+    --     server.capabilities = vim.tbl_deep_extend("force", {}, capabilities, server.capabilities or {})
 
-        -- Add memory limits for heavy LSP servers
-        local heavy_servers = {
-          "vtsls",
-          "lua_ls",
-          "pyright",
-          "rust_analyzer",
-          "gopls",
-          "clangd",
-          "tailwindcss",
-          "jdtls",
-          "yamlls",
-          "intelephense", -- PHP LSP can be memory hungry
-        }
-        if vim.tbl_contains(heavy_servers, server_name) then
-          server.settings = server.settings or {}
-          server.settings.memory = {
-            limitMb = get_memory_limit_mb(),
-          }
-        end
+    --     -- Add memory limits for heavy LSP servers
+    --     local heavy_servers = {
+    --       "vtsls",
+    --       "lua_ls",
+    --       "pyright",
+    --       "rust_analyzer",
+    --       "gopls",
+    --       "clangd",
+    --       "tailwindcss",
+    --       "jdtls",
+    --       "yamlls",
+    --       "intelephense", -- PHP LSP can be memory hungry
+    --     }
+    --     if vim.tbl_contains(heavy_servers, server_name) then
+    --       server.settings = server.settings or {}
+    --       server.settings.memory = {
+    --         limitMb = get_memory_limit_mb(),
+    --       }
+    --     end
 
-        -- Add offsetEncoding capability for clangd
-        if server_name == "clangd" then
-          server.capabilities.offsetEncoding = { "utf-16" }
-        end
+    --     -- Add offsetEncoding capability for clangd
+    --     if server_name == "clangd" then
+    --       server.capabilities.offsetEncoding = { "utf-16" }
+    --     end
 
-        --       server.on_attach = function(client, bufnr) -- Attach to every buffer
-        -- Populate Workspace-Diagnostics plugin information
-        --          require("workspace-diagnostics").populate_workspace_diagnostics(client, bufnr)
-        --        end
-        require("lspconfig")[server_name].setup(server)
-      end,
-    })
+    --     --       server.on_attach = function(client, bufnr) -- Attach to every buffer
+    --     -- Populate Workspace-Diagnostics plugin information
+    --     --          require("workspace-diagnostics").populate_workspace_diagnostics(client, bufnr)
+    --     --        end
+    --     require("lspconfig")[server_name].setup(server)
+    --   end,
+    -- })
 
     ---------------------
     -- keybinds
