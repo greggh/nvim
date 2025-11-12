@@ -17,8 +17,7 @@ local function get_snacks()
 end
 
 local builtin_map = {
-  -- Command mode tab completion
-  ["c|<tab>"] = map_cmd("<C-z>"):with_noremap():with_desc("edit: Command completion"),
+  -- Command mode tab completion ["c|<tab>"] = map_cmd("<C-z>"):with_noremap():with_desc("edit: Command completion"),
 
   -- fix stupid typo
   ["n|q:"] = map_cmd("<Cmd>q<CR>"):with_noremap():with_silent():with_desc("edit: Quit"),
@@ -212,10 +211,10 @@ local plug_map = {
   ["n|<A-j>"] = map_cu("SmartResizeDown"):with_silent():with_noremap():with_desc("window: Resize -3 down"),
   ["n|<A-k>"] = map_cu("SmartResizeUp"):with_silent():with_noremap():with_desc("window: Resize +3 up"),
   ["n|<A-l>"] = map_cu("SmartResizeRight"):with_silent():with_noremap():with_desc("window: Resize +3 right"),
-  ["n|<C-h>"] = map_cu("SmartCursorMoveLeft"):with_silent():with_noremap():with_desc("window: Focus left"),
-  ["n|<C-j>"] = map_cu("SmartCursorMoveDown"):with_silent():with_noremap():with_desc("window: Focus down"),
-  ["n|<C-k>"] = map_cu("SmartCursorMoveUp"):with_silent():with_noremap():with_desc("window: Focus up"),
-  ["n|<C-l>"] = map_cu("SmartCursorMoveRight"):with_silent():with_noremap():with_desc("window: Focus right"),
+  ["n|<C-h>"] = map_cu("wincmd h"):with_silent():with_noremap():with_desc("window: Focus left"),
+  ["n|<C-j>"] = map_cu("wincmd j"):with_silent():with_noremap():with_desc("window: Focus down"),
+  ["n|<C-k>"] = map_cu("wincmd k"):with_silent():with_noremap():with_desc("window: Focus up"),
+  ["n|<C-l>"] = map_cu("wincmd l"):with_silent():with_noremap():with_desc("window: Focus right"),
   ["n|<leader>wh"] = map_cu("SmartSwapLeft"):with_silent():with_noremap():with_desc("window: Move window left"),
   ["n|<leader>wj"] = map_cu("SmartSwapDown"):with_silent():with_noremap():with_desc("window: Move window down"),
   ["n|<leader>wk"] = map_cu("SmartSwapUp"):with_silent():with_noremap():with_desc("window: Move window up"),

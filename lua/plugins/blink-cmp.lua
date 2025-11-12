@@ -132,9 +132,34 @@ return {
     snippets = { preset = "luasnip" },
 
     cmdline = {
-      sources = {},
-    },
+      enabled = true,
+      keymap = { preset = "cmdline" },
+      sources = { "buffer", "cmdline" },
 
+      completion = {
+        trigger = {
+          show_on_blocked_trigger_characters = {},
+          show_on_x_blocked_trigger_characters = {},
+        },
+        list = {
+          selection = {
+            -- When `true`, will automatically select the first item in the completion list
+            preselect = true,
+            -- When `true`, inserts the completion item automatically when selecting it
+            auto_insert = true,
+          },
+        },
+        -- Whether to automatically show the window when new completion items are available
+        -- Default is false for cmdline, true for cmdwin (command-line window)
+        menu = {
+          auto_show = function(ctx, _)
+            return ctx.mode == "cmdwin"
+          end,
+        },
+        -- Displays a preview of the selected item on the current line
+        ghost_text = { enabled = true },
+      },
+    },
     sources = {
       default = sources_default,
       per_filetype = {
