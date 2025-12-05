@@ -45,112 +45,6 @@ return {
       },
       gopls = {},
       html = {},
-      intelephense = {
-        init_options = {
-          licenceKey = nil, -- Set your license key here if you have one
-          globalStoragePath = vim.env.HOME .. "/.local/share/intelephense",
-        },
-        settings = {
-          intelephense = {
-            files = {
-              maxSize = 1000000, -- Increased for larger files
-            },
-            environment = {
-              includePaths = {},
-            },
-            format = {
-              enable = false, -- We'll use a dedicated formatter for PHP
-            },
-            stubs = {
-              "apache",
-              "bcmath",
-              "bz2",
-              "calendar",
-              "com_dotnet",
-              "Core",
-              "ctype",
-              "curl",
-              "date",
-              "dba",
-              "dom",
-              "enchant",
-              "exif",
-              "FFI",
-              "fileinfo",
-              "filter",
-              "fpm",
-              "ftp",
-              "gd",
-              "gettext",
-              "gmp",
-              "hash",
-              "iconv",
-              "imap",
-              "intl",
-              "json",
-              "ldap",
-              "libxml",
-              "mbstring",
-              "meta",
-              "mysqli",
-              "oci8",
-              "odbc",
-              "openssl",
-              "pcntl",
-              "pcre",
-              "PDO",
-              "pdo_ibm",
-              "pdo_mysql",
-              "pdo_pgsql",
-              "pdo_sqlite",
-              "pgsql",
-              "Phar",
-              "posix",
-              "pspell",
-              "readline",
-              "Reflection",
-              "session",
-              "shmop",
-              "SimpleXML",
-              "snmp",
-              "soap",
-              "sockets",
-              "sodium",
-              "SPL",
-              "sqlite3",
-              "standard",
-              "superglobals",
-              "sysvmsg",
-              "sysvsem",
-              "sysvshm",
-              "tidy",
-              "tokenizer",
-              "xml",
-              "xmlreader",
-              "xmlrpc",
-              "xmlwriter",
-              "xsl",
-              "zip",
-              "zlib",
-              "wordpress",
-              "phpunit",
-              "laravel",
-              "wordpress-globals",
-              "woocommerce",
-            },
-            completion = {
-              maxItems = 100,
-              insertUseDeclaration = true,
-              fullyQualifyGlobalConstantsAndFunctions = false,
-              triggerParameterHints = true,
-            },
-            phpdoc = {
-              returnVoid = false, -- Don't add @return void
-              useFullyQualifiedNames = false,
-            },
-          },
-        },
-      },
       jsonls = {},
       lua_ls = {
         settings = {
@@ -242,7 +136,6 @@ return {
     ---------------------
     local LSP_TOOLS = {
       "goimports",
-      "phpcs", -- PHP CodeSniffer for PHP linting
       "prettier",
       "shfmt",
       "sqlfluff",
@@ -289,42 +182,43 @@ return {
     vim.list_extend(ensure_installed, LSP_TOOLS)
 
     require("mason-tool-installer").setup({ ensure_installed = ensure_installed })
-    require("mason-lspconfig").setup_handlers({
-      function(server_name)
-        local server = servers[server_name] or {}
-        server.capabilities = vim.tbl_deep_extend("force", {}, capabilities, server.capabilities or {})
+    require("mason-lspconfig").setup({
+      handlers = {
+        function(server_name)
+          local server = servers[server_name] or {}
+          server.capabilities = vim.tbl_deep_extend("force", {}, capabilities, server.capabilities or {})
 
-        -- Add memory limits for heavy LSP servers
-        local heavy_servers = {
-          "vtsls",
-          "lua_ls",
-          "pyright",
-          "rust_analyzer",
-          "gopls",
-          "clangd",
-          "tailwindcss",
-          "jdtls",
-          "yamlls",
-          "intelephense", -- PHP LSP can be memory hungry
-        }
-        if vim.tbl_contains(heavy_servers, server_name) then
-          server.settings = server.settings or {}
-          server.settings.memory = {
-            limitMb = get_memory_limit_mb(),
+          -- Add memory limits for heavy LSP servers
+          local heavy_servers = {
+            "vtsls",
+            "lua_ls",
+            "pyright",
+            "rust_analyzer",
+            "gopls",
+            "clangd",
+            "tailwindcss",
+            "jdtls",
+            "yamlls",
           }
-        end
+          if vim.tbl_contains(heavy_servers, server_name) then
+            server.settings = server.settings or {}
+            server.settings.memory = {
+              limitMb = get_memory_limit_mb(),
+            }
+          end
 
-        -- Add offsetEncoding capability for clangd
-        if server_name == "clangd" then
-          server.capabilities.offsetEncoding = { "utf-16" }
-        end
+          -- Add offsetEncoding capability for clangd
+          if server_name == "clangd" then
+            server.capabilities.offsetEncoding = { "utf-16" }
+          end
 
-        --       server.on_attach = function(client, bufnr) -- Attach to every buffer
-        -- Populate Workspace-Diagnostics plugin information
-        --          require("workspace-diagnostics").populate_workspace_diagnostics(client, bufnr)
-        --        end
-        require("lspconfig")[server_name].setup(server)
-      end,
+          --       server.on_attach = function(client, bufnr) -- Attach to every buffer
+          -- Populate Workspace-Diagnostics plugin information
+          --          require("workspace-diagnostics").populate_workspace_diagnostics(client, bufnr)
+          --        end
+          require("lspconfig")[server_name].setup(server)
+        end,
+      },
     })
 
     ---------------------

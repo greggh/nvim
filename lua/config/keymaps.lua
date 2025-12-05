@@ -478,7 +478,7 @@ local plug_map = {
     :with_silent()
     :with_desc("Trouble: LSP"),
 
-  -- Pligin: actions-preview
+  -- Plugin: actions-preview
   ["nv|<leader>ca"] = map_callback(function()
       require("actions-preview").code_actions()
     end)
