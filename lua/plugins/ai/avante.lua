@@ -30,9 +30,9 @@ return {
   config = function()
     require("avante_lib").load()
     require("avante").setup({
-      provider = "claude",
-      vendors = {
-        ["ollama"] = {
+      providers = {
+        claude = {},
+        ollama = {
           __inherited_from = "openai",
           api_key_name = "",
           endpoint = "http://192.168.1.197:11434/v1",

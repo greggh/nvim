@@ -164,10 +164,10 @@ return {
     ---------------------
     -- memory limiting for LSP servers
     ---------------------
-    local function get_memory_limit_mb()
-      -- Adapt based on available system memory
-      return 1024 -- 1GB limit for LSP servers
-    end
+    -- local function get_memory_limit_mb()
+    --   -- Adapt based on available system memory
+    --   return 1024 -- 1GB limit for LSP servers
+    -- end
 
     ---------------------
     -- mason

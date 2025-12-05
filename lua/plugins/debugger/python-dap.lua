@@ -6,7 +6,7 @@ return {
     -- see: nvim-dap-ui issue #279
     require("dapui").setup()
     -- uses the debugypy installation by mason
-    local debugpyPythonPath = require("mason-registry").get_package("debugpy"):get_install_path() .. "/venv/bin/python3"
+    local debugpyPythonPath = vim.fn.expand("$MASON/bin/kotlin-debug-adapter") .. "/venv/bin/python3"
     require("dap-python").setup(debugpyPythonPath, {}) ---@diagnostic disable-line: missing-fields
   end,
 }
