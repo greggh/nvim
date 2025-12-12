@@ -29,20 +29,6 @@ return {
       emmet_language_server = {
         fileeypes = { "html", "typescriptreact", "javascriptreact", "css", "sass", "scss", "php" },
       },
-      eslint_d = {
-        root_dir = vim.fs.root(0, { "package.json", ".eslintrc.json", ".eslintrc.js", ".git" }),
-        filetypes = { "javascript", "typescript", "typescriptreact", "javascriptreact" },
-        flags = os.getenv("DEBOUNCE_ESLINT") and {
-          allow_incremental_sync = true,
-          debounce_text_changes = 1000,
-        } or nil,
-        on_attach = function(_, bufnr)
-          vim.api.nvim_create_autocmd("BufWritePre", {
-            buffer = bufnr,
-            command = "EslintFixAll",
-          })
-        end,
-      },
       gopls = {},
       html = {},
       intelephense = {
@@ -154,16 +140,16 @@ return {
       jsonls = {},
       lua_ls = {
         settings = {
-          Lua = {
+          lua = {
             diagnostics = {
-              globals = { "vim", "Snacks" },
+              globals = { "vim", "snacks" },
             },
             completion = {
-              callSnippet = "Replace",
+              callsnippet = "replace",
             },
             workspace = {
               library = vim.api.nvim_get_runtime_file("", true),
-              checkThirdParty = false,
+              checkthirdparty = false,
             },
           },
         },
@@ -241,14 +227,28 @@ return {
     -- LSP tools
     ---------------------
     local LSP_TOOLS = {
-      "goimports",
-      "phpcs", -- PHP CodeSniffer for PHP linting
-      "prettier",
-      "shfmt",
-      "sqlfluff",
-      "sql-formatter",
-      "stylelint",
-      "stylua",
+      goimports = {},
+      phpcs = {},
+      prettier = {},
+      shfmt = {},
+      sqlformatter = {},
+      sqlfluff = {},
+      stylelint = {},
+      stylua = {},
+      eslint_d = {
+        root_dir = vim.fs.root(0, { "package.json", ".eslintrc.json", ".eslintrc.js", ".git" }),
+        filetypes = { "javascript", "typescript", "typescriptreact", "javascriptreact" },
+        flags = os.getenv("DEBOUNCE_ESLINT") and {
+          allow_incremental_sync = true,
+          debounce_text_changes = 1000,
+        } or nil,
+        on_attach = function(_, bufnr)
+          vim.api.nvim_create_autocmd("BufWritePre", {
+            buffer = bufnr,
+            command = "EslintFixAll",
+          })
+        end,
+      },
     }
 
     ---------------------
@@ -279,53 +279,19 @@ return {
     ---------------------
     -- mason
     ---------------------
+
     local ensure_installed = vim.tbl_keys(servers or {})
+    local ensure_lsptools_installed = vim.tbl_keys(servers or {})
 
     if vim.g.debugger then
       local DEBUGGERS = require("utils.debugger").DEBUGGERS
-      vim.list_extend(ensure_installed, DEBUGGERS)
+      vim.list_extend(ensure_lsptools_installed, DEBUGGERS)
     end
 
-    vim.list_extend(ensure_installed, LSP_TOOLS)
+    vim.list_extend(ensure_lsptools_installed, LSP_TOOLS)
 
-    require("mason-tool-installer").setup({ ensure_installed = ensure_installed })
-    -- require("mason-lspconfig").setup_handlers({
-    --   function(server_name)
-    --     local server = servers[server_name] or {}
-    --     server.capabilities = vim.tbl_deep_extend("force", {}, capabilities, server.capabilities or {})
-
-    --     -- Add memory limits for heavy LSP servers
-    --     local heavy_servers = {
-    --       "vtsls",
-    --       "lua_ls",
-    --       "pyright",
-    --       "rust_analyzer",
-    --       "gopls",
-    --       "clangd",
-    --       "tailwindcss",
-    --       "jdtls",
-    --       "yamlls",
-    --       "intelephense", -- PHP LSP can be memory hungry
-    --     }
-    --     if vim.tbl_contains(heavy_servers, server_name) then
-    --       server.settings = server.settings or {}
-    --       server.settings.memory = {
-    --         limitMb = get_memory_limit_mb(),
-    --       }
-    --     end
-
-    --     -- Add offsetEncoding capability for clangd
-    --     if server_name == "clangd" then
-    --       server.capabilities.offsetEncoding = { "utf-16" }
-    --     end
-
-    --     --       server.on_attach = function(client, bufnr) -- Attach to every buffer
-    --     -- Populate Workspace-Diagnostics plugin information
-    --     --          require("workspace-diagnostics").populate_workspace_diagnostics(client, bufnr)
-    --     --        end
-    --     require("lspconfig")[server_name].setup(server)
-    --   end,
-    -- })
+    require("mason-tool-installer").setup({ ensure_installed = ensure_lsptools_installed })
+    require("mason-lspconfig").setup({ ensure_installed = ensure_installed, automatic_enable = true })
 
     ---------------------
     -- keybinds
