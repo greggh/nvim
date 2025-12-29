@@ -20,7 +20,7 @@ local builtin_map = {
   -- Command mode tab completion ["c|<tab>"] = map_cmd("<C-z>"):with_noremap():with_desc("edit: Command completion"),
 
   -- fix stupid typo
-  ["n|q:"] = map_cmd("<Cmd>q<CR>"):with_noremap():with_silent():with_desc("edit: Quit"),
+  ["n|q:"] = map_cr("q"):with_noremap():with_silent():with_desc("edit: Quit"),
 
   -- Paste replace visual selection without yanking: https://vim.fandom.com/wiki/Pasting_over_visual_selection
   ["v|p"] = map_cmd('"_dP'):with_noremap():with_silent():with_desc("edit: Paste replace visual selection"),
@@ -76,10 +76,10 @@ local builtin_map = {
   ["n|<S-Tab>"] = map_cr("normal za"):with_noremap():with_silent():with_desc("edit: Toggle code fold"),
 
   -- Builtin: terminal
-  ["t|<C-w>h"] = map_cmd("<Cmd>wincmd h<CR>"):with_silent():with_noremap():with_desc("window: Focus left"),
-  ["t|<C-w>l"] = map_cmd("<Cmd>wincmd l<CR>"):with_silent():with_noremap():with_desc("window: Focus right"),
-  ["t|<C-w>j"] = map_cmd("<Cmd>wincmd j<CR>"):with_silent():with_noremap():with_desc("window: Focus down"),
-  ["t|<C-w>k"] = map_cmd("<Cmd>wincmd k<CR>"):with_silent():with_noremap():with_desc("window: Focus up"),
+  ["t|<C-w>h"] = map_cr("wincmd h"):with_silent():with_noremap():with_desc("window: Focus left"),
+  ["t|<C-w>l"] = map_cr("wincmd l"):with_silent():with_noremap():with_desc("window: Focus right"),
+  ["t|<C-w>j"] = map_cr("wincmd j"):with_silent():with_noremap():with_desc("window: Focus down"),
+  ["t|<C-w>k"] = map_cr("wincmd k"):with_silent():with_noremap():with_desc("window: Focus up"),
 
   -- Builtin: tab
   ["n|<leader>wtn"] = map_cr("tabnew"):with_noremap():with_silent():with_desc("tab: Create a new tab"),
@@ -122,7 +122,7 @@ local plug_map = {
     :with_desc("Format buffer (whitespace only)"),
 
   -- Plugin: tide
-  ["n|<leader>'"] = map_cmd("<CMD>lua require('tide.api').toggle_panel()<CR>")
+  ["n|<leader>'"] = map_cr("lua require('tide.api').toggle_panel()")
     :with_noremap()
     :with_silent()
     :with_desc("Tide: Open"),
@@ -135,31 +135,43 @@ local plug_map = {
     :with_noremap()
     :with_silent()
     :with_desc("Picker: Explorer"),
+  ["n|-"] = map_callback(function()
+      require("utils.snacks.scratch").new_scratch()
+    end)
+    :with_noremap()
+    :with_silent()
+    :with_desc("Scratch: New Scratchpad"),
+  ["n|_"] = map_callback(function()
+      require("utils.snacks.scratch").select_scratch()
+    end)
+    :with_noremap()
+    :with_silent()
+    :with_desc("Scratch: Open Existing"),
 
   -- Plugin: yazi
-  ["n|<leader>f/"] = map_cmd("<CMD>Yazi<CR>"):with_noremap():with_silent():with_desc("Yazi: Current file"),
-  ["n|<leader>f-"] = map_cmd("<CMD>Yazi cwd<CR>")
+  ["n|<leader>f/"] = map_cr("Yazi"):with_noremap():with_silent():with_desc("Yazi: Current file"),
+  ["n|<leader>f-"] = map_cr("Yazi cwd")
     :with_noremap()
     :with_silent()
     :with_desc("Yazi: nvim working directory"),
-  ["n|<leader>f\\"] = map_cmd("<CMD>Yazi toggle<CR>")
+  ["n|<leader>f\\"] = map_cr("Yazi toggle")
     :with_noremap()
     :with_silent()
     :with_desc("Yazi: Resume last session"),
 
   -- Plugin: lazy
-  ["n|<leader>pl"] = map_cmd("<CMD>Lazy sync<CR>"):with_noremap():with_silent():with_desc("✓ Lazy: Sync"),
+  ["n|<leader>pl"] = map_cr("Lazy sync"):with_noremap():with_silent():with_desc("✓ Lazy: Sync"),
 
   -- Plugin: Mason
-  ["n|<leader>pm"] = map_cmd("<CMD>Mason<CR>"):with_noremap():with_silent():with_desc("Mason: Toggle"),
+  ["n|<leader>pm"] = map_cr("Mason"):with_noremap():with_silent():with_desc("Mason: Toggle"),
 
   -- Plugin: flags
-  ["n|<leader>F"] = map_cmd("<CMD>Flags<CR>"):with_noremap():with_silent():with_desc("Flags"),
+  ["n|<leader>F"] = map_cr("Flags"):with_noremap():with_silent():with_desc("Flags"),
 
   -- Plugin: buffer
-  ["n|<leader><tab>"] = map_cmd("<CMD>b#<CR>"):with_noremap():with_silent():with_desc("Buffer: Switch back & forth"),
-  ["n|<leader>b["] = map_cmd("<CMD>bp<CR>"):with_noremap():with_silent():with_desc("Buffer: Previous"),
-  ["n|<leader>b]"] = map_cmd("<CMD>bn<CR>"):with_noremap():with_silent():with_desc("Buffer: Next"),
+  ["n|<leader><tab>"] = map_cr("b#"):with_noremap():with_silent():with_desc("Buffer: Switch back & forth"),
+  ["n|<leader>b["] = map_cr("bp"):with_noremap():with_silent():with_desc("Buffer: Previous"),
+  ["n|<leader>b]"] = map_cr("bn"):with_noremap():with_silent():with_desc("Buffer: Next"),
 
   -- Plugin: move lines
   ["n|<c-a-j>"] = map_cmd("<CMD>m .+1<CR>=="):with_noremap():with_silent():with_desc("Move: Line down"),
@@ -170,8 +182,8 @@ local plug_map = {
   ["v|<c-a-k>"] = map_cmd("<ESC><CMD>'<,'>m '<-2<CR>gv=gv"):with_noremap():with_silent():with_desc("Move: Line up"),
 
   -- Plugin: ccc
-  ["n|<leader>cp"] = map_cmd("<CMD>CccPick<CR>"):with_noremap():with_silent():with_desc("Color Picker"),
-  ["i|<C-c>"] = map_cmd("<CMD>CccPick<CR>"):with_noremap():with_silent():with_desc("Color Picker"),
+  ["n|<leader>cp"] = map_cr("CccPick"):with_noremap():with_silent():with_desc("Color Picker"),
+  ["i|<C-c>"] = map_cr("CccPick"):with_noremap():with_silent():with_desc("Color Picker"),
 
   -- Plugin Lazygit
   ["n|<leader>gg"] = map_callback(function()
@@ -221,60 +233,60 @@ local plug_map = {
   ["n|<leader>wl"] = map_cu("SmartSwapRight"):with_silent():with_noremap():with_desc("window: Move window right"),
 
   -- Plugin: boole.nvim
-  ["n|<C-n>"] = map_cmd("<CMD>Boole increment<CR>"):with_noremap():with_silent():with_desc("Boole: Increment"),
-  ["n|<C-m>"] = map_cmd("<CMD>Boole decrement<CR>"):with_noremap():with_silent():with_desc("Boole: Decrement"),
+  ["n|<C-n>"] = map_cr("Boole increment"):with_noremap():with_silent():with_desc("Boole: Increment"),
+  ["n|<C-m>"] = map_cr("Boole decrement"):with_noremap():with_silent():with_desc("Boole: Decrement"),
 
   -- Plugin: flash
   ["nxo|s"] = map_cmd("<CMD>lua require('flash').jump()<CR>"):with_noremap():with_silent():with_desc("Flash"),
 
   -- Plugin: gitsigns
-  ["n|<leader>gb"] = map_cmd("<CMD>Gitsigns toggle_current_line_blame<CR>")
+  ["n|<leader>gb"] = map_cr("Gitsigns toggle_current_line_blame")
     :with_noremap()
     :with_silent()
     :with_desc("Gitsigns: Toggle current line blame"),
-  ["n|<leader>gs"] = map_cmd("<CMD>Gitsigns stage_hunk<CR>")
+  ["n|<leader>gs"] = map_cr("Gitsigns stage_hunk")
     :with_noremap()
     :with_silent()
     :with_desc("Gitsigns: Stage hunk"),
-  ["n|<leader>gu"] = map_cmd("<CMD>Gitsigns undo_stage_hunk<CR>")
+  ["n|<leader>gu"] = map_cr("Gitsigns undo_stage_hunk")
     :with_noremap()
     :with_silent()
     :with_desc("Gitsigns: Undo stage hunk"),
-  ["n|<leader>gt"] = map_cmd("<CMD>Gitsigns toggle_signs<CR>")
+  ["n|<leader>gt"] = map_cr("Gitsigns toggle_signs")
     :with_noremap()
     :with_silent()
     :with_desc("Gitsigns: Toggle signs"),
-  ["n|<leader>gi"] = map_cmd("<CMD>Gitsigns preview_hunk_inline<CR>")
+  ["n|<leader>gi"] = map_cr("Gitsigns preview_hunk_inline")
     :with_noremap()
     :with_silent()
     :with_desc("Gitsigns: Preview hunk inline"),
-  ["n|<leader>gr"] = map_cmd("<CMD>Gitsigns reset_hunk<CR>")
+  ["n|<leader>gr"] = map_cr("Gitsigns reset_hunk")
     :with_noremap()
     :with_silent()
     :with_desc("Gitsigns: Reset hunk"),
-  ["n|<leader>gR"] = map_cmd("<CMD>Gitsigns reset_buffer<CR>")
+  ["n|<leader>gR"] = map_cr("Gitsigns reset_buffer")
     :with_noremap()
     :with_silent()
     :with_desc("Gitsigns: Reset buffer"),
-  ["n|<leader>gp"] = map_cmd("<CMD>Gitsigns preview_hunk<CR>")
+  ["n|<leader>gp"] = map_cr("Gitsigns preview_hunk")
     :with_noremap()
     :with_silent()
     :with_desc("Gitsigns: Preview hunk"),
-  ["n|<leader>g]"] = map_cmd("<CMD>Gitsigns next_hunk<CR>")
+  ["n|<leader>g]"] = map_cr("Gitsigns next_hunk")
     :with_noremap()
     :with_silent()
     :with_desc("Gitsigns: Next hunk"),
-  ["n|<leader>g["] = map_cmd("<CMD>Gitsigns prev_hunk<CR>")
+  ["n|<leader>g["] = map_cr("Gitsigns prev_hunk")
     :with_noremap()
     :with_silent()
     :with_desc("Gitsigns: Prev hunk"),
 
   -- Plugin: diffview.nvim
-  ["n|<leader>gh"] = map_cmd("<CMD>DiffviewFileHistory<CR>")
+  ["n|<leader>gh"] = map_cr("DiffviewFileHistory")
     :with_noremap()
     :with_silent()
     :with_desc("Diff branch history"),
-  ["n|<leader>gd"] = map_cmd("<CMD>DiffviewFileHistory --follow %<CR>")
+  ["n|<leader>gd"] = map_cr("DiffviewFileHistory --follow %")
     :with_noremap()
     :with_silent()
     :with_desc("Diff file"),
@@ -294,14 +306,14 @@ local plug_map = {
     :with_noremap()
     :with_silent()
     :with_desc("Diff view"),
-  ["n|<leader>gx"] = map_cmd("<CMD>ClipboardDiff<CR>"):with_noremap():with_silent():with_desc("Diff clipboard"),
+  ["n|<leader>gx"] = map_cr("ClipboardDiff"):with_noremap():with_silent():with_desc("Diff clipboard"),
   ["v|<leader>gx"] = map_cmd("<ESC><CMD>ClipboardDiffSelection<CR>")
     :with_noremap()
     :with_silent()
     :with_desc("Diff clipboard Selection"),
 
   -- Plugin: auto-save.nvim
-  ["n|<leader>oa"] = map_cmd("<CMD>ASToggle<CR>"):with_noremap():with_silent():with_desc("Toggle auto save"),
+  ["n|<leader>oa"] = map_cr("ASToggle"):with_noremap():with_silent():with_desc("Toggle auto save"),
 
   -- Plugin: grug-far.nvim
   ["n|<leader>r"] = map_callback(function()
@@ -368,12 +380,12 @@ local plug_map = {
     :with_desc("Surround: Replace"),
 
   -- Plugin: outline
-  ["n|<leader>lo"] = map_cmd("<CMD>Outline<CR>"):with_noremap():with_silent():with_desc("Toggle Outline"),
+  ["n|<leader>lo"] = map_cr("Outline"):with_noremap():with_silent():with_desc("Toggle Outline"),
 
   -- Plugin: Suda
-  ["n|<leader>qS"] = map_cmd("<CMD>Suda w<CR>"):with_noremap():with_silent():with_desc("Suda: Write"),
-  ["n|<leader>qv"] = map_cmd("<CMD>Suda wq<CR>"):with_noremap():with_silent():with_desc("Suda: Write and quit"),
-  ["n|<leader>qa"] = map_cmd("<CMD>Suda wqa<CR>"):with_noremap():with_silent():with_desc("Suda: Write and quit all"),
+  ["n|<leader>qS"] = map_cr("Suda w"):with_noremap():with_silent():with_desc("Suda: Write"),
+  ["n|<leader>qv"] = map_cr("Suda wq"):with_noremap():with_silent():with_desc("Suda: Write and quit"),
+  ["n|<leader>qa"] = map_cr("Suda wqa"):with_noremap():with_silent():with_desc("Suda: Write and quit all"),
 
   -- Plugin: neotest
   ["n|<leader>tl"] = map_callback(function()
@@ -441,21 +453,21 @@ local plug_map = {
     :with_desc("Todo Comments: show TODO"),
 
   -- Plugin: treewalker
-  ["n|<a-s-j>"] = map_cmd("<CMD>Treewalker Down<CR>"):with_noremap():with_silent():with_desc("Treewalker Down"),
-  ["n|<a-s-k>"] = map_cmd("<CMD>Treewalker Up<CR>"):with_noremap():with_silent():with_desc("Treewalker Up"),
-  ["n|<a-s-h>"] = map_cmd("<CMD>Treewalker Left<CR>"):with_noremap():with_silent():with_desc("Treewalker Left"),
-  ["n|<a-s-l>"] = map_cmd("<CMD>Treewalker Right<CR>"):with_noremap():with_silent():with_desc("Treewalker Right"),
+  ["n|<a-s-j>"] = map_cr("Treewalker Down"):with_noremap():with_silent():with_desc("Treewalker Down"),
+  ["n|<a-s-k>"] = map_cr("Treewalker Up"):with_noremap():with_silent():with_desc("Treewalker Up"),
+  ["n|<a-s-h>"] = map_cr("Treewalker Left"):with_noremap():with_silent():with_desc("Treewalker Left"),
+  ["n|<a-s-l>"] = map_cr("Treewalker Right"):with_noremap():with_silent():with_desc("Treewalker Right"),
 
   -- Plugin: Trouble
-  ["n|<leader>xw"] = map_cmd("<CMD>Trouble diagnostics toggle<CR>")
+  ["n|<leader>xw"] = map_cr("Trouble diagnostics toggle")
     :with_noremap()
     :with_silent()
     :with_desc("Trouble: workspace diagnostics"),
-  ["n|<leader>xx"] = map_cmd("<CMD>Trouble diagnostics toggle filter.buf=0<CR>")
+  ["n|<leader>xx"] = map_cr("Trouble diagnostics toggle filter.buf=0")
     :with_noremap()
     :with_silent()
     :with_desc("Trouble: document diagnostics"),
-  ["n|<leader>xq"] = map_cmd("<CMD>Trouble quickfix toggle<CR>")
+  ["n|<leader>xq"] = map_cr("Trouble quickfix toggle")
     :with_noremap()
     :with_silent()
     :with_desc("Trouble: quickfix list"),
@@ -463,16 +475,16 @@ local plug_map = {
     :with_noremap()
     :with_silent()
     :with_desc("Trouble: quickfix list"),
-  ["n|<leader>xl"] = map_cmd("<CMD>Trouble loclist toggle<CR>")
+  ["n|<leader>xl"] = map_cr("Trouble loclist toggle")
     :with_noremap()
     :with_silent()
     :with_desc("Trouble: location list"),
-  ["n|<leader>xt"] = map_cmd("<CMD>Trouble todo toggle<CR>"):with_noremap():with_silent():with_desc("Trouble: TODO"),
-  ["n|<leader>xs"] = map_cmd("<CMD>Trouble symbols toggle win.position=right<CR>")
+  ["n|<leader>xt"] = map_cr("Trouble todo toggle"):with_noremap():with_silent():with_desc("Trouble: TODO"),
+  ["n|<leader>xs"] = map_cr("Trouble symbols toggle win.position=right")
     :with_noremap()
     :with_silent()
     :with_desc("Trouble: Symbols"),
-  ["n|<leader>xp"] = map_cmd("<CMD>Trouble lsp toggle win.position=right<CR>")
+  ["n|<leader>xp"] = map_cr("Trouble lsp toggle win.position=right")
     :with_noremap()
     :with_silent()
     :with_desc("Trouble: LSP"),
@@ -494,7 +506,7 @@ local plug_map = {
     :with_desc("Rename file"),
 
   -- Plugin: screenkey
-  ["n|<leader>ckt"] = map_cmd("<CMD>Screenkey<CR>"):with_noremap():with_silent():with_desc("Screenkey: Toggle"),
+  ["n|<leader>ckt"] = map_cr("Screenkey"):with_noremap():with_silent():with_desc("Screenkey: Toggle"),
   ["n|<leader>ckr"] = map_callback(function()
       require("screenkey").redraw()
     end)
@@ -611,17 +623,17 @@ local misc_map = {
     :with_desc("Buffer: Close all except current"),
 
   -- Profiling and diagnostics
-  ["n|<leader>pp"] = map_cmd("<CMD>Profile<CR>")
+  ["n|<leader>pp"] = map_cr("Profile")
     :with_noremap()
     :with_silent()
     :with_desc("Generate detailed profile report"),
-  ["n|<leader>ps"] = map_cmd("<CMD>ProfileSummary<CR>"):with_noremap():with_silent():with_desc("Show profile summary"),
-  ["n|<leader>pL"] = map_cmd("<CMD>ProfileLogs<CR>"):with_noremap():with_silent():with_desc("List profile logs"),
-  ["n|<leader>pa"] = map_cmd("<CMD>ProfilePlugins<CR>")
+  ["n|<leader>ps"] = map_cr("ProfileSummary"):with_noremap():with_silent():with_desc("Show profile summary"),
+  ["n|<leader>pL"] = map_cr("ProfileLogs"):with_noremap():with_silent():with_desc("List profile logs"),
+  ["n|<leader>pa"] = map_cr("ProfilePlugins")
     :with_noremap()
     :with_silent()
     :with_desc("Analyze plugin performance"),
-  ["n|<leader>pc"] = map_cmd("<CMD>ProfileClean<CR>"):with_noremap():with_silent():with_desc("Clean up profile logs"),
+  ["n|<leader>pc"] = map_cr("ProfileClean"):with_noremap():with_silent():with_desc("Clean up profile logs"),
 }
 
 -- Defer loading of miscellaneous keymaps
@@ -701,6 +713,12 @@ vim.defer_fn(function()
     { "<leader>f/", desc = "Yazi: Current file", icon = "" },
     { "<leader>f-", desc = "Yazi: nvim working directory", icon = "󰘦" },
     { "<leader>f\\", desc = "Yazi: Resume first session", icon = "↺" },
+    { "<leader>-", desc = "Scratch: New Scratchpad", icon = "📝" },
+    { "<leader>_", desc = "Scratch: Open Existing", icon = "📂" },
+    { "<leader>nn", desc = "Notification history", icon = "🔔" },
+    { "<leader>nd", desc = "Dismiss notifications", icon = "🔕" },
+    { "<leader>fp", desc = "Picker: Projects", icon = "📁" },
+    { "<leader>gB", desc = "Git browse", icon = "🔍" },
     { "<leader>pl", desc = "✓ Lazy: Sync", icon = "󰒲" },
     { "<leader>pp", desc = "Profile: Generate report", icon = "📊" },
     { "<leader>ps", desc = "Profile: Show summary", icon = "📈" },

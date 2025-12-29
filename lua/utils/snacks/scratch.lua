@@ -64,22 +64,18 @@ function M.select_scratch()
       vim.cmd.startinsert()
     end,
     transform = function(item)
-      item.text = format_item_text(item)
+      item.text = format_item_text(item.item)
     end,
     win = {
       input = {
         keys = {
-          ["<c-x>"] = { "delete", mode = { "i", "n" } },
+          ["<c-d>"] = { "delete", mode = { "i", "n" } },
         },
       },
     },
     actions = {
       delete = function(picker, item)
-        for _, entry in ipairs(items) do
-          if entry.cwd == item.cwd then
-            os.remove(item.file)
-          end
-        end
+        os.remove(item.item.file)
         picker:close()
 
         vim.schedule(function()
@@ -96,34 +92,8 @@ function M.select_scratch()
   })
 end
 
-function M.new_scratch(filetypes)
-  ---@diagnostic disable-next-line: missing-fields
-  Snacks.picker.pick({
-    source = "scratch",
-    items = filetypes,
-    format = "text",
-    layout = {
-      preset = "vscode",
-      ---@diagnostic disable-next-line: assign-type-mismatch
-      preview = false,
-      layout = { title = " Select a filetype: " },
-    },
-    actions = {
-      confirm = function(picker, item)
-        picker:close()
-        vim.schedule(function()
-          local items = picker:items()
-          if #items == 0 then
-            ---@diagnostic disable-next-line: missing-fields
-            Snacks.scratch({ ft = picker:filter().pattern, name = generate_uuid() })
-          else
-            ---@diagnostic disable-next-line: missing-fields
-            Snacks.scratch({ ft = item.text, name = generate_uuid() })
-          end
-        end)
-      end,
-    },
-  })
+function M.new_scratch()
+  Snacks.scratch({ ft = "plaintext", name = generate_uuid() })
 end
 
 return M

@@ -1,11 +1,5 @@
-return {
-  "echasnovski/mini.icons",
-  lazy = true,
-  opts = {},
-  init = function()
-    package.preload["nvim-web-devicons"] = function()
-      require("mini.icons").mock_nvim_web_devicons()
-      return package.loaded["nvim-web-devicons"]
-    end
-  end,
-}
+-- DELETED: Replaced by nvim-web-devicons
+-- This plugin was removed as part of Phase 3 cleanup
+-- See AGENTS.md for more information about this change
+-- Date: 2025-01-XX
+-- Reason: Consolidate to single icon library (nvim-web-devicons)
