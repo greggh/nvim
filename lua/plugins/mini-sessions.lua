@@ -15,7 +15,8 @@ return {
       pre = {
         read = nil,
         write = function()
-          local edgy, diffview, dap, dapui = require("edgy"), require("diffview.lib"), require("dap"), require("dapui")
+          local edgy, diffview, dap, dapui =
+            require("edgy"), require("diffview.lib"), require("nvim-dap"), require("dapui")
 
           edgy.close()
 
