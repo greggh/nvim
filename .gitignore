@@ -2,3 +2,5 @@ lazy-lock.json
 .luarc.json
 PROTECTED
 .stfolder
+.venv
+.devcontainer

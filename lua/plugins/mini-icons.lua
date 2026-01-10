@@ -1,5 +1,0 @@
--- DELETED: Replaced by nvim-web-devicons
--- This plugin was removed as part of Phase 3 cleanup
--- See AGENTS.md for more information about this change
--- Date: 2025-01-XX
--- Reason: Consolidate to single icon library (nvim-web-devicons)
